@@ -1,0 +1,75 @@
+<template>
+    <div id="NewAdverst">
+        <Menu/>
+        <router-link to="/">Wróc na strone główną</router-link>
+        <h2>Tytuł</h2>
+        <input type="text" v-model="titleValue">
+
+        <h2>Twoje imie</h2>
+        <input type="text" v-model="usernameValue">
+
+        <h2>Kategoria</h2>
+        <!-- pozniej sie zmieni na lsite do wybrania -->
+        <input type="text" v-model="categoryValue">
+
+        <h2>Zdjęcia</h2>
+        <input type="image">
+
+        <h2>Opis</h2>
+        <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
+
+        <h2>
+           Dane kontaktowe
+
+            Lokalizacja
+           <input type="text" v-model="locationValue">
+
+           Numer telefonu
+           <input type="text" v-model="phoneNumberValue">
+        </h2>
+
+        <button @click="addAdverst">Dodaj ogłoszenie</button>
+    </div>
+</template>
+
+<script>
+import Menu from '../components/Menu'
+
+export default {
+    name: 'NewAdverst',
+    components: {
+        Menu
+    },
+    data(){
+        return{
+            // v-models
+            titleValue: '',
+            usernameValue: '',
+            categoryValue: '',
+            descriptionValue: '',
+            locationValue: '',
+            phoneNumberValue: '',
+            adversts: [],
+        }
+    },
+    methods: {
+        addAdverst(){
+            this.adversts.push({
+                title: this.titleValue,
+                username: this.usernameValue,
+                category: this.categoryValue,
+                description: this.descriptionValue,
+                location: this.locationValue,
+                phoneNumber: this.phoneNumberValue,
+                img: 'img'
+            })
+            console.log(this.adversts)
+        },
+    }
+}
+</script>
+
+<style lang="scss">
+@import '../../scssVariables/variables';
+
+</style>
