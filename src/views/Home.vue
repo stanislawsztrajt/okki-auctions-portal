@@ -11,7 +11,7 @@
             </div>
         </main>
         <footer>
-            <div>Wpisz dowolną wrazę aby znaleźć ogłoszenie odpowiadające jej wynikom wyszukiwania, lub dodaj własn eogłoszenie sprzedaży</div>
+            <div>Wpisz dowolną frazę aby znaleźć ogłoszenie odpowiadające jej wynikom wyszukiwania, lub dodaj własne eogłoszenie sprzedaży</div>
             <router-link to="/new-adverst">Dodaj ogłoszenie</router-link>
         </footer>
     </div>
