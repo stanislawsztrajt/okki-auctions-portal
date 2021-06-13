@@ -1,71 +1,78 @@
 <template>
-    <div id="NewAdverst">
-        <Menu/>
-        <router-link to="/">Wróc na strone główną</router-link>
-        <h2>Tytuł</h2>
-        <input type="text" v-model="titleValue">
+  <div id="NewAdverst">
+    <Menu/>
+    <router-link to="/">Wróc na strone główną</router-link>
+    <h2>Tytuł</h2>
+    <input type="text" v-model="titleValue">
 
-        <h2>Twoje imie</h2>
-        <input type="text" v-model="usernameValue">
+    <h2>Twoje imie</h2>
+    <input type="text" v-model="usernameValue">
 
-        <h2>Kategoria</h2>
-        <!-- pozniej sie zmieni na lsite do wybrania -->
-        <input type="text" v-model="categoryValue">
+    <h2>Cena</h2>
+    <input type="text" v-model="priceValue">
 
-        <h2>Zdjęcia</h2>
-        <input type="image">
+    <h2>Kategoria</h2>
+    <!-- pozniej sie zmieni na lsite do wybrania -->
+    <input type="text" v-model="categoryValue">
 
-        <h2>Opis</h2>
-        <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
+    <h2>Zdjęcia</h2>
+    <input type="image">
 
-        <h2>
-           Dane kontaktowe
+    <h2>Opis</h2>
+    <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
 
-            Lokalizacja
-           <input type="text" v-model="locationValue">
+    <h2>
+      Dane kontaktowe
 
-           Numer telefonu
-           <input type="text" v-model="phoneNumberValue">
-        </h2>
+      Lokalizacja
+      <input type="text" v-model="locationValue">
 
-        <button @click="addAdverst">Dodaj ogłoszenie</button>
-    </div>
+      Numer telefonu
+      <input type="text" v-model="phoneNumberValue">
+    </h2>
+
+    <button @click="addAdverst">Dodaj ogłoszenie</button>
+  </div>
 </template>
 
 <script>
 import Menu from '../components/Menu'
 
 export default {
-    name: 'NewAdverst',
-    components: {
-        Menu
-    },
-    data(){
-        return{
-            // v-models
-            titleValue: '',
-            usernameValue: '',
-            categoryValue: '',
-            descriptionValue: '',
-            locationValue: '',
-            phoneNumberValue: '',
-            adversts: [],
-        }
-    },
-    methods: {
-        addAdverst(){
-            this.adversts.push({
-                title: this.titleValue,
-                username: this.usernameValue,
-                category: this.categoryValue,
-                description: this.descriptionValue,
-                location: this.locationValue,
-                phoneNumber: this.phoneNumberValue,
-                img: 'img'
-            })
-            console.log(this.adversts)
-        },
+  name: 'NewAdverst',
+  components: {
+    Menu
+  },
+  data(){
+    return{
+      // v-models
+      titleValue: '',
+      usernameValue: '',
+      priceValue: '',
+      categoryValue: '',
+      descriptionValue: '',
+      locationValue: '',
+      phoneNumberValue: '',
+      dateValue: new Date(),
+      adversts: [],
     }
+  },
+  methods: {
+    addAdverst(){
+      this.adversts.push({
+        title: this.titleValue,
+        username: this.usernameValue,
+        price: parseInt(this.priceValue),
+        category: this.categoryValue,
+        description: this.descriptionValue,
+        location: this.locationValue,
+        phoneNumber: this.phoneNumberValue,
+        date: this.dateValue,
+        img: 'img'
+      })
+      console.log(this.adversts)
+    },
+  }
 }
 </script>
 
