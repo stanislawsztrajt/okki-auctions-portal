@@ -1,5 +1,6 @@
 <template>
   <div id="AdverstsResults">
+    <Menu/>
     <div class="input-area">
       <InputSearchPanel
         @sorting-by-price="sortingByPrice"
@@ -20,11 +21,14 @@
   </div>
 </template>
 <script>
+import Menu from '../components/Menu'
 import InputSearchPanel from '../components/InputSearchPanel'
+
 
 export default {
   name: 'AdverstsResults',
   components: {
+    Menu,
     InputSearchPanel
   },
   data() {

@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 .menu-hamburger-element{
-    @apply uppercase text-right mr-20 text-lg font-normal text-gray-600 hover:text-gray-900 duration-150 cursor-pointer
+    @apply
+    mr-6 text-sm
+    exsm:mr-8
+    md:mr-20 md:text-lg
+    uppercase text-right font-normal text-gray-600 hover:text-gray-900 duration-150 cursor-pointer
 }

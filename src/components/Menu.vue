@@ -1,13 +1,17 @@
 <template>
   <nav class="flex items-center justify-between bg-gray-200 relative">
-    <div class="text-5xl inline-block mb-4 ml-4 text-gray-600">OLXPL</div>
+    <div class="text-4xl md:text-5xl inline-block mb-4 ml-4 text-gray-600">OLXPL</div>
     <div class="h-20 ">
       <div class="inline-block">
-        <div class="text-gray-600 inline-block text-2xl cursor-pointer ml-5 mr-10 hover:text-gray-800 duration-100">logowanie</div>
+        <div class="text-lg md:text-2xl mr-2 md:mr-10 text-gray-600 inline-block  cursor-pointer ml-5  hover:text-gray-800 duration-100">logowanie</div>
       </div>
       <svg
         @click="unfoldMenu"
-        class="w-20 cursor-pointer inline-block mr-16 text-green-600 group"
+        class="
+          w-10 mr-2
+          exsm:w-14 exsm:mr-6
+          md:w-20 md:mr-16
+          cursor-pointer inline-block  text-green-600"
         xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
       </svg>
       <div class="hidden group" ref="hamburgerElements">
