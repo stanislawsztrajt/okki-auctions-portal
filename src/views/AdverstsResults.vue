@@ -50,7 +50,7 @@ export default {
     },
     sortingByPrice (sortingOption) {
       switch(sortingOption) {
-        case 'newest': {  
+        case 'newest': {
           this.adversts.sort();
           break;
         }
@@ -76,7 +76,8 @@ export default {
     this.searchInputValue = this.$route.params.data;
   },
 }
-</script>
+
+/*
 <style lang="scss" scoped>
 @import '../../scssVariables/variables';
 
@@ -131,3 +132,5 @@ export default {
   }
 }
 </style>
+*/
+</script>

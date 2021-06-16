@@ -31,8 +31,8 @@ export default {
     },
   }
 }
-</script>
 
+/*
 <style lang="scss">
 @import '../../scssVariables/variables';
 
@@ -57,3 +57,6 @@ export default {
   cursor: pointer;
 }
 </style>
+*/
+</script>
+

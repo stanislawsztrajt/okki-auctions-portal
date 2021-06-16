@@ -1,6 +1,6 @@
 <template>
   <div id="InputSearchPanel">
-    <input 
+    <input
       class="input-handler"
       placeholder="piła motorowa / rower / ps5..."
       type="text" name="inputHandler"
@@ -17,7 +17,7 @@
         <option value="newest">Najnowsze</option>
         <option value="cheapest">Najtańsze</option>
         <option value="mostexpensive">Najdroższe</option>
-      </select> 
+      </select>
     </div>
   </div>
 </template>
@@ -29,18 +29,18 @@ export default {
       inputValue: this.searchInputValue,
       choosenCategory: '',
       categoriesAndFilters: [
-        { 
-          name: 'motoryzacja', 
+        {
+          name: 'motoryzacja',
           filters: [{
-            name: 'marka', 
-            options: ['Audi', 'BMW', 'Volvo', 'Opel', 'Mercedes'] 
-          }] 
+            name: 'marka',
+            options: ['Audi', 'BMW', 'Volvo', 'Opel', 'Mercedes']
+          }]
         },
-        { 
-          name: 'odzież', 
-          filters: [{ 
+        {
+          name: 'odzież',
+          filters: [{
             name: 'rozmiar',
-            options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] 
+            options: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
           }]
         }
       ],
@@ -60,8 +60,7 @@ export default {
     }
   },
 }
-</script>
-<style lang="scss" scoped>
+/*<style lang="scss" scoped>
 @import '../../scssVariables/variables';
 
 #InputSearchPanel {
@@ -96,4 +95,6 @@ export default {
   }
 }
 
-</style>
+</style>*/
+</script>
+

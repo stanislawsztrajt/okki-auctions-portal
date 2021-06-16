@@ -1,6 +1,6 @@
-<template>
+<template >
   <div id="app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
@@ -9,9 +9,9 @@
 export default {
   name: 'App',
 }
-</script>
 
-<style lang="scss">
+/*
+  <style lang="scss">
 @import './../scssVariables/variables';
 
 body{
@@ -20,3 +20,11 @@ body{
   font-family: $font-family-main;
 }
 </style>
+*/
+</script>
+<style>
+body{
+  background: #EEE;
+}
+</style>
+
