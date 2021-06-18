@@ -43,6 +43,8 @@ export default {
         {title: 'Szafa Y', username: 'Andrzej', price: 420, category: 'dom', description: '...', location: 'Gliwice', phoneNumber: '999111444', img: 'img'},
       ],
       adverstsCopy: [],
+
+      endPoint: 'https://okki-api.herokuapp.com/'
     }
   },
   methods: {

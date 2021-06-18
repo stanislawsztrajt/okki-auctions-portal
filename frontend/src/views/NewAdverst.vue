@@ -1,37 +1,38 @@
 <template>
   <div id="NewAdverst">
-    <Menu/>
+    <Menu />
+      <h2>Tytuł</h2>
+      <input type="text" v-model="titleValue">
+
+      <h2>Twoje imie</h2>
+      <input type="text" v-model="usernameValue">
+
+      <h2>Cena</h2>
+      <input type="text" v-model="priceValue">
+
+      <h2>Kategoria</h2>
+      <!-- pozniej sie zmieni na lsite do wybrania -->
+      <input type="text" v-model="categoryValue">
+
+      <h2>Zdjęcia</h2>
+      <input type="image">
+
+      <h2>Opis</h2>
+      <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
+
+      <h2>
+        Dane kontaktowe
+
+        Lokalizacja
+        <input type="text" v-model="locationValue">
+
+        Numer telefonu
+        <input type="text" v-model="phoneNumberValue">
+      </h2>
+
+      <button @click="addAdverst">Dodaj ogłoszenie</button>
     <router-link to="/">Wróc na strone główną</router-link>
-    <h2>Tytuł</h2>
-    <input type="text" v-model="titleValue">
 
-    <h2>Twoje imie</h2>
-    <input type="text" v-model="usernameValue">
-
-    <h2>Cena</h2>
-    <input type="text" v-model="priceValue">
-
-    <h2>Kategoria</h2>
-    <!-- pozniej sie zmieni na lsite do wybrania -->
-    <input type="text" v-model="categoryValue">
-
-    <h2>Zdjęcia</h2>
-    <input type="image">
-
-    <h2>Opis</h2>
-    <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
-
-    <h2>
-      Dane kontaktowe
-
-      Lokalizacja
-      <input type="text" v-model="locationValue">
-
-      Numer telefonu
-      <input type="text" v-model="phoneNumberValue">
-    </h2>
-
-    <button @click="addAdverst">Dodaj ogłoszenie</button>
   </div>
 </template>
 
@@ -56,7 +57,7 @@ export default {
       phoneNumberValue: '',
       adversts: [],
 
-      endPoint: 'http://localhost:1337/'
+      endPoint: 'https://okki-api.herokuapp.com/'
     }
   },
   methods: {

@@ -1,9 +1,13 @@
 <template>
   <nav class="flex items-center justify-between bg-gray-200 relative">
-    <div class="text-4xl md:text-5xl inline-block mb-4 ml-4 text-gray-600">OLXPL</div>
+    <div class="text-4xl md:text-5xl inline-block mb-4 ml-4 text-gray-600">
+      <router-link to="/">OLXPL</router-link>
+    </div>
     <div class="h-20 ">
-      <div class="inline-block">
-        <div class="text-lg md:text-2xl mr-2 md:mr-10 text-gray-600 inline-block  cursor-pointer ml-5  hover:text-gray-800 duration-100">logowanie</div>
+      <div class="inline-block ">
+        <router-link to="/login" class=" inline-block text-lg md:text-2xl mr-2 md:mr-10 text-gray-600 cursor-pointer ml-5  hover:text-gray-800 duration-100">
+          logowanie
+        </router-link>
       </div>
       <svg
         @click="unfoldMenu"

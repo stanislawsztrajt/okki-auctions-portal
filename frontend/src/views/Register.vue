@@ -15,6 +15,11 @@
 
 <script>
 export default {
-    name: 'Register'
+    name: 'Register',
+    data(){
+        return{
+            endPoint: 'https://okki-api.herokuapp.com/'
+        }
+    }
 }
 </script>

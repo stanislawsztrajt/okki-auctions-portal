@@ -23,6 +23,7 @@ export default {
   data(){
     return{
       searchInputValue: '',
+      endPoint: 'https://okki-api.herokuapp.com/'
     }
   },
   methods: {
