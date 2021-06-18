@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "adverts",
+  "info": {
+    "name": "Advert"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "img": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "price": {
+      "type": "float"
+    },
+    "category": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    }
+  }
+}

@@ -37,6 +37,7 @@
 
 <script>
 import Menu from '../components/Menu'
+import axios from 'axios'
 
 export default {
   name: 'NewAdverst',
@@ -48,29 +49,39 @@ export default {
       // v-models
       titleValue: '',
       usernameValue: '',
-      priceValue: '',
+      priceValue: 0,
       categoryValue: '',
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
-      dateValue: new Date(),
       adversts: [],
+
+      endPoint: 'http://localhost:1337/'
     }
   },
   methods: {
     addAdverst(){
-      this.adversts.push({
+      axios.post(this.endPoint + 'adverts', {
         title: this.titleValue,
-        username: this.usernameValue,
-        price: parseInt(this.priceValue),
+        price: parseFloat(this.priceValue),
         category: this.categoryValue,
         description: this.descriptionValue,
         location: this.locationValue,
         phoneNumber: this.phoneNumberValue,
-        date: this.dateValue,
         img: 'img'
       })
-      console.log(this.adversts)
+      console.log(this.endPoint + 'adverts')
+
+      // this.adversts.push({
+      //   title: this.titleValue,
+      //   price: parseFloat(this.priceValue),
+      //   category: this.categoryValue,
+      //   description: this.descriptionValue,
+      //   location: this.locationValue,
+      //   phoneNumber: this.phoneNumberValue,
+      //   img: 'img'
+      // })
+      // console.log(this.adversts)
     },
   }
 }
