@@ -6,12 +6,11 @@ import './styles.css'
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import VueCookies from 'vue3-cookies'
 
-
-library.add(faSearch);
+library.add(faBars);
 
 createApp(App)
   .use(VueCookies)
