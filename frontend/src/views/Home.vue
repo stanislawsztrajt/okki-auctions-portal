@@ -47,32 +47,5 @@ export default {
     }
   }
 }
-
-/*
-<style lang="scss">
-@import '../../scssVariables/variables';
-
-.input-handler {
-  width: 50%;
-  background: transparent;
-  color: $color-main;
-  font-size: 2rem;
-  border: 0;
-  border-bottom: 2px solid $bg-second-main;
-  font-weight: 300;
-  padding-left: 5px;
-  outline: none;
-}
-.input-handler-btn {
-  background: transparent;
-  color: $color-main;
-  font-size: 1.5rem;
-  border: 0;
-  font-weight: 300;
-  outline: none;
-  cursor: pointer;
-}
-</style>
-*/
 </script>
 

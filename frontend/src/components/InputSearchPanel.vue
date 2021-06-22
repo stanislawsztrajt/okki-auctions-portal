@@ -84,41 +84,5 @@ export default {
     }
   },
 }
-/*<style lang="scss" scoped>
-@import '../../scssVariables/variables';
-
-#InputSearchPanel {
-  background: #7070703d;
-  .input-elements {
-    display: flex;
-    flex-direction: row;
-    .input-element {
-      cursor: pointer;
-      margin: 10px 30px;
-    }
-  }
-  .categories-options {
-    border-top: 1px solid $bg-second-main;
-    list-style: none;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    background: $bg-main;
-    width: 30%;
-    padding: 0;
-    .categories-option {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 40px;
-      transition: all .1s ease;
-      &:hover {
-        background: $bg-second-main;
-        cursor: pointer;
-      }
-    }
-  }
-}
-
-</style>*/
 </script>
 

@@ -10,20 +10,12 @@ export default {
   name: 'App',
 }
 
-/*
-  <style lang="scss">
-@import './../scssVariables/variables';
-
-body{
-  background-color: $bg-main;
-  color: $color-main;
-  font-family: $font-family-main;
-}
-</style>
-*/
 </script>
 <style>
-body{
+* {
+  -webkit-tap-highlight-color: rgba(128, 128, 128, 0.212);
+}
+body {
   background: #EEE;
 }
 </style>

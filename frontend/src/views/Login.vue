@@ -1,45 +1,51 @@
 <template>
-  <div class="w-screen h-screen flex justify-center items-center">
-    <router-link
-      to='/'
-      class="absolute top-2 right-2 mr-1 cursor-pointer text-green-600 transform hover:rotate-90 transition duration-150">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </router-link>
-    <div class="flex flex-col items-center justify-center bg-gray-300 py-6 px-4 w-96 h-96 border-l-8 border-green-600 box-border">
-      <h1 class="text-4xl font-semibold mb-4 text-green-600">Logowanie</h1>
-
-      <input
-        class="login-register-input"
-        placeholder="Adres email"
-        type="mail"
-        v-model="mailValue">
-      <input
-        class="login-register-input"
-        placeholder="Hasło"
-        type="password"
-        v-model="passwordValue">
-
-      <div v-if="loginError" class="validation-alert" role="alert">
-        <span class="block sm:inline">Podany login i/lub hasło są nieprawidłowe</span>
-        <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-        </span>
+  <div class="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
+    <div class="flex flex-col items-center bg-white w-96 md:w-108 h-auto rounded-lg">
+      <h2 class="text-2xl font-normal mt-10 text-green-600">Zaloguj się na konto</h2>
+      <div class="p-10 w-full">
+        <div class="login-register-input-box">
+          <label for="">Adres email</label>
+          <div class="login-register-input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input
+            class="login-register-input"
+            placeholder="Adres email"
+            type="mail"
+            v-model="mailValue">
+        </div>
+        <div class="login-register-input-box">
+          <label for="">Hasło</label>
+          <div class="login-register-input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input
+            class="login-register-input"
+            placeholder="Hasło"
+            type="password"
+            v-model="passwordValue">
+        </div>
+        <button
+          class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
+          @click="checkLogin">
+          Zaloguj
+        </button>
       </div>
-
-      <button class="text-gray-500 font-xs hover:text-gray-400 focus:outline-none transition duration-150">Zapomniałeś hasła?</button>
-
-      <button
-        class="w-10/12 h-10 bg-green-600 text-white mt-2 rounded-lg font-medium focus:outline-none hover:bg-green-700 transition duration-150"
-        @click="checkLogin">
-        Zaloguj
-      </button>
-
       <router-link
         to='/register'
-        class="flex justify-center items-center w-10/12 h-10 bg-transparent text-gray-500 border-2 border-gray-400 mt-3 rounded-lg font-medium focus:outline-none hover:bg-gray-400 hover:text-gray-300 transition duration-150">
-        Rejestracja
+        class="w-full flex justify-center items-center pb-6 p-5 bg-gray-100 text-gray-600 text-lg border-t border-gray-300 rounded-b-lg">
+        Nowy na OKKI? <span class="text-green-600 ml-2"> Zarejestruj się</span>
       </router-link>
+    </div>
+    <button class="text-white font-xs m-4 underline focus:outline-none hover:opacity-80 transition duration-150">Zapomniałeś hasła?</button>
+    <div v-if="loginError" class="validation-alert top-84 mt-72 md:top-96 md:mt-84" role="alert">
+      <span class="block sm:inline">Podany login i/lub hasło są nieprawidłowe</span>
+      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+      </span>
     </div>
   </div>
 </template>

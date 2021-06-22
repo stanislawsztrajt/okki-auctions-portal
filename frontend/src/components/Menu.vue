@@ -9,30 +9,18 @@
           logowanie
         </router-link>
       </div>
-      <svg
-        @click="unfoldMenu"
-        class="
-          w-10 mr-2
-          exsm:w-14 exsm:mr-6
-          md:w-20 md:mr-16
-          cursor-pointer inline-block  text-green-600"
-        xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-      <!-- <font-awesome-icon
-        class="
-          text-5xl
-          w-10 mr-2
-          exsm:mr-4 exsm:w-14
-          md:mr-8 md:20
-          cursor-pointer inline-block text-green-600"
-        icon="bars"
-        @click="unfoldMenu"
-        /> -->
-      <div class="hidden" ref="hamburgerElements">
-        <div class="menu-hamburger-element">faq</div>
-        <div class="menu-hamburger-element">polityka</div>
-        <div class="menu-hamburger-element">pliki cookies</div>
-      </div>
+      <ul>
+        <li class="group dropdown px-1 w-10 text-green-600 hover:text-green-700 cursor-pointer mr-4 md:mr-8 focus:bg-transparent">
+          <span @click="unfoldMenu()" class="text-4xl exsm:mr-4 md:mr-8"><font-awesome-icon icon="bars"/></span>
+          <div ref="hamburgerElements" class="md:group-hover:block dropdown-menu absolute right-0 hidden h-auto">
+            <ul class="w-48 top-0 right-5 md:right-9 absolute bg-white shadow-lg border-t-4 border-green-700 p-6">
+              <li class="py-1"><a href="#" class="block text-gray-400 font-bold text-base uppercase hover:text-gray-500 hover:bg-gray-100 px-2 py-1 cursor-pointer">faq</a></li>
+              <li class="py-1"><a href="#" class="block text-gray-400 font-bold text-base uppercase hover:text-gray-500 hover:bg-gray-100 px-2 py-1 cursor-pointer">polityka</a></li>
+              <li class="py-1"><a href="#" class="block text-gray-400 font-bold text-base uppercase hover:text-gray-500 hover:bg-gray-100 px-2 py-1 cursor-pointer">pliki cookies</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
     </div>
 
   </nav>
@@ -46,11 +34,13 @@ export default {
   },
   methods: {
     unfoldMenu(){
-      if(this.$refs.hamburgerElements.classList == ""){
-        this.$refs.hamburgerElements.classList = "hidden"
+      if(this.$refs.hamburgerElements.classList.contains('hidden')){
+        this.$refs.hamburgerElements.classList.remove('hidden')
+        this.$refs.hamburgerElements.classList.add('block')
       }
       else{
-        this.$refs.hamburgerElements.classList = ""
+        this.$refs.hamburgerElements.classList.add('hidden')
+        this.$refs.hamburgerElements.classList.remove('block')
       }
     }
   }
