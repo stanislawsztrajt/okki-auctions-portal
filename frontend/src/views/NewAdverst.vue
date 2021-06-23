@@ -15,7 +15,7 @@
       <input type="text" v-model="categoryValue">
 
       <h2>Zdjęcia</h2>
-      <input type="image">
+      <input type="file"  accept="image/png, image/jpeg" >
 
       <h2>Opis</h2>
       <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
@@ -30,7 +30,7 @@
         <input type="text" v-model="phoneNumberValue">
       </h2>
 
-      <button @click="addAdverst">Dodaj ogłoszenie</button>
+      <button @click.once="addAdverst">Dodaj ogłoszenie</button>
     <router-link to="/">Wróc na strone główną</router-link>
 
   </div>
@@ -55,34 +55,52 @@ export default {
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
-      adversts: [],
+      imageValue: '',
+      userInfo: this.$cookies.get('user'),
+      jwt: this.$cookies.get('jwt'),
+      addAdverstUsed: false,
 
-      endPoint: 'https://okki-api.herokuapp.com/'
+      advertsID: [],
+
+      endPoint: 'https://okki-api.herokuapp.com'
     }
   },
+  async created(){
+    if(!this.jwt){
+      this.$router.push('/login')
+    }
+
+    await axios.get(`${this.endPoint}/users/${this.userInfo._id}`)
+    .then(res=>{
+      this.advertsID = res.data.Adverts.adverts
+    })
+  },
   methods: {
-    addAdverst(){
-      axios.post(this.endPoint + 'adverts', {
+    async addAdverst(){
+      await axios.post(`${this.endPoint}/adverts`, {
         title: this.titleValue,
         price: parseFloat(this.priceValue),
         category: this.categoryValue,
         description: this.descriptionValue,
         location: this.locationValue,
         phoneNumber: this.phoneNumberValue,
-        img: 'img'
+        img: '',
       })
-      console.log(this.endPoint + 'adverts')
+      .then(async res =>{
+        console.log(res)
+        this.advertsID.push(res.data._id)
 
-      // this.adversts.push({
-      //   title: this.titleValue,
-      //   price: parseFloat(this.priceValue),
-      //   category: this.categoryValue,
-      //   description: this.descriptionValue,
-      //   location: this.locationValue,
-      //   phoneNumber: this.phoneNumberValue,
-      //   img: 'img'
-      // })
-      // console.log(this.adversts)
+
+        await axios.put(`${this.endPoint}/users/${this.userInfo._id}`, {
+          Adverts: {
+            adverts: this.advertsID
+          }
+        })
+        .then(()=>{
+          this.$router.push('/dashboard')
+        })
+        .catch(err=>console.log(err))
+      }) .catch(err=>{console.log(err)})
     },
   }
 }
