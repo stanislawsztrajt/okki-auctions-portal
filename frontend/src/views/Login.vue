@@ -66,6 +66,7 @@ export default {
 
         endPoint: 'https://okki-api.herokuapp.com',
 
+        setTimeout: Function,
         setTimeoutTime: 4000
       }
     },
@@ -76,6 +77,7 @@ export default {
     },
     methods: {
       async checkLogin(){
+        clearTimeout(this.setTimeout)
 
         await axios.post(`${this.endPoint}/auth/local`, {
           identifier: this.mailValue,
@@ -92,7 +94,7 @@ export default {
           this.$router.push('/dashboard')
         })
         .catch(() =>{
-          setTimeout(() =>{
+          this.setTimeout = setTimeout(() =>{
             this.loginError = false
           },this.setTimeoutTime)
           return this.loginError = true

@@ -63,7 +63,7 @@
         </button>
       </div>
     </div>
-    <div v-if="validationError" class="validation-alert top-84 mt-84 md:top-96 md:mt-96" role="alert">
+    <div v-if="validationError" class="validation-alert mt-112" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
       </span>
@@ -89,6 +89,7 @@ export default {
 
         endPoint: 'https://okki-api.herokuapp.com',
 
+        setTimeout: Function,
         setTimeoutTime: 4000,
         }
     },
@@ -99,8 +100,10 @@ export default {
     },
     methods: {
       async register(){
+        clearTimeout(this.setTimeout)
+
         if(!this.usernameValue || !this.emailValue || !this.passwordValue || !this.passwordValueRepeat){
-          setTimeout(()=>{
+          this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Uzupełnij puste pola'
@@ -109,7 +112,7 @@ export default {
 
         if(this.usernameValue.length < 4){
           this.usernameLengthErrorText = ''
-          setTimeout(()=>{
+          this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Nazwa użytkownika jest za krótka (co najmniej 4 znaki)'
@@ -117,7 +120,7 @@ export default {
         }
 
         if(this.usernameValue.length > 20){
-          setTimeout(()=>{
+          this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 20 znaki)'
@@ -125,7 +128,7 @@ export default {
         }
 
         if(this.passwordValue.length < 6){
-          setTimeout(()=>{
+          this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Hasło jest za krótkie (co najmniej 6 znaków)'
@@ -133,7 +136,7 @@ export default {
         }
 
         if(this.passwordValue.length > 20){
-          setTimeout(()=>{
+          this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Hasło jest za długie (maksymalnie 20 znaków)'
@@ -141,7 +144,7 @@ export default {
         }
 
         if(this.passwordValue != this.passwordValueRepeat){
-          setTimeout(()=>{
+          this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Powtórzone hasło nie zgadza sie z podanym wcześniej'
