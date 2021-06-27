@@ -1,5 +1,6 @@
 <template>
   <div class="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
+    <router-link to="/" class="text-white text-5xl focus:outline-none mb-3 font-light">okki</router-link>
     <div class="flex flex-col items-center bg-white w-96 md:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Utwórz swoje konto</h2>
       <div class="p-10 w-full">

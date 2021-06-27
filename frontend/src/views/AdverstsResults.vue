@@ -4,10 +4,16 @@
     <div class="m-10 md:mx-24 lg:mx-40 xl:mx-48">
       <div class="border-b border-gray-300">
         <InputSearchPanel
-          @sorting-by-price="sortingByPrice"
+          @change-sorting-option="changeSortingOption"
           @search-adversts="searchAdversts"
           :searchInputValue="searchInputValue"
+          :searchInputLocation="searchInputLocation"
         />
+      </div>
+      <div v-if="adversts.length === 0" class="text-gray-400 text-xl sm:text-2xl mt-10">
+        <h1 class="text-8xl mb-5">:(</h1>
+        <h2 class="mb-3 sm:mb-2">Nie znaleźliśmy ogłoszeń dla zapytania <span class="font-semibold">"{{ searchInputValue }}"</span>.</h2>
+        <h2>Sprawdź poprawność wyszukiwanej frazy, lub użyj bardziej ogólnego zapytania.</h2>
       </div>
       <div class="mt-6 grid grid-cols-2 sm:grid-cols-1 justify-items-center md:justify-items-start">
         <div class="flex-row w-10/12 border-gray-300 border-2 my-4 text-gray-600 bg-white" v-for="adverst in adversts" :key="adverst.code">
@@ -16,7 +22,6 @@
             <h2 class="sm:text-2xl">{{ adverst.title }}</h2>
             <h3 class="font-bold sm:text-3xl">{{ adverst.price }}zł</h3>
             <h3 class="text-xs float-right mb-0.5 mt-2 sm:float-left sm:text-lg sm:mt-0">{{ adverst.location }}</h3>
-            <!-- <h3 class="adverst-data adverst-category">{{ adverst.category }}</h3> -->
           </div>
         </div>
       </div>
@@ -36,33 +41,39 @@ export default {
   },
   data() {
     return {
-      image: require('../assets/motocykl1.jpg'),
       searchInputValue: '',
-      adversts: [
-        {title: 'Motocykl X', username: 'Adam', price: 3200, category: 'motoryzacja', description: '...', location: 'Kraków', phoneNumber: '123123123', img: require('../assets/motocykl1.jpg')},
-        {title: 'Motocykl Y', username: 'Adam', price: 2100, category: 'motoryzacja', description: '...', location: 'Kraków', phoneNumber: '123123123', img: require('../assets/motocykl2.jpg')},
-        {title: 'Koszulka X', username: 'Anna', price: 50, category: 'odzież', description: '...', location: 'Poznań', phoneNumber: '444555666', img: require('../assets/koszulka1.jpg')},
-        {title: 'Koszulka Y', username: 'Anna', price: 75, category: 'odzież', description: '...', location: 'Poznań', phoneNumber: '444555666', img: require('../assets/koszulka2.jpg')},
-        {title: 'Szafa X', username: 'Andrzej', price: 300, category: 'dom', description: '...', location: 'Gliwice', phoneNumber: '999111444', img: require('../assets/szafa1.jpg')},
-        {title: 'Szafa Y', username: 'Andrzej', price: 420, category: 'dom', description: '...', location: 'Gliwice', phoneNumber: '999111444', img: require('../assets/szafa2.jpg')},
-      ],
+      searchInputLocation: '',
+      sortingOption: '',
+      adversts: [],
       adverstsCopy: [],
-
       endPoint: 'https://okki-api.herokuapp.com/'
     }
   },
   methods: {
-    searchAdversts (searchInputValue) {
+    searchAdversts (searchInputValue, searchInputLocation) {
       this.searchInputValue = searchInputValue;
+      this.searchInputLocation = searchInputLocation;
       this.adversts = this.adverstsCopy;
+
       this.adversts = this.adversts.filter((adverst) => {
         return adverst.title.toLowerCase().includes(this.searchInputValue.toLowerCase())
       })
+
+      if(this.searchInputLocation.length !== 0) {
+        this.adversts = this.adversts.filter((adverst) => {
+          return adverst.location.toLowerCase().includes(this.searchInputLocation.toLowerCase())
+        })
+      }
+
+      this.changeSortingOption(this.sortingOption);
     },
-    sortingByPrice (sortingOption) {
-      switch(sortingOption) {
+    changeSortingOption (sortingOption) {
+      this.sortingOption = sortingOption;
+      switch(this.sortingOption) {
         case 'newest': {
-          this.adversts.sort();
+          this.adversts.sort(function(a,b){
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
           break;
         }
         case 'cheapest': {
@@ -77,11 +88,18 @@ export default {
     },
   },
   created() {
-    this.adverstsCopy = this.adversts;
-    this.searchInputValue = this.$route.params.data;
-    if(this.searchInputValue !== undefined) {
-      this.searchAdversts(this.searchInputValue);
-    }
+    this.searchInputValue = this.$route.params.value;
+    this.searchInputLocation = this.$route.params.Location;
+
+    fetch('https://okki-api.herokuapp.com/adverts')
+      .then(response => response.json())
+      .then(data => this.adversts = data)
+      .then(adversts => this.adverstsCopy = adversts)
+      .then(() => {
+        if(this.searchInputValue !== undefined && this.searchInputLocation !== undefined) {
+          this.searchAdversts(this.searchInputValue, this.searchInputLocation);
+        }
+      })
   },
 }
 
