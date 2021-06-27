@@ -2,12 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.menu-hamburger-element{
-  @apply
-    mr-6 text-sm
-    exsm:mr-8
-    md:mr-20 md:text-lg
-    uppercase text-right font-normal text-gray-600 hover:text-gray-900 duration-150 cursor-pointer
+.menu-element{
+  @apply flex flex-col justify-center items-center h-full px-4 text-xl text-gray-600 hover:shadow-inner hover:bg-gray-200 transition duration-100;
 }
 
 .login-register-input {
