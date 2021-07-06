@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "adverts",
   "info": {
-    "name": "Advert"
+    "name": "Advert",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -17,18 +18,6 @@
     "description": {
       "type": "text"
     },
-    "img": {
-      "collection": "file",
-      "via": "related",
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos"
-      ],
-      "plugin": "upload",
-      "required": false,
-      "pluginOptions": {}
-    },
     "price": {
       "type": "float"
     },
@@ -41,8 +30,11 @@
     "phoneNumber": {
       "type": "string"
     },
-    "username": {
+    "userID": {
       "type": "string"
+    },
+    "images": {
+      "type": "json"
     }
   }
 }

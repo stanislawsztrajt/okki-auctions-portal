@@ -88,7 +88,7 @@ export default {
 
         ISjwt: this.$cookies.isKey('jwt'),
 
-        endPoint: 'https://okki-api.herokuapp.com',
+        API_URL: 'https://okki-api.herokuapp.com',
 
         setTimeout: Function,
         setTimeoutTime: 4000,
@@ -154,12 +154,13 @@ export default {
 
 
         const user = {
-            username: this.usernameValue,
-            email: this.emailValue,
-            password: this.passwordValue
+          username: this.usernameValue,
+          email: this.emailValue,
+          password: this.passwordValue,
+          Adverts: {}
         }
 
-        const registerResponse = await fetch(`${this.endPoint}/auth/local/register`, {
+        const registerResponse = await fetch(`${this.API_URL}/auth/local/register`, {
           method: "POST",
           headers: {
             'Accept': 'application/json',

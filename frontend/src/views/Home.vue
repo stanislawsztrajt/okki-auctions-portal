@@ -1,20 +1,20 @@
 <template>
   <div id="Home" class="h-screen w-screen flex flex-col justify-between text-gray-500">
     <Menu/>
-    <div class="h-108 -mt-20 w-full bg-gradient-to-b from-green-600 to-green-700 bg-cover bg-center shadow-md" :style="{ backgroundImage: 'url('+ require('../assets/bannerImg.png') +')' }"></div> 
+    <div class="h-108 -mt-20 w-full bg-gradient-to-b from-green-600 to-green-700 bg-cover bg-center shadow-md" :style="{ backgroundImage: 'url('+ require('../assets/bannerImg.png') +')' }"></div>
     <main class="px-10 md:px-20">
       <div class="flex justify-between border-b-2 border-gray-300 py-0.5 px-0.5 w-11/12 mx-auto">
-        <input 
-          class="bg-transparent outline-none text-2xl w-3/5 font-light text-gray-700 md:text-4xl" 
-          type="text" 
-          name="inputHandler" 
-          v-model="searchInputValue" 
-          @keydown="makeSureKeyIsEnter($event)" 
+        <input
+          class="bg-transparent outline-none text-2xl w-3/5 font-light text-gray-700 md:text-4xl"
+          type="text"
+          name="inputHandler"
+          v-model="searchInputValue"
+          @keydown="makeSureKeyIsEnter($event)"
           placeholder="książka / rower / ...">
-        <input 
-          class="bg-transparent outline-none text-2xl w-2/5 font-light text-gray-700 md:text-4xl pl-3 border-l border-gray-300" 
-          type="text"  
-          v-model="searchInputLocation" 
+        <input
+          class="bg-transparent outline-none text-2xl w-2/5 font-light text-gray-700 md:text-4xl pl-3 border-l border-gray-300"
+          type="text"
+          v-model="searchInputLocation"
           @keydown="makeSureKeyIsEnter($event)"
           placeholder="lokalizacja">
         <button class="text-green-600 focus:outline-none" @click="shareSearchInputValues()">
@@ -41,7 +41,7 @@ export default {
     return{
       searchInputValue: '',
       searchInputLocation: '',
-      endPoint: 'https://okki-api.herokuapp.com/'
+      API_URL: 'https://okki-api.herokuapp.com/'
     }
   },
   methods: {

@@ -15,7 +15,16 @@
       <input type="text" v-model="categoryValue">
 
       <h2>Zdjęcia</h2>
-      <input type="file"  accept="image/png, image/jpeg" >
+      <input
+        type="file"
+        accept="image/png, image/jpeg"
+        @change="onFileChange($event)"
+      >
+      <img
+        :src="`${API_URL}${imageURL}`"
+        class="h-48"
+        alt=""
+      >
 
       <h2>Opis</h2>
       <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
@@ -41,7 +50,7 @@ import Menu from '../components/Menu'
 import axios from 'axios'
 
 export default {
-  name: 'NewAdverst',
+  name: 'NewAdvert',
   components: {
     Menu
   },
@@ -55,14 +64,13 @@ export default {
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
-      imageValue: '',
+      image: '',
+      imageURL: '',
       userInfo: this.$cookies.get('user'),
       jwt: this.$cookies.get('jwt'),
-      addAdverstUsed: false,
+      advertsIDs: [],
 
-      advertsID: [],
-
-      endPoint: 'https://okki-api.herokuapp.com'
+      API_URL: 'https://okki-api.herokuapp.com'
     }
   },
   async created(){
@@ -70,33 +78,52 @@ export default {
       this.$router.push('/login')
     }
 
-    await axios.get(`${this.endPoint}/users/${this.userInfo._id}`)
+    await axios.get(`${this.API_URL}/users/${this.userInfo.id}`)
     .then(res=>{
-      this.advertsID = res.data.Adverts.adverts
+      console.log(res)
+      this.advertsIDs = res.data.Adverts
     })
+    .catch(err =>{
+      console.log(err)
+    })
+    console.log(this.advertsIDs)
   },
   methods: {
+    async onFileChange(e){
+      this.image = e.target.files[0]
+
+      const data = new FormData()
+      data.append('files', this.image)
+
+      await axios({
+        method: 'POST',
+        url: `${this.API_URL}/upload`,
+        data
+      })
+      .then(res => this.imageURL = res.data[0].url)
+      .catch(err => console.log(err))
+    },
     async addAdverst(){
-      await axios.post(`${this.endPoint}/adverts`, {
+
+
+      await axios.post(`${this.API_URL}/adverts`, {
         title: this.titleValue,
         price: parseFloat(this.priceValue),
         category: this.categoryValue,
         description: this.descriptionValue,
         location: this.locationValue,
         phoneNumber: this.phoneNumberValue,
-        img: '',
+        userID: this.userInfo.id,
+        images: [this.imageURL]
       })
       .then(async res =>{
-        console.log(res)
-        this.advertsID.push(res.data._id)
+        this.advertsIDs.push(res.data._id)
 
-
-        await axios.put(`${this.endPoint}/users/${this.userInfo._id}`, {
-          Adverts: {
-            adverts: this.advertsID
-          }
+        await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
+          Adverts: this.advertsIDs
         })
-        .then(()=>{
+        .then((res)=>{
+          console.log(res)
           this.$router.push('/dashboard')
         })
         .catch(err=>console.log(err))

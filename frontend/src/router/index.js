@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Home from '../views/Home.vue'
-import NewAdverst from '../views/NewAdverst.vue'
+import NewAdvert from '../views/NewAdvert.vue'
 import AdverstsResults from '../views/AdverstsResults.vue'
+import Advert from '../views/Advert.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
@@ -13,19 +14,25 @@ const routes = [
     component: Home
   },
   {
-    path: '/new-adverst',
-    name: 'NewAdverst',
-    component: NewAdverst
+    path: '/new-advert',
+    name: 'NewAdvert',
+    component: NewAdvert
   },
   {
-  path: '/adversts-results',
-  name: 'AdverstsResults',
-  component: AdverstsResults,
+    path: '/adversts-results',
+    name: 'AdverstsResults',
+    component: AdverstsResults,
   },
   {
-  path: '/login',
-  name: 'Login',
-  component: Login,
+    path: '/advert/:id',
+    name: 'Advert',
+    props: true,
+    component: Advert
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
   {
     path: '/register',

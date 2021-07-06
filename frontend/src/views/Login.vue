@@ -65,22 +65,22 @@ export default {
 
         loginError: false,
 
-        endPoint: 'https://okki-api.herokuapp.com',
+        API_URL: 'https://okki-api.herokuapp.com',
 
         setTimeout: Function,
         setTimeoutTime: 4000
       }
     },
-    created() {
+    async created() {
       if(this.jwt){
-          this.$router.push('/dashboard')
+        this.$router.push('/dashboard')
       }
     },
     methods: {
       async checkLogin(){
         clearTimeout(this.setTimeout)
 
-        await axios.post(`${this.endPoint}/auth/local`, {
+        await axios.post(`${this.API_URL}/auth/local`, {
           identifier: this.mailValue,
           password: this.passwordValue
         })
@@ -102,7 +102,7 @@ export default {
         })
 
         // Ta czesc kodu odpowiada za uzyskiwanie informacji z bazy danych z uwzglednieniem tego ze trzeba byc zalogowanym aby moc uzyskac dostep
-        // await axios.get(`${this.endPoint}/adverts`,{
+        // await axios.get(`${this.API_URL}/adverts`,{
         //     headers: {
         //         Authorization: `Bearer ${this.infoUser.jwt}`
         //     }
