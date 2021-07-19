@@ -2,9 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-.menu-element{
-  @apply flex flex-col justify-center items-center h-full px-4 text-xl text-gray-600 hover:shadow-inner hover:bg-gray-200 transition duration-100;
+/* Menu styles */
+
+.menu-element {
+  @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl text-gray-600 hover:shadow-inner hover:bg-gray-200 transition duration-100;
 }
+
+.menu-element-newAdverst {
+  @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 lg:px-7 text-2xl text-green-600 hover:shadow-inner hover:bg-gray-200 transition duration-100 lg:border-r lg:border-l border-gray-300;
+}
+
+/* Home styles */
+
+.search-input-item {
+  @apply bg-transparent text-xl h-8 w-full sm:w-3/5 font-light text-gray-700 sm:text-2xl lg:h-12 lg:text-4xl;
+}
+
+.search-input-location {
+  @apply bg-transparent text-xl h-8 w-2/5 font-light text-gray-700 pl-3 border-l border-gray-300 sm:text-2xl lg:h-12 lg:text-4xl hidden sm:block;
+}
+
+.banner-background {
+  background-color: #058760;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Login and Register styles */
 
 .login-register-input {
   @apply w-full h-11 bg-white text-base text-gray-700 outline-none pl-12 pr-2 my-2 placeholder-gray-500 border border-gray-300 shadow-inner
@@ -21,4 +44,22 @@
 
 .validation-alert{
   @apply bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute;
+}
+
+/* NewAdverst styles */
+
+.new-adverst-main-box {
+  @apply bg-green-600 rounded-xl p-7 mb-6;
+}
+
+.new-adverst-title {
+  @apply text-white text-2xl font-semibold mb-5;
+}
+
+.new-adverst-data-box {
+  @apply flex flex-col text-white mb-4;
+}
+
+.new-adverst-input {
+  @apply h-12 w-full md:w-4/5 bg-gray-100 text-lg text-gray-700 px-4 py-2;
 }

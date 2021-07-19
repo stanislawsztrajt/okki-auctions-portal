@@ -1,46 +1,114 @@
 <template>
   <div id="NewAdverst">
     <Menu />
-      <h2>Tytuł</h2>
-      <input type="text" v-model="titleValue">
+    <div class="w-3/4 lg:w-3/5 py-10 m-auto">
+      <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
+      <div class="new-adverst-main-box">
+        <h1 class="new-adverst-title">Informacje podstawowe</h1>
+        <div class="new-adverst-data-box">
+          <label class="text-gray-100 mb-1">Tytuł ogłoszenia</label>
+          <input 
+            type="text" 
+            placeholder="Np. Opel Corsa 2014 1.4 benzyna" 
+            required 
+            class="new-adverst-input" 
+            v-model="titleValue"
+          >
+        </div>
+        <div class="new-adverst-data-box">
+          <h2>Cena</h2>
+          <input 
+            type="text" 
+            placeholder="Np. 8600" 
+            required 
+            class="new-adverst-input" 
+            v-model="priceValue"
+          >
+        </div>
+        <div class="new-adverst-data-box">
+          <h2>Kategoria</h2>
+          <input 
+            list="categories"
+            placeholder="Wyszukaj kategorię"
+            required
+            class="new-adverst-input"
+            v-model="categoryValue"
+          >
+            <datalist id="categories">
+              <option value="" disabled selected hidden>Wybierz kategorię</option>
+              <option 
+                v-for="category in categories" 
+                :key="category.value" 
+                :value="category.name">
+              </option>
+            </datalist>    
+        </div>
+        <div class="new-adverst-data-box">
+          <h2>Twoje imię</h2>
+          <input 
+            type="text" 
+            placeholder="Np. Michał" 
+            required 
+            class="new-adverst-input" 
+            v-model="usernameValue"
+          > 
+        </div>
+      </div>
+      <div class="new-adverst-main-box">
+        <h1 class="new-adverst-title">Zdjęcia i opis</h1>
+        <div class="new-adverst-data-box">
+          <label>Zdjęcia</label>
+          <div class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2">
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              required
+              class=""
+              @change="onFileChange($event)"
+            >
+          </div>
+          <img
+            :src="`${API_URL}${imageURL}`"
+            class="max-w-sm bg-gray-100 mt-2"
+            alt=""
+          >
+        </div>
+        <div class="new-adverst-data-box">
+          <label>Opis</label>
+          <textarea 
+            class="bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full md:w-3/5 h-72" 
+            placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
+            required
+            v-model="descriptionValue">
+          </textarea>
+        </div>
+      </div>
 
-      <h2>Twoje imie</h2>
-      <input type="text" v-model="usernameValue">
+      <div class="new-adverst-main-box">
+        <h1 class="new-adverst-title">Dane kontaktowe</h1>
+        <div class="new-adverst-data-box">
+          <label>Lokalizacja</label>
+          <input 
+            type="text" 
+            placeholder="Np. Warszawa"
+            required
+            class="new-adverst-input" 
+            v-model="locationValue"
+          >
+        </div>
+        <div class="new-adverst-data-box">
+          <label>Numer Telefonu</label>
+          <input 
+            type="tel" 
+            placeholder="Np. 111222333"
+            class="new-adverst-input" 
+            v-model="phoneNumberValue"
+          >
+        </div>
+      </div>
 
-      <h2>Cena</h2>
-      <input type="text" v-model="priceValue">
-
-      <h2>Kategoria</h2>
-      <!-- pozniej sie zmieni na lsite do wybrania -->
-      <input type="text" v-model="categoryValue">
-
-      <h2>Zdjęcia</h2>
-      <input
-        type="file"
-        accept="image/png, image/jpeg"
-        @change="onFileChange($event)"
-      >
-      <img
-        :src="`${API_URL}${imageURL}`"
-        class="h-48"
-        alt=""
-      >
-
-      <h2>Opis</h2>
-      <textarea name="" id="" cols="30" rows="10" v-model="descriptionValue"></textarea>
-
-      <h2>
-        Dane kontaktowe
-
-        Lokalizacja
-        <input type="text" v-model="locationValue">
-
-        Numer telefonu
-        <input type="text" v-model="phoneNumberValue">
-      </h2>
-
-      <button @click.once="addAdverst">Dodaj ogłoszenie</button>
-    <router-link to="/">Wróc na strone główną</router-link>
+      <button class="w-52 md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150" @click.once="addAdverst">Dodaj ogłoszenie</button>
+    </div>
 
   </div>
 </template>
@@ -59,7 +127,7 @@ export default {
       // v-models
       titleValue: '',
       usernameValue: '',
-      priceValue: 0,
+      priceValue: '',
       categoryValue: '',
       descriptionValue: '',
       locationValue: '',
@@ -69,7 +137,21 @@ export default {
       userInfo: this.$cookies.get('user'),
       jwt: this.$cookies.get('jwt'),
       advertsIDs: [],
-
+      categories: [
+        {name: "Motoryzacja", value: "motoryzacja"},
+        {name: "Dom i ogród", value: "dom-i-ogrod"},
+        {name: "Elektronika", value: "elektronika"},
+        {name: "Odzież", value: "odziez"},
+        {name: "Rolnictwo", value: "rolnictwo"},
+        {name: "Zwierzęta", value: "zwierzeta"},
+        {name: "Dziecięce", value: "dzieciece"},
+        {name: "Sport i hobby", value: "sport-i-hobby"},
+        {name: "Edukacja i muzyka", value: "edukacja-i-muzyka"},
+        {name: "Budownictwo", value: "budownictwo"},
+        {name: "Noclegi", value: "noclegi"},
+        {name: "Praca", value: "praca"},
+        {name: "Korepetycje", value: "korepetycje"},
+      ],
       API_URL: 'https://okki-api.herokuapp.com'
     }
   },
@@ -104,8 +186,6 @@ export default {
       .catch(err => console.log(err))
     },
     async addAdverst(){
-
-
       await axios.post(`${this.API_URL}/adverts`, {
         title: this.titleValue,
         price: parseFloat(this.priceValue),
@@ -117,6 +197,9 @@ export default {
         images: [this.imageURL]
       })
       .then(async res =>{
+        if(this.advertsIDs === undefined) {
+          this.advertsIDs = []
+        }
         this.advertsIDs.push(res.data._id)
 
         await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {

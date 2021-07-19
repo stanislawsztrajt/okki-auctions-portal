@@ -2,20 +2,20 @@
   <div id="InputSearchPanel">
     <div class="flex justify-between border-b-2 border-gray-300 pb-0.5 px-0.5 w-full md:w-3/4">
       <input
-        class="bg-transparent outline-none text-2xl w-3/5 font-light text-gray-700 md:text-4xl"
+        class="search-input-item"
         placeholder="książka / rower / ..."
         type="text" name="inputHandler"
-        @keypress="emitSearchAdversts($event)"
-        v-model="inputValue" >
+        @keypress="emitSearchAdverts($event)"
+        v-model="inputItem" >
       <input 
-          class="bg-transparent outline-none text-2xl w-2/5 font-light text-gray-700 md:text-4xl pl-3 border-l border-gray-300" 
+          class="search-input-location" 
           placeholder="lokalizacja"
           type="text"  
-          @keydown="emitSearchAdversts($event)"
+          @keydown="emitSearchAdverts($event)"
           v-model="inputLocation">
       <button
         class="text-green-600 focus:outline-none"
-        @click="$emit('search-adversts', inputValue)">
+        @click="$emit('search-adverts', inputItem)">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
@@ -53,7 +53,7 @@ export default {
   name: 'InputSearchPanel',
   data() {
     return {
-      inputValue: this.searchInputValue,
+      inputItem: this.searchInputItem,
       inputLocation: this.searchInputLocation,
       choosenCategory: '',
       categoriesAndFilters: [
@@ -75,7 +75,7 @@ export default {
     }
   },
   props: {
-    searchInputValue: {
+    searchInputItem: {
       type: String
     },
     searchInputLocation: {
@@ -100,9 +100,9 @@ export default {
         sortingArrow.remove('rotate-90')
       }
     },
-    emitSearchAdversts (e) {
-      if (e.key === "Enter") {
-        this.$emit('search-adversts', this.inputValue, this.inputLocation)
+    emitSearchAdverts (e) {
+      if (e.code === "Enter") {
+        this.$emit('search-adverts', this.inputItem, this.inputLocation)
       }
     }
   },
