@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
-  <router-link to="/" class="text-white text-5xl focus:outline-none mb-4 font-light">okki</router-link>
-    <div class="flex flex-col items-center bg-white w-96 md:w-108 h-auto rounded-lg">
+  <router-link to="/" class="text-white text-5xl mb-4 font-light">okki</router-link>
+    <div class="flex flex-col items-center bg-white w-84 md:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Zaloguj się na konto</h2>
       <div class="p-10 w-full">
         <div class="login-register-input-box">
@@ -42,7 +42,7 @@
         Nowy na okki? <span class="text-green-600 ml-2"> Zarejestruj się</span>
       </router-link>
     </div>
-    <button class="text-white font-xs mt-4 underline focus:outline-none hover:opacity-80 transition duration-150">Zapomniałeś hasła?</button>
+    <button class="text-white font-xs mt-4 underline hover:opacity-80 transition duration-150">Zapomniałeś hasła?</button>
     <div v-if="loginError" class="validation-alert top-84 mt-72 md:top-96 md:mt-84" role="alert">
       <span class="block sm:inline">Podany login i/lub hasło są nieprawidłowe</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
