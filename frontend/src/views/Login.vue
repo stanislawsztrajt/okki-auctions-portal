@@ -14,8 +14,8 @@
           <input
             class="login-register-input"
             placeholder="Adres email"
-            type="mail"
-            v-model="mailValue">
+            type="email"
+            v-model="emailValue">
         </div>
         <div class="login-register-input-box">
           <label for="">Hasło</label>
@@ -32,7 +32,7 @@
         </div>
         <button
           class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
-          @click="checkLogin">
+          @click="login">
           Zaloguj
         </button>
       </div>
@@ -58,7 +58,7 @@ export default {
     name: 'Login',
     data(){
       return{
-        mailValue: '',
+        emailValue: '',
         passwordValue: '',
         infoUser: '',
         jwt: this.$cookies.isKey('jwt'),
@@ -77,11 +77,11 @@ export default {
       }
     },
     methods: {
-      async checkLogin(){
+      async login(){
         clearTimeout(this.setTimeout)
 
         await axios.post(`${this.API_URL}/auth/local`, {
-          identifier: this.mailValue,
+          identifier: this.emailValue,
           password: this.passwordValue
         })
 
@@ -100,19 +100,6 @@ export default {
           },this.setTimeoutTime)
           return this.loginError = true
         })
-
-        // Ta czesc kodu odpowiada za uzyskiwanie informacji z bazy danych z uwzglednieniem tego ze trzeba byc zalogowanym aby moc uzyskac dostep
-        // await axios.get(`${this.API_URL}/adverts`,{
-        //     headers: {
-        //         Authorization: `Bearer ${this.infoUser.jwt}`
-        //     }
-        // })
-        // .then(res=>{
-        //     console.log(res)
-        // })
-        // .catch(()=>{
-        //     console.log('you are not login')
-        // })
         },
     }
   }

@@ -1,0 +1,12 @@
+{
+  "provider": "cloudinary",
+  "providerOptions": {
+    "cloud_name": "dh35iucxu",
+    "api_key": "453499119442835",
+    "api_secret": "gos0bzFpuPtkvIIn7W3cpo6rf9c"
+  },
+  "actionOptions": {
+    "upload": {},
+    "delete": {}
+  }
+}

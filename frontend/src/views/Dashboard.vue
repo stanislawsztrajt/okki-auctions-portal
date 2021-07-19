@@ -18,7 +18,7 @@
           {{ advert.price }}
           {{ advert.location }}
           {{ advert.description }}
-          <img class="h-48" :src="`${API_URL}${advert.images}`" alt="">
+          <img class="h-48" :src="`${advert.images[0]}`" alt="">
         </div>
       </div>
       <button @click="logout">logout</button>
@@ -52,8 +52,7 @@ export default {
             this.$router.push('/login')
         }
 
-        await axios
-        .get(`${this.API_URL}/users/${this.userCookie.id}`)
+        await axios.get(`${this.API_URL}/users/${this.userCookie.id}`)
         .then(res => {
             this.user = res.data
             console.log(res)
@@ -61,8 +60,9 @@ export default {
         .catch(err => {
             console.log(err)
         })
+        console.log(this.user.Adverts)
 
-        this.user.Adverts.forEach(async advert =>{
+        await this.user.Adverts.forEach(async advert =>{
             await axios
             .get(`${this.API_URL}/adverts/${advert}`)
             .then(res =>{

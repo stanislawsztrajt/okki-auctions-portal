@@ -21,7 +21,7 @@
         @change="onFileChange($event)"
       >
       <img
-        :src="`${API_URL}${imageURL}`"
+        :src="`${imageRes.url}`"
         class="h-48"
         alt=""
       >
@@ -39,7 +39,7 @@
         <input type="text" v-model="phoneNumberValue">
       </h2>
 
-      <button @click.once="addAdverst">Dodaj ogłoszenie</button>
+      <button @click="addAdvert">Dodaj ogłoszenie</button>
     <router-link to="/">Wróc na strone główną</router-link>
 
   </div>
@@ -65,7 +65,7 @@ export default {
       locationValue: '',
       phoneNumberValue: '',
       image: '',
-      imageURL: '',
+      imageRes: '',
       userInfo: this.$cookies.get('user'),
       jwt: this.$cookies.get('jwt'),
       advertsIDs: [],
@@ -86,27 +86,32 @@ export default {
     .catch(err =>{
       console.log(err)
     })
-    console.log(this.advertsIDs)
   },
   methods: {
     async onFileChange(e){
       this.image = e.target.files[0]
 
       const data = new FormData()
-      data.append('files', this.image)
+      data.append('file', this.image)
+      data.append("api_key", '');
+      data.append("api_secret", '');
+      data.append("cloud_name", 'dh35iucxu');
+      data.append("upload_preset", "qpfb0fma");
 
-      await axios({
-        method: 'POST',
-        url: `${this.API_URL}/upload`,
+
+      await axios.post(
+        `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
         data
+      )
+      .then(res => {
+        console.log(res.data.secure_url)
+        this.imageRes = res.data
       })
-      .then(res => this.imageURL = res.data[0].url)
       .catch(err => console.log(err))
     },
-    async addAdverst(){
-
-
-      await axios.post(`${this.API_URL}/adverts`, {
+    async addAdvert(){
+      await axios.post(
+        `${this.API_URL}/adverts`, {
         title: this.titleValue,
         price: parseFloat(this.priceValue),
         category: this.categoryValue,
@@ -114,10 +119,13 @@ export default {
         location: this.locationValue,
         phoneNumber: this.phoneNumberValue,
         userID: this.userInfo.id,
-        images: [this.imageURL]
+        images: [this.imageRes.url]
       })
       .then(async res =>{
-        this.advertsIDs.push(res.data._id)
+        if(typeof this.advertsIDs === undefined || Object || null){
+          this.advertsIDs = []
+        }
+        this.advertsIDs.push(res.data.id)
 
         await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
           Adverts: this.advertsIDs

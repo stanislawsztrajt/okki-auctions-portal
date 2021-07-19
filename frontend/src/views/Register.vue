@@ -55,7 +55,7 @@
             class="login-register-input"
             placeholder="Powtórz hasło"
             type="password"
-            v-model="passwordValueRepeat">
+            v-model="repeatPasswordValue">
         </div>
         <button
           class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
@@ -81,7 +81,7 @@ export default {
         usernameValue: '',
         emailValue: '',
         passwordValue: '',
-        passwordValueRepeat: '',
+        repeatPasswordValue: '',
 
         validationText: '',
         validationError: false,
@@ -92,18 +92,18 @@ export default {
 
         setTimeout: Function,
         setTimeoutTime: 4000,
-        }
+      }
     },
     created() {
       if(this.ISjwt){
-          this.$router.push('/dashboard')
+        this.$router.push('/dashboard')
       }
     },
     methods: {
       async register(){
         clearTimeout(this.setTimeout)
 
-        if(!this.usernameValue || !this.emailValue || !this.passwordValue || !this.passwordValueRepeat){
+        if(!this.usernameValue || !this.emailValue || !this.passwordValue || !this.repeatPasswordValue){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
@@ -144,7 +144,7 @@ export default {
           return this.validationError = true
         }
 
-        if(this.passwordValue != this.passwordValueRepeat){
+        if(this.passwordValue != this.repeatPasswordValue){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
@@ -180,7 +180,7 @@ export default {
             return this.validationError = true;
           }
 
-          if(registerResponseJSON.message[0].messages[0].message == 'Email is already taken.'){
+          else{
             setTimeout(()=>{
               this.validationError = false
             },this.setTimeoutTime)

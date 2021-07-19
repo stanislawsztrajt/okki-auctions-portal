@@ -25,7 +25,7 @@
         >
           <img
             class="sm:float-left py-1 h-32 w-full border-gray-200 border-b-2 bg-cover bg-no-repeat bg-center sm:w-60 sm:h-48 sm:border-r-2 sm:border-b-0 bg-picture-img"
-            :src="`${API_URL}${advert.images}`"
+            :src="`${advert.images}`"
             alt=""
           >
           <div class="sm:float-left px-3 py-2 sm:px-5 sm:py-4">
