@@ -13,7 +13,6 @@
           v-for="advert in adverts"
           :key="advert.id"
         >
-          {{ advert.img }}
           {{ advert.title }}
           {{ advert.price }}
           {{ advert.location }}

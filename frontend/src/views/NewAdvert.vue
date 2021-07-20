@@ -209,10 +209,14 @@ export default {
         images: [this.imageRes.url]
       })
       .then(async res =>{
-        if(typeof this.advertsIDs === undefined || Object || null){
+        console.log(this.advertsIDs)
+        console.log(typeof this.advertsIDs)
+        try{
+          this.advertsIDs.push(res.data.id)
+        } catch(err){
           this.advertsIDs = []
+          this.advertsIDs.push(res.data.id)
         }
-        this.advertsIDs.push(res.data.id)
 
         await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
           Adverts: this.advertsIDs
