@@ -27,21 +27,19 @@
         </div>
         <div class="new-adverst-data-box">
           <h2>Kategoria</h2>
-          <input
-            list="categories"
-            placeholder="Wyszukaj kategorię"
-            required
+          <select 
+            name="Kategorie" 
             class="new-adverst-input"
             v-model="categoryValue"
           >
-            <datalist id="categories">
-              <option value="" disabled selected hidden>Wybierz kategorię</option>
-              <option
-                v-for="category in categories"
-                :key="category.value"
-                :value="category.name">
-              </option>
-            </datalist>
+            <option value="" disabled selected hidden>Wybierz kategorię</option>
+            <option
+              v-for="category in categories"
+              :key="category.value"
+              :value="category.value">
+              {{ category.name }}
+            </option>
+          </select>
         </div>
         <div class="new-adverst-data-box">
           <h2>Twoje imię</h2>
@@ -121,6 +119,7 @@
 <script>
 import Menu from '../components/Menu'
 import axios from 'axios'
+import categoriesJSON from '../jsons files/categories.json'
 
 export default {
   name: 'NewAdvert',
@@ -142,25 +141,13 @@ export default {
       userInfo: this.$cookies.get('user'),
       jwt: this.$cookies.get('jwt'),
       advertsIDs: [],
-      categories: [
-        {name: "Motoryzacja", value: "motoryzacja"},
-        {name: "Dom i ogród", value: "dom-i-ogrod"},
-        {name: "Elektronika", value: "elektronika"},
-        {name: "Odzież", value: "odziez"},
-        {name: "Rolnictwo", value: "rolnictwo"},
-        {name: "Zwierzęta", value: "zwierzeta"},
-        {name: "Dziecięce", value: "dzieciece"},
-        {name: "Sport i hobby", value: "sport-i-hobby"},
-        {name: "Edukacja i muzyka", value: "edukacja-i-muzyka"},
-        {name: "Budownictwo", value: "budownictwo"},
-        {name: "Noclegi", value: "noclegi"},
-        {name: "Praca", value: "praca"},
-        {name: "Korepetycje", value: "korepetycje"},
-      ],
+      categories: categoriesJSON,
       API_URL: 'https://okki-api.herokuapp.com'
     }
   },
   async created(){
+    this.categories.sort((categoryA, categoryB) => (categoryA.name > categoryB.name) ? 1 : -1);
+
     if(!this.jwt){
       this.$router.push('/login')
     }

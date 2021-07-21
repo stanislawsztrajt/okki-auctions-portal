@@ -2,19 +2,21 @@
   <div id="AdverstsResults">
     <Menu/>
     <div class="m-10 md:mx-24 lg:mx-40 xl:mx-48">
-      <div class="border-b border-gray-300">
+      <div class="border-b pb-6 border-gray-300">
         <InputSearchPanel
           @change-sorting-option="changeSortingOption"
+          @change-category-option="changeCategoryOption"
           @search-adverts="searchAdversts"
           :searchInputItem="searchInputItem"
-          :searchInputLocation="searchInputLocation" />
+          :searchInputLocation="searchInputLocation"
+          :categoryOption="categoryOption" />
       </div>
       <div v-show="loading" class="flex flex-col items-center mt-24 md:mt-48">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-28 w-28 animate-spin text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18L18 6M6 6l12 12" />
         </svg>
         <span class="text-gray-500 text-3xl font-light">
-          Ładowanie...
+          Ładowanie
         </span>
       </div>
       <div v-show="loading === false">
@@ -37,7 +39,7 @@
             :key="advert.code"
           >
             <img
-              class="sm:float-left h-32 w-full border-gray-200 border-b-2 bg-cover bg-no-repeat bg-center sm:w-60 sm:h-48 sm:border-r-2 sm:border-b-0 bg-picture-img"
+              class="sm:float-left h-32 w-full border-gray-200 border-b-2 bg-cover bg-no-repeat bg-center sm:w-60 sm:h-48 sm:border-r-2 sm:border-b-0"
               :src="advert.images"
               alt=""
             >
@@ -74,6 +76,7 @@ export default {
       searchInputItem: '',
       searchInputLocation: '',
       sortingOption: '',
+      categoryOption: '',
       loading: false,
       adversts: [],
       adverstsCopy: [],
@@ -87,14 +90,12 @@ export default {
       this.searchInputLocation = searchInputLocation;
       this.adversts = this.adverstsCopy;
 
-
       if(this.searchInputItem !== undefined) {
         // Filtrowanie tablicy adversts po nazwach ogłoszeń
         this.adversts = this.adversts.filter((adverst) => {
           return adverst.title.toLowerCase().includes(this.searchInputItem.toLowerCase())
         })
       }
-
       if(this.searchInputLocation !== undefined) {
         // Filtrowanie tablicy adversts po lokalizacji
         this.adversts = this.adversts.filter((adverst) => {
@@ -103,30 +104,48 @@ export default {
       }
 
       this.changeSortingOption(this.sortingOption);
+      if(this.categoryOption !== undefined && this.categoryOption !== '') {
+        this.filterByCategory(this.categoryOption)
+      }
     },
     changeSortingOption (sortingOption) {
       this.sortingOption = sortingOption;
       switch(this.sortingOption) {
         case 'newest': {
-          this.adversts.sort(function(a,b){
-            return new Date(b.createdAt) - new Date(a.createdAt);
+          this.adversts.sort(function(advertA,advertB){
+            return new Date(advertB.createdAt) - new Date(advertA.createdAt);
           });
           break;
         }
         case 'cheapest': {
-          this.adversts.sort((a, b) => (a.price > b.price) ? 1 : -1);
+          this.adversts.sort((advertA, advertB) => (advertA.price > advertB.price) ? 1 : -1);
           break;
         }
         case 'mostexpensive': {
-          this.adversts.sort((a, b) => (a.price < b.price) ? 1 : -1);
+          this.adversts.sort((advertA, advertB) => (advertA.price < advertB.price) ? 1 : -1);
           break;
         }
       }
     },
+    changeCategoryOption(categoryOption) {
+      this.categoryOption = categoryOption;
+      if(this.searchInputItem !== undefined && this.searchInputLocation !== undefined) {
+          this.searchAdversts(this.searchInputItem, this.searchInputLocation);
+        }
+        else {
+          this.searchAdversts('', '');
+        }
+    },
+    filterByCategory(categoryOption) {
+      this.adversts = this.adversts.filter((adverst) => {
+        return adverst.category === categoryOption
+      })
+    }
   },
   created() {
     this.searchInputItem = this.$route.params.value;
     this.searchInputLocation = this.$route.params.location;
+    this.categoryOption = this.$route.params.category;
     this.loading = true;
 
     fetch(`${this.API_URL}/adverts`)
@@ -140,9 +159,9 @@ export default {
         else {
           this.searchAdversts('', '');
         }
-
         this.loading = false;
       })
+
   },
 }
 

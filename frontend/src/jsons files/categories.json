@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Motoryzacja", 
+    "value": "motoryzacja",
+    "icon": "car-side"
+  },
+  {
+    "name": "Dom i ogród", 
+    "value": "dom-i-ogrod", 
+    "icon": "home"
+  },
+  {
+    "name": "Elektronika", 
+    "value": "elektronika", 
+    "icon": "desktop"
+  },
+  {
+    "name": "Odzież", 
+    "value": "odziez", 
+    "icon": "tshirt"
+  },
+  {
+    "name": "Rolnictwo", 
+    "value": "rolnictwo", 
+    "icon": "tractor"
+  },
+  {
+    "name": "Zwierzęta", 
+    "value": "zwierzeta", 
+    "icon": "dog"
+  },
+  {
+    "name": "Dziecięce", 
+    "value": "dzieciece", 
+    "icon": "baby-carriage"
+  },
+  {
+    "name": "Sport i hobby", 
+    "value": "sport-i-hobby", 
+    "icon": "futbol"
+  },
+  {
+    "name": "Edukacja i muzyka", 
+    "value": "edukacja-i-muzyka", 
+    "icon": "book-open"
+  },
+  {
+    "name": "Budownictwo", 
+    "value": "budownictwo", 
+    "icon": "hammer"
+  },
+  {
+    "name": "Noclegi", 
+    "value": "noclegi", 
+    "icon": "bed"
+  },
+  {
+    "name": "Praca", 
+    "value": "praca", 
+    "icon": "briefcase"
+  },
+  {
+    "name": "Korepetycje", 
+    "value": "korepetycje", 
+    "icon": "chalkboard-teacher"
+  },
+  {
+    "name": "Inne", 
+    "value": "inne", 
+    "icon": "ellipsis-h"
+  }
+]

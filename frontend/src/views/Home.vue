@@ -1,14 +1,15 @@
 <template>
-  <div id="Home" class="flex flex-col justify-between text-gray-500">
+  <div id="Home" class="flex flex-col justify-between text-gray-500 pb-10">
     <Menu/>
     <main class="flex flex-col mt-20">
-      <div class="h-80 w-full md:h-108 flex justify-center items-center shadow-md banner-background">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 lg:h-28 lg:w-28 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        <span class="text-white font-light text-6xl lg:text-8xl ml-6 md:mb-1">okki</span>
+      <div class="h-80 w-full md:h-108 shadow-md banner-background grid gap-4 grid-cols-4 sm:grid-cols-5 xl:grid-cols-7 items-center justify-items-center p-8 sm:py-10 sm:px-20 md:py-12 md:px-32">
+        <div v-for="category in categories" :key="category.name">
+          <button @click="updateCategoryOption(category.value)" class="w-16 h-12 sm:w-20 sm:h-16 md:w-24 md:h-20 lg:w-28 lg:h-24 xl:w-32 xl:h-28 bg-white hover:bg-gray-200 text-gray-500 text-3xl md:text-4xl lg:text-5xl rounded-lg flex justify-center items-center cursor-pointer transition duration-100">
+            <i v-bind:class="'fas fa-' + category.icon"></i>
+          </button>
+        </div>
       </div> 
-      <div class="flex justify-between border-b-2 border-gray-300 py-0.5 px-0.5 w-10/12 mt-16 lg:mt-36 mx-auto">
+      <div class="flex justify-between border-b border-gray-400 py-0.5 px-0.5 w-10/12 mt-16 lg:mt-36 mx-auto">
         <input 
           type="text" 
           placeholder="książka / rower / ..."
@@ -37,6 +38,7 @@
 
 <script>
 import Menu from '../components/Menu'
+import categoriesJSON from '../jsons files/categories.json'
 
 export default {
   name: 'Home',
@@ -47,21 +49,27 @@ export default {
     return{
       searchInputItem: '',
       searchInputLocation: '',
-      API_URL: 'https://okki-api.herokuapp.com/'
+      categoryOption: '',
+      API_URL: 'https://okki-api.herokuapp.com/',
+      categories: categoriesJSON
     }
   },
   methods: {
     // Funkcja która przekazuje dane do AdverstsResults.vue
     shareSearchInputValues () {
-      this.$router.push({name: "AdverstsResults", params: {value: this.searchInputItem, location: this.searchInputLocation}})
+      this.$router.push({name: "AdverstsResults", params: {value: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
     },
     //Funkcja sprawdzająca czy naciśnięty przycisk w inpucie jest enterem
     makeSureKeyIsEnter (e) {
       if (e.key === "Enter") {
         this.shareSearchInputValues();
       }
+    },
+    updateCategoryOption(category) {
+      this.categoryOption = category;
+      this.shareSearchInputValues()
     }
-  }
+  },
 }
 </script>
 

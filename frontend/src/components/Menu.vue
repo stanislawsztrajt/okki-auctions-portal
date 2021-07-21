@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-between bg-gray-100 relative shadow text-gray-600">
+  <nav class="flex items-center justify-between bg-white relative shadow text-gray-600">
     <div class="text-4xl md:text-6xl ml-4 md:ml-8 font-light text-gray-600">
       <router-link to="/">okki</router-link>
     </div>
