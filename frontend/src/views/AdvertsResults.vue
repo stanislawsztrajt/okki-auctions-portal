@@ -3,76 +3,52 @@
     <Menu/>
     <div class="m-10 md:mx-24 lg:mx-40 xl:mx-48">
       <div class="border-b pb-6 border-gray-300">
-        <InputSearchPanel
-          @change-sorting-option="changeSortingOption"
-          @change-category-option="changeCategoryOption"
-          @search-adverts="searchAdversts"
+        <SearchInputs
+          class="sm:w-3/4"
+          @update-search-input-values="updateSearchInputValues"
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
-          :categoryOption="categoryOption" />
+        />
+        <SearchFilters 
+          @update-category-option="updateCategoryOption"
+          :categoryOption="categoryOption"
+        />
+        <SearchSorting 
+          @update-sorting-option="updateSortingOption"
+          :sortingOption="sortingOption"
+        />
       </div>
-      <div v-show="loading" class="flex flex-col items-center">
-        <div class="flex flex-col justify-center items-center z-50">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-28 w-28 animate-spin text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          <span class="text-gray-600 text-3xl font-light">
-            Ładowanie
-          </span>
-        </div>
-        <div class="absolute bg-gray-500 opacity-20 z-10 w-screen h-screen top-0 left-0"></div>
-      </div>
+      <Loading v-show="loading" />
       <div v-show="!loading">
-        <div v-if="adversts.length === 0" class="text-gray-400 text-xl sm:text-2xl mt-10">
-          <h1 class="text-8xl mb-5">:(</h1>
-          <h2 class="mb-3 sm:mb-2">
-            Nie znaleźliśmy ogłoszeń dla zapytania <span class="font-semibold">"{{ searchInputItem }}"</span>
-            <span v-if="searchInputLocation !== ''">
-              dla lokalizacji <span class="font-semibold">"{{ searchInputLocation }}"</span>
-            </span>.
-          </h2>
-          <h2>Sprawdź poprawność wyszukiwanej frazy, lub użyj bardziej ogólnego zapytania.</h2>
-        </div>
-        <div class="mt-6 grid grid-cols-2 sm:grid-cols-1 justify-items-center md:justify-items-start">
-          <!-- advert -->
-          <router-link
-            :to="`/advert/${advert.id}`"
-            class="flex-row w-10/12 border-gray-300 my-4 text-gray-600 bg-white shadow"
-            v-for="advert in adversts"
-            :key="advert.code"
-          >
-            <img
-              class="sm:float-left h-32 w-full border-gray-200 border-b-2 bg-cover bg-no-repeat bg-center sm:w-60 sm:h-48 sm:border-r-2 sm:border-b-0"
-              :src="advert.images"
-              alt=""
-            >
-            <div class="sm:float-left px-3 py-2 sm:px-5 sm:py-4">
-              <h2 class="sm:text-2xl">
-                {{ advert.title }}
-              </h2>
-              <h3 class="font-bold sm:text-3xl">
-                {{ advert.price }}zł
-              </h3>
-              <h3 class="text-xs float-right mb-0.5 mt-2 sm:float-left sm:text-lg sm:mt-0">
-                {{ advert.location }}
-              </h3>
-            </div>
-          </router-link>
-        </div>
+        <Adverts :adverts="adverts" />
+        <NoAdvertsFound
+          v-if="adverts.length === 0"
+          :searchInputItem="searchInputItem"
+          :searchInputLocation="searchInputLocation"
+        />
       </div>
     </div>
   </div>
 </template>
 <script>
 import Menu from '../components/Menu'
-import InputSearchPanel from '../components/InputSearchPanel'
-
+import Loading from '../components/Loading'
+import SearchInputs from '../components/SearchInputs'
+import SearchFilters from '../components/SearchFilters'
+import SearchSorting from '../components/SearchSorting'
+import NoAdvertsFound from '../components/NoAdvertsFound'
+import Adverts from '../components/Adverts'
 
 export default {
   name: 'AdverstsResults',
   components: {
     Menu,
-    InputSearchPanel
+    Loading,
+    SearchInputs,
+    SearchFilters,
+    SearchSorting,
+    NoAdvertsFound,
+    Adverts
   },
   data() {
     return {
@@ -81,67 +57,61 @@ export default {
       sortingOption: '',
       categoryOption: '',
       loading: false,
-      adversts: [],
-      adverstsCopy: [],
+      adverts: [],
+      advertsCopy: [],
       API_URL: 'https://okki-api.herokuapp.com'
     }
   },
   methods: {
-    // Funkcja odpowiadajca za wyszukiwanie ogłoszeń
-    searchAdversts (searchInputItem, searchInputLocation) {
+    searchAdversts () {
+      // Resetowanie tablicy adverts
+      this.adverts = this.advertsCopy;
+
+      // Filtrowanie tablicy adverts po nazwach ogłoszeń
+      this.adverts = this.adverts.filter((adverst) => {
+        return adverst.title.toLowerCase().includes(this.searchInputItem.toLowerCase())
+      })
+      // Filtrowanie tablicy adverts po lokalizacji
+      this.adverts = this.adverts.filter((adverst) => {
+        return adverst.location.toLowerCase().includes(this.searchInputLocation.toLowerCase())
+      })
+
+      this.sortByOption();
+      this.filterByCategory();
+    },
+    filterByCategory() {
+      this.adverts = this.adverts.filter((advert) => {
+        return advert.category.includes(this.categoryOption)
+      })
+    },
+    sortByOption () {
+      switch(this.sortingOption) {
+        case 'najnowsze': {
+          this.adverts.sort((advertA,advertB) => new Date(advertB.createdAt) - new Date(advertA.createdAt) ? -1 : 1);
+          break;
+        }
+        case 'najtansze': {
+          this.adverts.sort((advertA, advertB) => (advertA.price > advertB.price) ? 1 : -1);
+          break;
+        }
+        case 'najdrozsze': {
+          this.adverts.sort((advertA, advertB) => (advertA.price < advertB.price) ? 1 : -1);
+          break;
+        }
+      }
+    },
+    updateSortingOption(sortingOption) {
+      this.sortingOption = sortingOption;
+      this.searchAdversts();
+    },
+    updateCategoryOption(categoryOption) {
+      this.categoryOption = categoryOption;
+      this.searchAdversts();
+    },
+    updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
-      this.adversts = this.adverstsCopy;
-
-      if(this.searchInputItem !== undefined) {
-        // Filtrowanie tablicy adversts po nazwach ogłoszeń
-        this.adversts = this.adversts.filter((adverst) => {
-          return adverst.title.toLowerCase().includes(this.searchInputItem.toLowerCase())
-        })
-      }
-      if(this.searchInputLocation !== undefined) {
-        // Filtrowanie tablicy adversts po lokalizacji
-        this.adversts = this.adversts.filter((adverst) => {
-          return adverst.location.toLowerCase().includes(this.searchInputLocation.toLowerCase())
-        })
-      }
-
-      this.changeSortingOption(this.sortingOption);
-      if(this.categoryOption !== undefined && this.categoryOption !== '') {
-        this.filterByCategory(this.categoryOption)
-      }
-    },
-    changeSortingOption (sortingOption) {
-      this.sortingOption = sortingOption;
-      switch(this.sortingOption) {
-        case 'newest': {
-          this.adversts.sort(function(advertA,advertB){
-            return new Date(advertB.createdAt) - new Date(advertA.createdAt);
-          });
-          break;
-        }
-        case 'cheapest': {
-          this.adversts.sort((advertA, advertB) => (advertA.price > advertB.price) ? 1 : -1);
-          break;
-        }
-        case 'mostexpensive': {
-          this.adversts.sort((advertA, advertB) => (advertA.price < advertB.price) ? 1 : -1);
-          break;
-        }
-      }
-    },
-    changeCategoryOption(categoryOption) {
-      this.categoryOption = categoryOption;
-      if(this.searchInputItem !== undefined && this.searchInputLocation !== undefined) {
-        this.searchAdversts(this.searchInputItem, this.searchInputLocation);
-      } else {
-        this.searchAdversts('', '');
-      }
-    },
-    filterByCategory(categoryOption) {
-      this.adversts = this.adversts.filter((adverst) => {
-        return adverst.category === categoryOption
-      })
+      this.searchAdversts()
     }
   },
   created() {
@@ -150,10 +120,18 @@ export default {
     this.categoryOption = this.$route.params.category;
     this.loading = true;
 
+    if(this.searchInputItem === undefined) {
+      this.searchInputItem = ''
+      this.searchInputLocation = ''
+    }
+    if(this.categoryOption === undefined) {
+      this.categoryOption = ''
+    }
+
     fetch(`${this.API_URL}/adverts`)
       .then(response => response.json())
-      .then(adversts => {
-        this.adversts, this.adverstsCopy = adversts;
+      .then(adverts => {
+        this.adverts, this.advertsCopy = adverts;
 
         if(this.searchInputItem !== undefined && this.searchInputLocation !== undefined) {
           this.searchAdversts(this.searchInputItem, this.searchInputLocation);
