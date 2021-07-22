@@ -57,7 +57,7 @@ export default {
   methods: {
     // Funkcja która przekazuje dane do AdverstsResults.vue
     shareSearchInputValues () {
-      this.$router.push({name: "AdverstsResults", params: {value: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
+      this.$router.push({name: "AdvertsResults", params: {value: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
     },
     //Funkcja sprawdzająca czy naciśnięty przycisk w inpucie jest enterem
     makeSureKeyIsEnter (e) {

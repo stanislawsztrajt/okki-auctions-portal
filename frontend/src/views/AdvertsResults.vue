@@ -11,15 +11,18 @@
           :searchInputLocation="searchInputLocation"
           :categoryOption="categoryOption" />
       </div>
-      <div v-show="loading" class="flex flex-col items-center mt-24 md:mt-48">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-28 w-28 animate-spin text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-        <span class="text-gray-500 text-3xl font-light">
-          Ładowanie
-        </span>
+      <div v-show="loading" class="flex flex-col items-center">
+        <div class="flex flex-col justify-center items-center z-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-28 w-28 animate-spin text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          <span class="text-gray-600 text-3xl font-light">
+            Ładowanie
+          </span>
+        </div>
+        <div class="absolute bg-gray-500 opacity-20 z-10 w-screen h-screen top-0 left-0"></div>
       </div>
-      <div v-show="loading === false">
+      <div v-show="!loading">
         <div v-if="adversts.length === 0" class="text-gray-400 text-xl sm:text-2xl mt-10">
           <h1 class="text-8xl mb-5">:(</h1>
           <h2 class="mb-3 sm:mb-2">
@@ -34,7 +37,7 @@
           <!-- advert -->
           <router-link
             :to="`/advert/${advert.id}`"
-            class="flex-row w-10/12 border-gray-300 border-2 my-4 text-gray-600 bg-white"
+            class="flex-row w-10/12 border-gray-300 my-4 text-gray-600 bg-white shadow"
             v-for="advert in adversts"
             :key="advert.code"
           >
@@ -130,11 +133,10 @@ export default {
     changeCategoryOption(categoryOption) {
       this.categoryOption = categoryOption;
       if(this.searchInputItem !== undefined && this.searchInputLocation !== undefined) {
-          this.searchAdversts(this.searchInputItem, this.searchInputLocation);
-        }
-        else {
-          this.searchAdversts('', '');
-        }
+        this.searchAdversts(this.searchInputItem, this.searchInputLocation);
+      } else {
+        this.searchAdversts('', '');
+      }
     },
     filterByCategory(categoryOption) {
       this.adversts = this.adversts.filter((adverst) => {

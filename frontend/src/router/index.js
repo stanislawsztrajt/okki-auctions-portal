@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Home from '../views/Home.vue'
 import NewAdvert from '../views/NewAdvert.vue'
-import AdverstsResults from '../views/AdverstsResults.vue'
+import AdvertsResults from '../views/AdvertsResults.vue'
 import Advert from '../views/Advert.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
@@ -19,9 +19,9 @@ const routes = [
     component: NewAdvert
   },
   {
-    path: '/adversts-results',
-    name: 'AdverstsResults',
-    component: AdverstsResults,
+    path: '/adverts-results',
+    name: 'AdvertsResults',
+    component: AdvertsResults,
   },
   {
     path: '/advert/:id',
