@@ -112,7 +112,6 @@ export default {
         }
 
         if(this.usernameValue.length < 4){
-          this.usernameLengthErrorText = ''
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)

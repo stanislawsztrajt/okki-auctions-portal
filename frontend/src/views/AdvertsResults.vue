@@ -1,7 +1,7 @@
 <template>
   <div id="AdverstsResults">
     <Menu/>
-    <div class="m-10 md:mx-24 lg:mx-40 xl:mx-48">
+    <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <div class="border-b pb-6 border-gray-300">
         <SearchInputs
           class="sm:w-3/4"
@@ -119,12 +119,10 @@ export default {
     this.searchInputLocation = this.$route.params.location;
     this.categoryOption = this.$route.params.category;
     this.loading = true;
-
+    
     if(this.searchInputItem === undefined) {
       this.searchInputItem = ''
       this.searchInputLocation = ''
-    }
-    if(this.categoryOption === undefined) {
       this.categoryOption = ''
     }
 
@@ -132,14 +130,8 @@ export default {
       .then(response => response.json())
       .then(adverts => {
         this.adverts, this.advertsCopy = adverts;
-
-        if(this.searchInputItem !== undefined && this.searchInputLocation !== undefined) {
-          this.searchAdversts(this.searchInputItem, this.searchInputLocation);
-        }
-        else {
-          this.searchAdversts('', '');
-        }
         this.loading = false;
+        this.searchAdversts();
       })
 
   },

@@ -28,7 +28,7 @@
         </svg>
         <span class="hidden lg:block">Logowanie</span>
       </router-link>
-      <router-link to='/new-advert' class="menu-element-newAdverst">
+      <router-link to='/new-advert' class="menu-element menu-element-new-adverst">
         <span class="hidden lg:block">Dodaj ogłoszenie</span>
         <span class="block lg:hidden">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">

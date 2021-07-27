@@ -5,11 +5,11 @@
 /* Menu styles */
 
 .menu-element {
-  @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl text-gray-600 hover:shadow-inner hover:bg-gray-200 transition duration-100;
+  @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl hover:shadow-inner hover:bg-gray-100 transition duration-100;
 }
 
-.menu-element-newAdverst {
-  @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 lg:px-7 text-2xl text-green-600 hover:shadow-inner hover:bg-gray-200 transition duration-100 lg:border-r lg:border-l border-gray-300;
+.menu-element-new-adverst {
+  @apply lg:px-7 text-green-600 text-2xl lg:border-r lg:border-l border-gray-200;
 }
 
 /* Home and AdvertsResults styles */

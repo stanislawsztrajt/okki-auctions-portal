@@ -12,7 +12,9 @@
             placeholder="Np. Opel Corsa 2014 1.4 benzyna"
             required
             class="new-adverst-input"
-            v-model="titleValue"
+            v-model.trim="titleValue"
+            maxlength="70"
+            minlength="8"
           >
         </div>
         <div class="new-adverst-data-box">
@@ -22,13 +24,15 @@
             placeholder="Np. 8600"
             required
             class="new-adverst-input"
-            v-model="priceValue"
+            v-model.number="priceValue"
+            maxlength="15"
           >
         </div>
         <div class="new-adverst-data-box">
           <h2>Kategoria</h2>
           <select 
             name="Kategorie" 
+            required
             class="new-adverst-input"
             v-model="categoryValue"
           >
@@ -49,6 +53,7 @@
             required
             class="new-adverst-input"
             v-model="usernameValue"
+            maxlength="20"
           >
         </div>
       </div>
@@ -77,7 +82,10 @@
             class="bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full md:w-3/5 h-72"
             placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
             required
-            v-model="descriptionValue">
+            v-model.trim="descriptionValue"
+            maxlength="1000"
+            minlength="50"
+          >
           </textarea>
         </div>
       </div>
@@ -92,6 +100,7 @@
             required
             class="new-adverst-input"
             v-model="locationValue"
+            maxlength="50"
           >
         </div>
         <div class="new-adverst-data-box">
@@ -99,20 +108,26 @@
           <input
             type="tel"
             placeholder="Np. 111222333"
+            required
             class="new-adverst-input"
             v-model="phoneNumberValue"
+            maxlength="15"
           >
         </div>
       </div>
 
       <button
         class="w-52 md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150"
-        @click.once="addAdvert"
+        @click="addAdvert"
       >
         Dodaj ogłoszenie
       </button>
     </div>
-
+    <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
+      <span class="block sm:inline">{{ validationText }}</span>
+      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+      </span>
+    </div>
   </div>
 </template>
 
@@ -142,7 +157,12 @@ export default {
       jwt: this.$cookies.get('jwt'),
       advertsIDs: [],
       categories: categoriesJSON,
-      API_URL: 'https://okki-api.herokuapp.com'
+      API_URL: 'https://okki-api.herokuapp.com',
+      validationText: '',
+      validationError: false,
+      setTimeout: Function,
+      setTimeoutTime: 4000,
+      used: false,
     }
   },
   async created(){
@@ -184,36 +204,67 @@ export default {
       .catch(err => console.log(err))
     },
     async addAdvert(){
-      await axios.post(
-        `${this.API_URL}/adverts`, {
-        title: this.titleValue,
-        price: parseFloat(this.priceValue),
-        category: this.categoryValue,
-        description: this.descriptionValue,
-        location: this.locationValue,
-        phoneNumber: this.phoneNumberValue,
-        userID: this.userInfo.id,
-        images: [this.imageRes.url]
-      })
-      .then(async res =>{
-        console.log(this.advertsIDs)
-        console.log(typeof this.advertsIDs)
-        try{
-          this.advertsIDs.push(res.data.id)
-        } catch(err){
-          this.advertsIDs = []
-          this.advertsIDs.push(res.data.id)
-        }
+      clearTimeout(this.setTimeout)
 
-        await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
-          Adverts: this.advertsIDs
+      if(!this.titleValue || !this.usernameValue || !this.priceValue || !this.categoryValue || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue || !this.image){
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Uzupełnij puste pola'
+        return this.validationError = true
+      }
+
+      if(this.titleValue.length < 8){
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Tytuł ogłoszenia jest za krótki (co najmniej 8 znaków)'
+        return this.validationError = true
+      }
+
+      if(this.descriptionValue.length < 50){
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Opis ogłoszenia jest za krótki (co najmniej 50 znaków)'
+        return this.validationError = true
+      }
+
+      this.used = true 
+
+      if(this.used) {
+        console.log('dodano');
+        await axios.post(
+          `${this.API_URL}/adverts`, {
+          title: this.titleValue,
+          price: parseFloat(this.priceValue),
+          category: this.categoryValue,
+          description: this.descriptionValue,
+          location: this.locationValue,
+          phoneNumber: this.phoneNumberValue,
+          userID: this.userInfo.id,
+          images: [this.imageRes.url]
         })
-        .then((res)=>{
-          console.log(res)
-          this.$router.push('/dashboard')
-        })
-        .catch(err=>console.log(err))
-      }) .catch(err=>{console.log(err)})
+        .then(async res =>{
+          console.log(this.advertsIDs)
+          console.log(typeof this.advertsIDs)
+          try{
+            this.advertsIDs.push(res.data.id)
+          } catch(err){
+            this.advertsIDs = []
+            this.advertsIDs.push(res.data.id)
+          }
+  
+          await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
+            Adverts: this.advertsIDs
+          })
+          .then((res)=>{
+            console.log(res)
+            this.$router.push('/dashboard')
+          })
+          .catch(err=>console.log(err))
+        }) .catch(err=>{console.log(err)})
+      }
     },
   }
 }
