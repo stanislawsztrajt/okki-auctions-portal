@@ -30,8 +30,8 @@
         </div>
         <div class="new-adverst-data-box">
           <h2>Kategoria</h2>
-          <select 
-            name="Kategorie" 
+          <select
+            name="Kategorie"
             required
             class="new-adverst-input"
             v-model="categoryValue"
@@ -120,7 +120,7 @@
         class="w-52 md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150"
         @click="addAdvert"
       >
-        Dodaj ogłoszenie
+        Dodaj ogłoszeniee
       </button>
     </div>
     <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
@@ -230,7 +230,7 @@ export default {
         return this.validationError = true
       }
 
-      this.used = true 
+      this.used = true
 
       if(this.used) {
         console.log('dodano');
@@ -254,7 +254,7 @@ export default {
             this.advertsIDs = []
             this.advertsIDs.push(res.data.id)
           }
-  
+
           await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
             Adverts: this.advertsIDs
           })
