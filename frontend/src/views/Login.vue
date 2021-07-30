@@ -43,7 +43,7 @@
       </router-link>
     </div>
     <button class="text-white font-xs mt-4 underline hover:opacity-80 transition duration-150">Zapomniałeś hasła?</button>
-    <div v-if="loginError" class="validation-alert top-84 mt-72 md:top-96 md:mt-84" role="alert">
+    <div v-if="loginError" class="validation-alert top-0 sm:top-3/4" role="alert">
       <span class="block sm:inline">Podany login i/lub hasło są nieprawidłowe</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
       </span>
@@ -53,6 +53,8 @@
 
 <script>
 import axios from 'axios'
+
+import API_URL from '../../API_URL'
 
 export default {
     name: 'Login',
@@ -64,8 +66,6 @@ export default {
         jwt: this.$cookies.isKey('jwt'),
 
         loginError: false,
-
-        API_URL: 'https://okki-api.herokuapp.com',
 
         setTimeout: Function,
         setTimeoutTime: 4000
@@ -80,7 +80,7 @@ export default {
       async login(){
         clearTimeout(this.setTimeout)
 
-        await axios.post(`${this.API_URL}/auth/local`, {
+        await axios.post(`${API_URL}/auth/local`, {
           identifier: this.emailValue,
           password: this.passwordValue
         })

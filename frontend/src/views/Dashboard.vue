@@ -12,12 +12,26 @@
             Wyloguj się
           </button>
         </div>
-
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-4 p-4 text-2xl">Twoje ogłoszenia</div>
         </div>
         <Adverts :adverts="adverts"/>
-        <div>Komentarze na twoim koncie: </div>
+        <div class="flex flex-row justify-center mt-10 md:justify-start">
+          <div class="dashboardElements mt-4 p-4 text-2xl">
+            Komentarze na twoim koncie
+          </div>
+        </div>
+        <div
+          v-for="comment in user.comments"
+          :key="comment"
+          class="w-10/12 h-auto lg:h-62 xl:h-40 mt-6 p-4 bg-white"
+        >
+          <p class="text-lg font-medium">
+            {{ comment.rate }}/6
+            {{ comment.user.username }}
+          </p>
+          {{ comment.comment }}
+        </div>
       </div>
     </div>
 </template>
@@ -27,6 +41,8 @@ import axios from 'axios'
 
 import Menu from '../components/Menu.vue'
 import Adverts from '../components/Adverts.vue'
+
+import API_URL from '../../API_URL'
 
 export default {
   name: 'Dashboard',
@@ -41,8 +57,6 @@ export default {
         userCookie: this.$cookies.get('user'),
         user: {},
         adverts: [],
-
-        API_URL: 'https://okki-api.herokuapp.com'
       }
   },
   async created() {
@@ -50,7 +64,7 @@ export default {
       this.$router.push('/login')
     }
 
-    await axios.get(`${this.API_URL}/users/${this.userCookie.id}`)
+    await axios.get(`${API_URL}/users/${this.userCookie.id}`)
     .then(res => {
       this.user = res.data
       console.log(res)
@@ -62,7 +76,7 @@ export default {
 
     await this.user.Adverts.forEach(async advert =>{
       await axios
-      .get(`${this.API_URL}/adverts/${advert}`)
+      .get(`${API_URL}/auctions/${advert}`)
       .then(res =>{
         this.adverts.push(res.data)
       })

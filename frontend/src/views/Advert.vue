@@ -61,7 +61,10 @@
 
 <script>
 import Menu from '../components/Menu.vue'
+
 import axios from 'axios'
+
+import API_URL from '../../API_URL'
 
 export default {
   components: {
@@ -69,7 +72,6 @@ export default {
   },
   data(){
     return{
-      API_URL: 'http://localhost:1337',
       user: {},
       advert: {}
     }
@@ -78,11 +80,11 @@ export default {
     id: String
   },
   async created(){
-    await axios.get(`${this.API_URL}/arsts/${this.id}`)
+    await axios.get(`${API_URL}/auctions/${this.id}`)
     .then(async res => {
       console.log(res)
       this.advert = res.data;
-      await axios.get(`${this.API_URL}/users/${res.data.userID}`)
+      await axios.get(`${API_URL}/users/${res.data.userID}`)
       .then(res =>{
         this.user = res.data
       })

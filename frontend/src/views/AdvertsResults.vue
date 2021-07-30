@@ -9,11 +9,11 @@
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
-        <SearchFilters 
+        <SearchFilters
           @update-category-option="updateCategoryOption"
           :categoryOption="categoryOption"
         />
-        <SearchSorting 
+        <SearchSorting
           @update-sorting-option="updateSortingOption"
           :sortingOption="sortingOption"
         />
@@ -39,6 +39,8 @@ import SearchSorting from '../components/SearchSorting'
 import NoAdvertsFound from '../components/NoAdvertsFound'
 import Adverts from '../components/Adverts'
 
+import API_URL from '../../API_URL'
+
 export default {
   name: 'AdverstsResults',
   components: {
@@ -59,7 +61,6 @@ export default {
       loading: false,
       adverts: [],
       advertsCopy: [],
-      API_URL: 'https://okki-api.herokuapp.com'
     }
   },
   methods: {
@@ -119,14 +120,14 @@ export default {
     this.searchInputLocation = this.$route.params.location;
     this.categoryOption = this.$route.params.category;
     this.loading = true;
-    
+
     if(this.searchInputItem === undefined) {
       this.searchInputItem = ''
       this.searchInputLocation = ''
       this.categoryOption = ''
     }
 
-    fetch(`${this.API_URL}/adverts`)
+    fetch(`${API_URL}/auctions`)
       .then(response => response.json())
       .then(adverts => {
         this.adverts, this.advertsCopy = adverts;

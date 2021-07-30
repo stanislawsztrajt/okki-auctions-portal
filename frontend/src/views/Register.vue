@@ -64,7 +64,7 @@
         </button>
       </div>
     </div>
-    <div v-if="validationError" class="validation-alert mt-112" role="alert">
+    <div v-if="validationError" class="validation-alert mt-16 top-0 sm:top-3/4 sm:mt-24" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
       </span>
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import API_URL from '../../API_URL'
 
 export default {
     name: 'Register',
@@ -87,8 +88,6 @@ export default {
         validationError: false,
 
         ISjwt: this.$cookies.isKey('jwt'),
-
-        API_URL: 'https://okki-api.herokuapp.com',
 
         setTimeout: Function,
         setTimeoutTime: 4000,
@@ -159,7 +158,7 @@ export default {
           Adverts: {}
         }
 
-        const registerResponse = await fetch(`${this.API_URL}/auth/local/register`, {
+        const registerResponse = await fetch(`${API_URL}/auth/local/register`, {
           method: "POST",
           headers: {
             'Accept': 'application/json',

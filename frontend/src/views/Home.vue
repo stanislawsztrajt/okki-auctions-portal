@@ -15,16 +15,17 @@
               <i v-bind:class="'fas fa-' + category.icon"></i>
             </button>
           </div>
-        </div> 
+        </div>
       </div>
     </main>
   </div>
 </template>
 
 <script>
-import Menu from '../components/Menu'
-import SearchInputs from '../components/SearchInputs'
-import categoriesJSON from '../jsons files/categories.json'
+import Menu from '../components/Menu';
+import SearchInputs from '../components/SearchInputs';
+import categoriesJSON from '../jsons files/categories.json';
+
 
 export default {
   name: 'Home',
@@ -38,7 +39,6 @@ export default {
       searchInputLocation: '',
       categoryOption: '',
       categories: categoriesJSON,
-      API_URL: 'https://okki-api.herokuapp.com/',
     }
   },
   methods: {
@@ -49,13 +49,13 @@ export default {
     // Funkcja aktualizująca wartość zmiennej categoryOption i wywołująca funkcję shareSearchInputValues
     updateCategoryOption(categoryOption) {
       this.categoryOption = categoryOption;
-      this.shareSearchInputValues()
+      this.shareSearchInputValues();
     },
     // Funkcja aktualizująca wartości zmiennych searchInputItem i searchInputLocation i wywołująca funkcję shareSearchInputValues
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
-      this.shareSearchInputValues()
+      this.shareSearchInputValues();
     }
   },
 }

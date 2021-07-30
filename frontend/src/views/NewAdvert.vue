@@ -133,8 +133,13 @@
 
 <script>
 import Menu from '../components/Menu'
+
 import axios from 'axios'
+
 import categoriesJSON from '../jsons files/categories.json'
+
+import API_URL from '../../API_URL'
+
 
 export default {
   name: 'NewAdvert',
@@ -157,7 +162,6 @@ export default {
       jwt: this.$cookies.get('jwt'),
       advertsIDs: [],
       categories: categoriesJSON,
-      API_URL: 'http://localhost:1337',
       validationText: '',
       validationError: false,
       setTimeout: Function,
@@ -172,7 +176,7 @@ export default {
       this.$router.push('/login')
     }
 
-    await axios.get(`${this.API_URL}/users/${this.userInfo.id}`)
+    await axios.get(`${API_URL}/users/${this.userInfo.id}`)
     .then(res=>{
       console.log(res)
       this.advertsIDs = res.data.Adverts
@@ -234,7 +238,7 @@ export default {
 
       if(this.used) {
         await axios.post(
-          `${this.API_URL}/arsts`, {
+          `${API_URL}/auctions`, {
           title: this.titleValue,
           price: parseFloat(this.priceValue),
           category: this.categoryValue,
@@ -254,7 +258,7 @@ export default {
             this.advertsIDs.push(res.data.id)
           }
 
-          await axios.put(`${this.API_URL}/users/${this.userInfo.id}`, {
+          await axios.put(`${API_URL}/users/${this.userInfo.id}`, {
             Adverts: this.advertsIDs
           })
           .then((res)=>{

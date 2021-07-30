@@ -1,0 +1,1 @@
+export default 'https://okki-api.herokuapp.com'
