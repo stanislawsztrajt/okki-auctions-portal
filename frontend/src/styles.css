@@ -65,3 +65,18 @@
 .sortingElement {
   @apply h-12 bg-white text-gray-700 px-4 py-2 shadow-sm;
 }
+
+/* Dashboard and  UserProfile*/
+
+.dashboardElements{
+  @apply w-10/12 md:w-1/2 border-gray-300 text-gray-600 bg-white shadow;
+}
+
+.rateStars{
+  @apply hover:text-yellow-400 duration-100 cursor-pointer mr-10 text-yellow-300;
+}
+
+/* buttons animation */
+.buttonAnimationHover{
+  @apply hover:opacity-80 duration-100;
+}

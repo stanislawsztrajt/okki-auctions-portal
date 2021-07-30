@@ -1,7 +1,7 @@
 <template>
   <div class=" h-screen">
     <Menu />
-    <main class=" h-5/6 flex justify-center items-center">
+    <main v-if="user" class=" h-5/6 flex justify-center items-center">
       <div class=" w-10/12 bg-white p-6 shadow-2xl grid grid-cols-4">
         <img :src="advert.images" class=" col-span-1" alt="">
         <div class="col-span-2 mx-12">
@@ -17,7 +17,11 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="inline ml-2">{{ userInfo.username }}</p>
+            <router-link :to="`/users/${user.id}`">
+              <p class="inline ml-2">
+                {{ user.username }}
+              </p>
+            </router-link>
             <br>
           </h2>
           <button class=" ml-10 mt-8 text-center text-xl bg-green-600 rounded-xl p-2 text-white hover:opacity-80 duration-100">
@@ -51,6 +55,7 @@
         </div>
         </div>
     </main>
+    <div v-else>arst</div>
   </div>
 </template>
 
@@ -64,8 +69,8 @@ export default {
   },
   data(){
     return{
-      API_URL: 'https://okki-api.herokuapp.com',
-      userInfo: {},
+      API_URL: 'http://localhost:1337',
+      user: {},
       advert: {}
     }
   },
@@ -73,19 +78,19 @@ export default {
     id: String
   },
   async created(){
-    await axios.get(`${this.API_URL}/adverts/${this.id}`)
+    await axios.get(`${this.API_URL}/arsts/${this.id}`)
     .then(async res => {
       console.log(res)
       this.advert = res.data;
       await axios.get(`${this.API_URL}/users/${res.data.userID}`)
       .then(res =>{
-        this.userInfo = res.data
+        this.user = res.data
       })
       .catch(err =>{
         console.log(err)
       })
     })
-    .catch(err => console.log(err, ' nie znaleziono ogloszenia'))
+    .catch(() => this.user = undefined)
   }
 }
 </script>

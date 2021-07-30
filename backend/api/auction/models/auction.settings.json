@@ -1,9 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "adverts",
+  "collectionName": "auctions",
   "info": {
-    "name": "Advert",
-    "description": ""
+    "name": "auction"
   },
   "options": {
     "increments": true,
@@ -15,26 +14,26 @@
     "title": {
       "type": "string"
     },
-    "description": {
-      "type": "text"
-    },
-    "price": {
-      "type": "float"
-    },
     "category": {
-      "type": "string"
-    },
-    "location": {
-      "type": "string"
-    },
-    "phoneNumber": {
       "type": "string"
     },
     "userID": {
       "type": "string"
     },
+    "description": {
+      "type": "richtext"
+    },
+    "price": {
+      "type": "float"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
     "images": {
       "type": "json"
+    },
+    "location": {
+      "type": "string"
     }
   }
 }

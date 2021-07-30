@@ -5,7 +5,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 18L18 6M6 6l12 12" />
       </svg>
       <span class="text-gray-600 text-3xl font-light">
-        Ładowanie
+        Ładowanie...
       </span>
     </div>
     <div class="absolute bg-gray-500 opacity-30 z-10 w-screen h-screen top-0 left-0"></div>
@@ -13,6 +13,6 @@
 </template>
 <script>
 export default {
-  
+
 }
 </script>

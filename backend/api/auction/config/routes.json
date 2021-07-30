@@ -2,48 +2,48 @@
   "routes": [
     {
       "method": "GET",
-      "path": "/adverts",
-      "handler": "advert.find",
+      "path": "/auctions",
+      "handler": "auction.find",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/adverts/count",
-      "handler": "advert.count",
+      "path": "/auctions/count",
+      "handler": "auction.count",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/adverts/:id",
-      "handler": "advert.findOne",
+      "path": "/auctions/:id",
+      "handler": "auction.findOne",
       "config": {
         "policies": []
       }
     },
     {
       "method": "POST",
-      "path": "/adverts",
-      "handler": "advert.create",
+      "path": "/auctions",
+      "handler": "auction.create",
       "config": {
         "policies": []
       }
     },
     {
       "method": "PUT",
-      "path": "/adverts/:id",
-      "handler": "advert.update",
+      "path": "/auctions/:id",
+      "handler": "auction.update",
       "config": {
         "policies": []
       }
     },
     {
       "method": "DELETE",
-      "path": "/adverts/:id",
-      "handler": "advert.delete",
+      "path": "/auctions/:id",
+      "handler": "auction.delete",
       "config": {
         "policies": []
       }

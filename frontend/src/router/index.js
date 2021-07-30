@@ -6,6 +6,7 @@ import Advert from '../views/Advert.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
+import UserProfile from '../views/UserProfile.vue'
 
 const routes = [
   {
@@ -26,8 +27,8 @@ const routes = [
   {
     path: '/advert/:id',
     name: 'Advert',
+    component: Advert,
     props: true,
-    component: Advert
   },
   {
     path: '/login',
@@ -43,6 +44,12 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+  },
+  {
+    path: '/users/:id',
+    name: 'UserProfile',
+    component: UserProfile,
+    props: true,
   }
 
 ]

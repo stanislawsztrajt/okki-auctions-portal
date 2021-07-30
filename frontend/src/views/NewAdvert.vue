@@ -157,7 +157,7 @@ export default {
       jwt: this.$cookies.get('jwt'),
       advertsIDs: [],
       categories: categoriesJSON,
-      API_URL: 'https://okki-api.herokuapp.com',
+      API_URL: 'http://localhost:1337',
       validationText: '',
       validationError: false,
       setTimeout: Function,
@@ -233,9 +233,8 @@ export default {
       this.used = true
 
       if(this.used) {
-        console.log('dodano');
         await axios.post(
-          `${this.API_URL}/adverts`, {
+          `${this.API_URL}/arsts`, {
           title: this.titleValue,
           price: parseFloat(this.priceValue),
           category: this.categoryValue,
