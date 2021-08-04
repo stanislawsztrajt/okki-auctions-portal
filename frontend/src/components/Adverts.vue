@@ -1,5 +1,5 @@
 <template>
-<div id="Adverts" class="mt-6 grid grid-cols-2 sm:grid-cols-1 justify-items-center md:justify-items-start">
+<div id="Adverts" class="mt-6 grid grid-cols-1 justify-items-center md:justify-items-start">
   <div class=""></div>
   <router-link
     :to="`/advert/${advert.id}`"
@@ -27,13 +27,13 @@
       </h3>
       <router-link to="" class="w-full flex flex-col" v-if="user.id === advert.userID">
         <svg
-          class="h-10 w-10 text-blue-500 self-end buttonAnimationHover"
+          class="h-6 w-6 xl:h-10 xl:w-10 text-blue-500 self-end buttonAnimationHover"
           @click="toggleEditAdvertLayer(advert.id)"
           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         <svg
-          class="h-10 w-10 text-red-500 self-end buttonAnimationHover"
+          class="h-6 w-6 xl:h-10 xl:w-10 text-red-500 self-end buttonAnimationHover "
           @click="toggleDeleteAdvertLayer(advert.id)"
           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
         >
