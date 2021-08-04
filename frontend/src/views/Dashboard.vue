@@ -1,7 +1,13 @@
 <template>
     <div>
       <Menu />
-      <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+      <div v-if="isEditAdvertLayer"></div>
+      <div v-else-if="isDeleteAdvertLayer">
+        Jesteś pewny, że chcesz usunąć ogłoszenie ?
+        <button @click="deleteAdvert">tak</button>
+        <button @click="toggleEditAdvertLayer">nie</button>
+      </div>
+      <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-6 p-4 text-2xl">
             Witaj!<span class="ml-2 font-bold">{{ user.username }}</span>
@@ -15,9 +21,16 @@
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-4 p-4 text-2xl">Twoje ogłoszenia</div>
         </div>
-        <Adverts :adverts="adverts"/>
+        <Adverts
+          :adverts="adverts"
+          @toggle-edit-advert-layer="toggleEditAdvertLayer"
+          @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+        />
         <div class="flex flex-row justify-center mt-10 md:justify-start">
-          <div class="dashboardElements mt-4 p-4 text-2xl">
+          <div v-if="!user.comments" class="dashboardElements mt-4 p-4 text-2xl">
+            Nie ma komentarzy na twoim koncie
+          </div>
+          <div v-else class="dashboardElements mt-4 p-4 text-2xl">
             Komentarze na twoim koncie
           </div>
         </div>
@@ -51,15 +64,20 @@ export default {
     Adverts
   },
   data(){
-      return{
-        ISjwt: this.$cookies.isKey('jwt'),
-        jwt: this.$cookies.get('jwt'),
-        userCookie: this.$cookies.get('user'),
-        user: {},
-        adverts: [],
-      }
+    return{
+      ISjwt: this.$cookies.isKey('jwt'),
+      jwt: this.$cookies.get('jwt'),
+      userCookie: this.$cookies.get('user'),
+      user: {},
+      adverts: [],
+      activeIdAdvert: '',
+
+      isEditAdvertLayer: false,
+      isDeleteAdvertLayer: false
+    }
   },
   async created() {
+    console.log(this.userCookie)
     if(!this.ISjwt){
       this.$router.push('/login')
     }
@@ -67,7 +85,6 @@ export default {
     await axios.get(`${API_URL}/users/${this.userCookie.id}`)
     .then(res => {
       this.user = res.data
-      console.log(res)
     })
     .catch(err => {
       console.log(err)
@@ -83,10 +100,55 @@ export default {
     })
   },
   methods: {
+    async deleteAdvert(){
+      await axios.get(`${API_URL}/users/${this.userCookie.id}`)
+      .then(async res =>{
+        const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
+        let advertsIDs = res.data.Adverts;
+        advertsIDs.splice(indexId, 1);
+
+        await axios.put(`${API_URL}/users/${this.userCookie.id}`,
+        {
+          Adverts: advertsIDs
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.jwt}`
+          }
+        })
+        .then(res => console.log(res.status))
+        .catch(err => console.log(err))
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+
+      await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
+        headers: {
+          Authorization: `Bearer ${this.jwt}`
+        }
+      })
+      .then(res =>{
+        console.log(res.status)
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+    },
+    toggleEditAdvertLayer(id){
+      this.activeIdAdvert = id;
+      this.isEditAdvertLayer = !this.isEditAdvertLayer
+      console.log(id)
+    },
+    toggleDeleteAdvertLayer(id){
+      this.activeIdAdvert = id;
+      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer
+      console.log(id)
+    },
     logout(){
       this.$cookies.remove('jwt')
       this.$cookies.remove('user')
-      this.$router.push('/login')
+      this.$router.push('/')
     }
   },
 }

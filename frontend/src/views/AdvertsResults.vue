@@ -20,7 +20,7 @@
       </div>
       <Loading v-show="loading" />
       <div v-show="!loading">
-        <Adverts :adverts="adverts" />
+        <Adverts :adverts="adverts"/>
         <NoAdvertsFound
           v-if="adverts.length === 0"
           :searchInputItem="searchInputItem"
@@ -61,6 +61,7 @@ export default {
       loading: false,
       adverts: [],
       advertsCopy: [],
+      user: this.$cookies.get('user')
     }
   },
   methods: {

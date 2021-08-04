@@ -1,5 +1,6 @@
 <template>
 <div id="Adverts" class="mt-6 grid grid-cols-2 sm:grid-cols-1 justify-items-center md:justify-items-start">
+  <div class=""></div>
   <router-link
     :to="`/advert/${advert.id}`"
     class="flex flex-col sm:flex-row w-10/12 border-gray-300 my-4 text-gray-600 bg-white shadow"
@@ -14,7 +15,7 @@
     <div class="">
 
     </div>
-    <div class="px-3 py-2 sm:px-5 sm:py-4">
+    <div class="px-3 py-2 sm:px-5 sm:py-4 w-full">
       <h2 class="sm:text-2xl">
         {{ advert.title }}
       </h2>
@@ -24,6 +25,21 @@
       <h3 class="text-xs float-right mb-0.5 mt-2 sm:float-left sm:text-lg sm:mt-0">
         {{ advert.location }}
       </h3>
+      <router-link to="" class="w-full flex flex-col" v-if="user.id === advert.userID">
+        <svg
+          class="h-10 w-10 text-blue-500 self-end buttonAnimationHover"
+          @click="toggleEditAdvertLayer(advert.id)"
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        <svg
+          class="h-10 w-10 text-red-500 self-end buttonAnimationHover"
+          @click="toggleDeleteAdvertLayer(advert.id)"
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </router-link>
     </div>
   </router-link>
 </div>
@@ -31,7 +47,20 @@
 <script>
 export default {
   props: {
-    adverts: Array
+    adverts: Array,
+  },
+  data(){
+    return{
+      user: this.$cookies.get('user') ? this.$cookies.get('user') : '',
+    }
+  },
+  methods: {
+    toggleEditAdvertLayer(id){
+      this.$emit('toggle-edit-advert-layer', id)
+    },
+    toggleDeleteAdvertLayer(id){
+      this.$emit('toggle-delete-advert-layer', id)
+    }
   }
 }
 </script>
