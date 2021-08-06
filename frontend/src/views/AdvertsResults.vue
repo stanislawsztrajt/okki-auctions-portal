@@ -1,7 +1,13 @@
 <template>
   <div id="AdverstsResults">
     <Menu/>
-    <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div v-if="isEditAdvertLayer"></div>
+    <ApproveLayer
+      v-else-if="isDeleteAdvertLayer"
+      @delete-advert="deleteAdvert"
+      @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+    />
+    <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <div class="border-b pb-6 border-gray-300">
         <SearchInputs
           class="sm:w-3/4"
@@ -20,7 +26,11 @@
       </div>
       <Loading v-show="loading" />
       <div v-show="!loading">
-        <Adverts :adverts="adverts"/>
+        <Adverts
+          :adverts="adverts"
+          @toggle-edit-advert-layer="toggleEditAdvertLayer"
+          @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+        />
         <NoAdvertsFound
           v-if="adverts.length === 0"
           :searchInputItem="searchInputItem"
@@ -31,7 +41,10 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+
 import Menu from '../components/Menu'
+import ApproveLayer from '../components/ApproveLayer'
 import Loading from '../components/Loading'
 import SearchInputs from '../components/SearchInputs'
 import SearchFilters from '../components/SearchFilters'
@@ -45,6 +58,7 @@ export default {
   name: 'AdverstsResults',
   components: {
     Menu,
+    ApproveLayer,
     Loading,
     SearchInputs,
     SearchFilters,
@@ -61,7 +75,10 @@ export default {
       loading: false,
       adverts: [],
       advertsCopy: [],
-      user: this.$cookies.get('user')
+      user: this.$cookies.get('user'),
+
+      isEditAdvertLayer: false,
+      isDeleteAdvertLayer: false
     }
   },
   methods: {
@@ -114,7 +131,55 @@ export default {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
       this.searchAdversts()
-    }
+    },
+    async deleteAdvert(){
+      await axios.get(`${API_URL}/users/${this.userCookie.id}`)
+      .then(async res =>{
+        const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
+        let advertsIDs = res.data.Adverts;
+        advertsIDs.splice(indexId, 1);
+
+        await axios.put(`${API_URL}/users/${this.userCookie.id}`,
+        {
+          Adverts: advertsIDs
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.jwt}`
+          }
+        })
+        .then(res => {
+          console.log(res.status)
+          window.location.reload()
+        })
+        .catch(err => console.log(err))
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+
+      await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
+        headers: {
+          Authorization: `Bearer ${this.jwt}`
+        }
+      })
+      .then(res =>{
+        console.log(res.status)
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+    },
+    toggleEditAdvertLayer(id){
+      this.activeIdAdvert = id;
+      this.isEditAdvertLayer = !this.isEditAdvertLayer;
+      console.log(id);
+    },
+    toggleDeleteAdvertLayer(id){
+      this.activeIdAdvert = id;
+      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
+      console.log(id);
+    },
   },
   created() {
     this.searchInputItem = this.$route.params.value;

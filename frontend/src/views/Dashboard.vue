@@ -2,11 +2,11 @@
     <div>
       <Menu />
       <div v-if="isEditAdvertLayer"></div>
-      <div v-else-if="isDeleteAdvertLayer">
-        Jesteś pewny, że chcesz usunąć ogłoszenie ?
-        <button @click="deleteAdvert">tak</button>
-        <button @click="toggleEditAdvertLayer">nie</button>
-      </div>
+      <ApproveLayer
+        v-else-if="isDeleteAdvertLayer"
+        @delete-advert="deleteAdvert"
+        @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+      />
       <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-6 p-4 text-2xl">
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="flex flex-row justify-center md:justify-start">
-          <button @click="logout" class="dashboardElements buttonAnimationHover mt-4 p-4 text-2xl text-left">
+          <button @click="logout" class="dashboardElements button-animation-hover mt-4 p-4 text-2xl text-left">
             Wyloguj się
           </button>
         </div>
@@ -54,6 +54,7 @@ import axios from 'axios'
 
 import Menu from '../components/Menu.vue'
 import Adverts from '../components/Adverts.vue'
+import ApproveLayer from '../components/ApproveLayer.vue'
 
 import API_URL from '../../API_URL'
 
@@ -61,7 +62,8 @@ export default {
   name: 'Dashboard',
   components: {
     Menu,
-    Adverts
+    Adverts,
+    ApproveLayer
   },
   data(){
     return{
@@ -116,7 +118,10 @@ export default {
             Authorization: `Bearer ${this.jwt}`
           }
         })
-        .then(res => console.log(res.status))
+        .then(res => {
+          console.log(res.status)
+          window.location.reload()
+        })
         .catch(err => console.log(err))
       })
       .catch(err =>{
@@ -137,18 +142,18 @@ export default {
     },
     toggleEditAdvertLayer(id){
       this.activeIdAdvert = id;
-      this.isEditAdvertLayer = !this.isEditAdvertLayer
-      console.log(id)
+      this.isEditAdvertLayer = !this.isEditAdvertLayer;
+      console.log(id);
     },
     toggleDeleteAdvertLayer(id){
       this.activeIdAdvert = id;
-      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer
-      console.log(id)
+      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
+      console.log(id);
     },
     logout(){
-      this.$cookies.remove('jwt')
-      this.$cookies.remove('user')
-      this.$router.push('/')
+      this.$cookies.remove('jwt');
+      this.$cookies.remove('user');
+      this.$router.push('/');
     }
   },
 }

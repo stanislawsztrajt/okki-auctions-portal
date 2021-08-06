@@ -258,8 +258,14 @@ export default {
             this.advertsIDs.push(res.data.id)
           }
 
-          await axios.put(`${API_URL}/users/${this.userInfo.id}`, {
+          await axios.put(`${API_URL}/users/${this.userInfo.id}`,
+          {
             Adverts: this.advertsIDs
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.jwt}`
+            }
           })
           .then((res)=>{
             console.log(res)

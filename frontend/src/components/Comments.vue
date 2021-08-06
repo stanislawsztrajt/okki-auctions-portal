@@ -43,7 +43,7 @@
       <textarea placeholder="tutaj możesz wpisać komentarz" maxlength="450" name="" id="" v-model="commentValue" class=" w-10/12 h-28 focus:outline-none">
         Twoj komentarz
       </textarea>
-      <button @click="addComment" class="buttonAnimationHover w-1/2 lg:w-1/3 h-20 bg-green-400 text-white text-2xl rounded-xl mt-4">
+      <button @click="addComment" class="button-animation-hover w-1/2 lg:w-1/3 h-20 bg-green-400 text-white text-2xl rounded-xl mt-4">
         dodaj komentarz
       </button>
     </div>
