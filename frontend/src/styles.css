@@ -12,7 +12,7 @@
   @apply lg:px-7 text-green-600 text-2xl lg:border-r lg:border-l border-gray-200;
 }
 
-/* Home and AdvertsResults styles */
+/* Home, AdvertsResults and Help styles */
 
 .search-input {
   @apply h-8 lg:h-12 text-gray-700 font-light text-lg sm:text-xl lg:text-3xl focus:outline-none focus:bg-gray-100;
@@ -45,7 +45,7 @@
 /* NewAdverst styles */
 
 .new-adverst-main-box {
-  @apply bg-green-600 rounded-xl p-7 mb-6;
+  @apply bg-green-600 rounded-xl shadow p-7 mb-6;
 }
 
 .new-adverst-title {

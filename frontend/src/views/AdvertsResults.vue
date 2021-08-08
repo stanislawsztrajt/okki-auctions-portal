@@ -32,7 +32,7 @@
           @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
         />
         <NoAdvertsFound
-          v-if="adverts.length === 0"
+          v-show="adverts.length === 0"
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
@@ -88,12 +88,20 @@ export default {
 
       // Filtrowanie tablicy adverts po nazwach ogłoszeń
       this.adverts = this.adverts.filter((adverst) => {
-        return adverst.title.toLowerCase().includes(this.searchInputItem.toLowerCase())
+        let advertTitle = adverst.title.toLowerCase()
+        let searchInputItem = this.searchInputItem.toLowerCase().split(' ')
+        return searchInputItem.every(searchingWord => advertTitle.includes(searchingWord));
       })
       // Filtrowanie tablicy adverts po lokalizacji
       this.adverts = this.adverts.filter((adverst) => {
-        return adverst.location.toLowerCase().includes(this.searchInputLocation.toLowerCase())
+        if(this.searchInputLocation.replace(/\s+/g, ' ').trim() !== '') {
+          return adverst.location.toLowerCase().replace(/\s+/g, ' ') === this.searchInputLocation.toLowerCase().replace(/\s+/g, ' ')
+        }
+        else {
+          return true
+        }
       })
+
 
       this.sortByOption();
       this.filterByCategory();

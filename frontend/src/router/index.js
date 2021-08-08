@@ -7,6 +7,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
 import UserProfile from '../views/UserProfile.vue'
+import Help from '../views/Help.vue'
 
 const routes = [
   {
@@ -50,7 +51,12 @@ const routes = [
     name: 'UserProfile',
     component: UserProfile,
     props: true,
-  }
+  },
+  {
+    path: '/help',
+    name: 'Help',
+    component: Help,
+  },
 
 ]
 
