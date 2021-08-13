@@ -20,11 +20,11 @@
         <div class="new-adverst-data-box">
           <h2>Cena</h2>
           <input
-            type="text"
+            type="number"
             placeholder="Np. 8600"
             required
             class="new-adverst-input"
-            v-model.number="priceValue"
+            v-model="priceValue"
             maxlength="15"
           >
         </div>
@@ -83,8 +83,8 @@
             placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
             required
             v-model.trim="descriptionValue"
-            maxlength="1000"
             minlength="50"
+            maxlength="1000"
           >
           </textarea>
         </div>
@@ -106,12 +106,13 @@
         <div class="new-adverst-data-box">
           <label>Numer Telefonu</label>
           <input
-            type="tel"
+            type="number"
             placeholder="Np. 111222333"
             required
             class="new-adverst-input"
             v-model="phoneNumberValue"
-            maxlength="15"
+            minlength="9"
+            maxlength="12"
           >
         </div>
       </div>
@@ -231,6 +232,30 @@ export default {
           this.validationError = false
         },this.setTimeoutTime)
         this.validationText = 'Opis ogłoszenia jest za krótki (co najmniej 50 znaków)'
+        return this.validationError = true
+      }
+
+      if(this.phoneNumberValue.length < 9) {
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Podany numer telefonu jest za krótki (co najmniej 9 znaków)'
+        return this.validationError = true
+      }
+
+      if(this.phoneNumberValue.length > 12) {
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Podany numer telefonu jest za długi (maksymalnie 12 znaków)'
+        return this.validationError = true
+      }
+
+      if(this.priceValue.length > 15) {
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Podana kwota jest za długa (maksymalnie 15 znaków)'
         return this.validationError = true
       }
 
