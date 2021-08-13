@@ -64,6 +64,9 @@
     },
     "comments": {
       "type": "json"
+    },
+    "likedAdverts": {
+      "type": "json"
     }
   }
 }

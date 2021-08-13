@@ -122,12 +122,7 @@ export default {
         }
         this.userComments = res.data.comments;
 
-        try{
-          this.userComments.push(comment);
-        } catch(err){
-          this.userComments = [];
-          this.userComments.push(comment)
-        }
+        this.userComments.push(comment);
       })
       .catch(err =>{
         console.log(err)

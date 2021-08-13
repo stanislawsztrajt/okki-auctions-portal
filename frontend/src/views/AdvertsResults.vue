@@ -26,10 +26,12 @@
       </div>
       <Loading v-show="loading" />
       <div v-show="!loading">
-        <Adverts
-          :adverts="adverts"
+        <Advert
           @toggle-edit-advert-layer="toggleEditAdvertLayer"
           @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+          v-for="advert in adverts"
+          :key="advert.code"
+          :advert="advert"
         />
         <NoAdvertsFound
           v-if="adverts.length === 0"
@@ -50,7 +52,7 @@ import SearchInputs from '../components/SearchInputs'
 import SearchFilters from '../components/SearchFilters'
 import SearchSorting from '../components/SearchSorting'
 import NoAdvertsFound from '../components/NoAdvertsFound'
-import Adverts from '../components/Adverts'
+import Advert from '../components/Advert'
 
 import API_URL from '../../API_URL'
 
@@ -64,7 +66,7 @@ export default {
     SearchFilters,
     SearchSorting,
     NoAdvertsFound,
-    Adverts
+    Advert
   },
   data() {
     return {
@@ -75,7 +77,9 @@ export default {
       loading: false,
       adverts: [],
       advertsCopy: [],
-      user: this.$cookies.get('user'),
+      userCookie: this.$cookies.get('user'),
+      jwt: this.$cookies.get('jwt'),
+      activeIdAdvert: '',
 
       isEditAdvertLayer: false,
       isDeleteAdvertLayer: false
@@ -132,6 +136,14 @@ export default {
       this.searchInputLocation = searchInputLocation;
       this.searchAdversts()
     },
+    toggleEditAdvertLayer(id){
+      this.activeIdAdvert = id;
+      this.isEditAdvertLayer = !this.isEditAdvertLayer;
+    },
+    toggleDeleteAdvertLayer(id){
+      this.activeIdAdvert = id;
+      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
+    },
     async deleteAdvert(){
       await axios.get(`${API_URL}/users/${this.userCookie.id}`)
       .then(async res =>{
@@ -169,16 +181,6 @@ export default {
       .catch(err =>{
         console.log(err)
       })
-    },
-    toggleEditAdvertLayer(id){
-      this.activeIdAdvert = id;
-      this.isEditAdvertLayer = !this.isEditAdvertLayer;
-      console.log(id);
-    },
-    toggleDeleteAdvertLayer(id){
-      this.activeIdAdvert = id;
-      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
-      console.log(id);
     },
   },
   created() {

@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "auctions",
   "info": {
-    "name": "auction"
+    "name": "auction",
+    "description": ""
   },
   "options": {
     "increments": true,

@@ -21,10 +21,12 @@
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-4 p-4 text-2xl">Twoje ogłoszenia</div>
         </div>
-        <Adverts
-          :adverts="adverts"
+        <Advert
           @toggle-edit-advert-layer="toggleEditAdvertLayer"
           @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+          v-for="advert in adverts"
+          :key="advert.code"
+          :advert="advert"
         />
         <div class="flex flex-row justify-center mt-10 md:justify-start">
           <div v-if="!user.comments" class="dashboardElements mt-4 p-4 text-2xl">
@@ -53,7 +55,7 @@
 import axios from 'axios'
 
 import Menu from '../components/Menu.vue'
-import Adverts from '../components/Adverts.vue'
+import Advert from '../components/Advert.vue'
 import ApproveLayer from '../components/ApproveLayer.vue'
 
 import API_URL from '../../API_URL'
@@ -62,7 +64,7 @@ export default {
   name: 'Dashboard',
   components: {
     Menu,
-    Adverts,
+    Advert,
     ApproveLayer
   },
   data(){

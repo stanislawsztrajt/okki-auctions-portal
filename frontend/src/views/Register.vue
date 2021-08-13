@@ -155,7 +155,9 @@ export default {
           username: this.usernameValue,
           email: this.emailValue,
           password: this.passwordValue,
-          Adverts: {}
+          Adverts: [],
+          comments: [],
+          likedAdverts: []
         }
 
         const registerResponse = await fetch(`${API_URL}/auth/local/register`, {

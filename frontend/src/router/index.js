@@ -6,6 +6,7 @@ import Advert from '../views/Advert.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Liked from '../views/Liked.vue'
 import UserProfile from '../views/UserProfile.vue'
 
 const routes = [
@@ -44,6 +45,11 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+  },
+  {
+    path: '/liked',
+    name: 'Liked',
+    component: Liked,
   },
   {
     path: '/users/:id',

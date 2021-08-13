@@ -1,11 +1,7 @@
 <template>
-<div id="Adverts" class="mt-6 grid grid-cols-1 justify-items-center md:justify-items-start">
-  <div class=""></div>
   <router-link
     :to="`/advert/${advert.id}`"
     class="flex flex-col sm:flex-row w-10/12 border-gray-300 my-4 text-gray-600 bg-white shadow"
-    v-for="advert in adverts"
-    :key="advert.code"
   >
     <img
       class="h-32 w-full border-gray-200 border-b-2 bg-cover bg-no-repeat bg-center sm:w-60 sm:h-48 sm:border-r-2 sm:border-b-0"
@@ -40,12 +36,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
         </svg>
       </router-link>
-
       <router-link to="" class="w-full flex flex-col" v-else>
         <svg xmlns="http://www.w3.org/2000/svg"
-          v-if="advert.id === user.likedAdverts[0].id && user.likedAdverts[0].liked"
+          v-if="isLiked"
           @click="unLike"
-          class="mr-12 sm:mr-0 h-6 w-6 xl:h-10 xl:w-10 text-red-500 self-end button-animation-hover" viewBox="0 0 20 20" fill="currentColor">
+          class="mr-12 sm:mr-0 h-6 w-6 xl:h-10 xl:w-10 text-red-500 self-end button-animation-hover " viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
         </svg>
         <svg
@@ -57,21 +52,24 @@
       </router-link>
     </div>
   </router-link>
-</div>
 </template>
+
 <script>
 import axios from 'axios';
+import API_URL from '../../API_URL';
 
-import API_URL from '../../API_URL'
 
 export default {
   props: {
-    adverts: Array,
+    advert: Object,
   },
   data(){
     return{
+      jwt: this.$cookies.get('jwt'),
       userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : '',
-      user: {}
+      user: {},
+      isLiked: false,
+      likedAdverts: []
     }
   },
   async created(){
@@ -79,7 +77,9 @@ export default {
     .then(res =>{
       this.user = res.data;
       this.likedAdverts = res.data.likedAdverts;
+
       const indexLikedAdvert = this.user.likedAdverts.findIndex(el => el === this.advert.id);
+
       if(indexLikedAdvert === - 1) this.isLiked = false;
       else this.isLiked = true;
     })
@@ -88,6 +88,10 @@ export default {
   methods: {
     async like(){
       this.isLiked = true;
+      await axios
+      .get(`${API_URL}/users/${this.userCookie.id}`)
+      .then(res => this.likedAdverts = res.data.likedAdverts)
+      .catch(err => console.log(err.status))
       this.likedAdverts.push(this.advert.id)
 
       await axios.put(`${API_URL}/users/${this.userCookie.id}`,
@@ -105,6 +109,12 @@ export default {
     async unLike(){
       this.isLiked = false;
       const index = await this.likedAdverts.findIndex(el => el === this.advert.id)
+
+      await axios
+      .get(`${API_URL}/users/${this.userCookie.id}`)
+      .then(res => this.likedAdverts = res.data.likedAdverts)
+      .catch(err => console.log(err.status))
+
       await this.likedAdverts.splice(index,1)
 
       await axios.put(`${API_URL}/users/${this.userCookie.id}`,

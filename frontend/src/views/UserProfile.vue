@@ -15,7 +15,13 @@
           <div class="flex flex-row justify-center md:justify-start">
             <div class="dashboardElements mt-4 p-4 text-2xl">Ogłoszenia użytkownika</div>
           </div>
-          <Adverts :adverts="adverts"/>
+          <Advert
+            @toggle-edit-advert-layer="toggleEditAdvertLayer"
+            @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+            v-for="advert in adverts"
+            :key="advert.code"
+            :advert="advert"
+          />
         </div>
         <Comments :id="id"/>
       </div>
@@ -30,7 +36,7 @@
 import axios from 'axios'
 
 import Menu from '../components/Menu.vue'
-import Adverts from '../components/Adverts.vue'
+import Advert from '../components/Advert.vue'
 import Comments from '../components/Comments.vue'
 
 import API_URL from '../../API_URL'
@@ -38,7 +44,7 @@ import API_URL from '../../API_URL'
 export default {
   components: {
     Menu,
-    Adverts,
+    Advert,
     Comments
   },
   props: {
