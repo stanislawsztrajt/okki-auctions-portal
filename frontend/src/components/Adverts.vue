@@ -63,7 +63,7 @@ export default {
   },
   data(){
     return{
-      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : '',
+      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       user: {}
     }
   },

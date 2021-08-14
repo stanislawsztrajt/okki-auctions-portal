@@ -21,9 +21,6 @@
     "userID": {
       "type": "string"
     },
-    "description": {
-      "type": "richtext"
-    },
     "price": {
       "type": "float"
     },
@@ -35,6 +32,9 @@
     },
     "location": {
       "type": "string"
+    },
+    "description": {
+      "type": "text"
     }
   }
 }

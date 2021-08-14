@@ -70,8 +70,8 @@ export default {
   data(){
     return{
       ISjwt: this.$cookies.isKey('jwt'),
-      jwt: this.$cookies.get('jwt'),
-      userCookie: this.$cookies.get('user'),
+      jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : false,
+      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       user: {},
       adverts: [],
       activeIdAdvert: '',
@@ -81,7 +81,6 @@ export default {
     }
   },
   async created() {
-    console.log(this.userCookie)
     if(!this.ISjwt){
       this.$router.push('/login')
     }

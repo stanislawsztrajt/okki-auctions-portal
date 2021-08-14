@@ -92,7 +92,7 @@ export default {
 
       comments: [],
 
-      user: this.$cookies.get('user'),
+      user: this.$cookies.get('user') ? this.$cookies.get('user') : false,
     }
   },
   async created(){

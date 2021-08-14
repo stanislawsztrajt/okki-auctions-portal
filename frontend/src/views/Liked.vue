@@ -26,12 +26,17 @@ export default {
   },
   data(){
     return{
-      userCookie: this.$cookies.get('user'),
+      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
+      ISjwt: this.$cookies.isKey('jwt'),
       user: {},
       adverts: []
     }
   },
   async created(){
+    if(!this.ISjwt){
+      this.$router.push('/login')
+    }
+
     await axios
     .get(`${API_URL}/users/${this.userCookie.id}`)
     .then(res => this.user = res.data)

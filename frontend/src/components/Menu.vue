@@ -50,8 +50,8 @@
 export default {
   data(){
     return{
-      userInfo: this.$cookies.get('user'),
-      jwt: this.$cookies.isKey('jwt')
+      userInfo: this.$cookies.get('user') ? this.$cookies.get('user') : false,
+      jwt: this.$cookies.isKey('jwt') ? this.$cookies.get('user') : false
     }
   },
   methods: {
