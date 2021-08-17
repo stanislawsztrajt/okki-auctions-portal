@@ -9,6 +9,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Liked from '../views/Liked.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Help from '../views/Help.vue'
+import ChangeUserInfo from '../views/ChangeUserInfo.vue'
 
 const routes = [
   {
@@ -63,7 +64,11 @@ const routes = [
     name: 'Help',
     component: Help,
   },
-
+  {
+    path: '/change-user-info',
+    name: 'ChangeUserInfo',
+    component: ChangeUserInfo,
+  },
 ]
 
 const router = createRouter({

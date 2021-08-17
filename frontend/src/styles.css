@@ -78,7 +78,7 @@
 
 /* buttons animation */
 .button-animation-hover{
-  @apply hover:opacity-80 duration-100;
+  @apply hover:opacity-80 duration-150;
 }
 
 body::-webkit-scrollbar {
