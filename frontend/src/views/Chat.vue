@@ -74,16 +74,7 @@ export default {
     .catch(() =>{
       this.user = undefined
     })
-    
-    this.messages.push({msg: 'siema', id:this.user.id})
-    this.messages.push({msg: 'elo', id:this.$cookies.get('user').id})
-    this.messages.push({msg: 'chcialbym kupic ten motor', id:this.user.id})
-    this.messages.push({msg: 'spoko, mozesz przyjechac go obejrzec ale to od srody bo na wakacjach jestem', id:this.$cookies.get('user').id})
-    this.messages.push({msg: 'spoko, najprawdopodobniej w czwartek przyjade', id:this.user.id})
-    this.messages.push({msg: 'dobra, a o ktorej godzinie tak mniej wiecej', id:this.$cookies.get('user').id})
-    this.messages.push({msg: '?', id:this.$cookies.get('user').id})
-    this.messages.push({msg: 'cos okolo 13 ci pasuje?', id:this.user.id})
-    this.messages.push({msg: 'tak', id:this.$cookies.get('user').id})
+
   },
   methods: {
     
