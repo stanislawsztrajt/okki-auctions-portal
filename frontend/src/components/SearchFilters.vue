@@ -8,7 +8,7 @@
           name="Kategorie" 
           class="filtering-input"
           v-model="this.category"
-          @change="this.$emit('update-category-option', this.category)"
+          @change="this.$emit('search-adverts')"
         >
           <option value="" selected>Wszystko</option>
           <option
@@ -31,13 +31,28 @@ export default {
   data() {
     return {
       categories: categoriesJSON,
-      category: this.categoryOption,
+      category: '',
+      adverts: [],
     }
   },
   props: {
-    categoryOption : {
-      type: String
+    categoryOption: {
+      props: String
     }
+  },
+  created() {
+    if(this.categoryOption !== undefined) {
+      this.category = this.categoryOption
+    }
+  },
+  methods: {
+    filterByCategory(advertsCopy) {
+      this.adverts = advertsCopy
+      this.adverts = this.adverts.filter((advert) => {
+        return advert.category.includes(this.category)
+      })
+      this.$emit('update-adverts', this.adverts)
+    },
   },
 }
 </script>

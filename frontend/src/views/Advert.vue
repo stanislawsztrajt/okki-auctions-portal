@@ -2,7 +2,8 @@
   <div>
     <div class=" h-screen">
       <Menu />
-      <main v-if="!isReportLayerShow" class=" h-5/6 flex justify-center items-center relative top-1/4 mt-12 sm:top-1/3 xl:top-0">
+      <Loading v-show="loading" />
+      <main v-show="!loading" v-if="!isReportLayerShow" class=" h-5/6 flex justify-center items-center relative top-1/4 mt-12 sm:top-1/3 xl:top-0">
         <div class=" w-11/12 bg-white p-6 shadow-2xl grid grid-cols-1 xl:grid-cols-9">
           <img :src="advert.images" class="col-span-4" alt="">
           <div class="col-span-3 ml-4 mt-12 xl:mt-0">
@@ -42,12 +43,14 @@
             </button>
 
 
-            <button class="-ml-10 xl:ml-6 mt-3 text-center text-xl bg-gray-200 rounded-xl p-2 text-green-600 hover:opacity-80 duration-100">
+            <router-link
+              :to="`/chat/${user.id}`" 
+              class="-ml-10 xl:ml-6 mt-3 text-center text-xl bg-gray-200 rounded-xl p-2 text-green-600 hover:opacity-80 duration-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               Wyślij wiadomość
-            </button>
+            </router-link>
             <div class="-ml-10 xl:ml-6 mt-3 text-center text-xl bg-green-600 rounded-xl p-2 text-white">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -79,6 +82,7 @@
 <script>
 import Menu from '../components/Menu.vue'
 import ReportLayer from '../components/ReportLayer.vue'
+import Loading from '../components/Loading.vue'
 
 import axios from 'axios'
 
@@ -87,24 +91,28 @@ import API_URL from '../../API_URL'
 export default {
   components: {
     Menu,
-    ReportLayer
+    ReportLayer,
+    Loading
   },
-    data(){
-      return{
-        userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
-        user: {},
-        advert: {},
-        jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : false,
-        isLiked: false,
-        likedAdverts: [],
-        setTimeoutFunction: Function,
-        isReportLayerShow: false
-      }
+  data(){
+    return{
+      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
+      user: {},
+      advert: {},
+      jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : false,
+      isLiked: false,
+      likedAdverts: [],
+      setTimeoutFunction: Function,
+      isReportLayerShow: false,
+      loading: false,
+    }
   },
   props: {
     id: String
   },
   async created(){
+    this.loading = true
+
     await axios
     .get(`${API_URL}/auctions/${this.id}`)
     .then(async res => {
@@ -131,6 +139,8 @@ export default {
       else this.isLiked = true;
     })
     .catch(err => console.log(err.status))
+
+    this.loading = false
   },
   methods: {
     toggleShowReportLayer(){
@@ -182,7 +192,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

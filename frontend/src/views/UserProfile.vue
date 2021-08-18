@@ -1,7 +1,8 @@
 <template>
   <div class="h-screen">
     <Menu />
-    <div v-if="user" class="h-screen">
+    <Loading v-show="this.loading" />
+    <div v-show="!this.loading" v-if="user" class="h-screen">
       <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-6 p-4 text-2xl">
@@ -38,6 +39,7 @@ import axios from 'axios'
 import Menu from '../components/Menu.vue'
 import Advert from '../components/Advert.vue'
 import Comments from '../components/Comments.vue'
+import Loading from '../components/Loading.vue'
 
 import API_URL from '../../API_URL'
 
@@ -45,7 +47,8 @@ export default {
   components: {
     Menu,
     Advert,
-    Comments
+    Comments,
+    Loading
   },
   props: {
     id: String,
@@ -53,10 +56,13 @@ export default {
   data(){
     return{
       adverts: [],
-      user: {}
+      user: {},
+      loading: false,
     }
   },
   async created(){
+    this.loading = true
+
     if(this.id === this.$cookies.get('user').id){
       this.$router.push('/dashboard')
     }
@@ -83,10 +89,8 @@ export default {
     } catch(err){
       this.adverts = undefined
     }
+
+    this.loading = false
   }
 }
 </script>
-
-<style>
-
-</style>

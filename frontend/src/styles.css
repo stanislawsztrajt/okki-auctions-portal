@@ -12,7 +12,7 @@
   @apply lg:px-7 text-green-600 text-2xl lg:border-r lg:border-l border-gray-200;
 }
 
-/* Home, AdvertsResults and Help styles */
+/* Home, SearchInputs, Help styles */
 
 .search-input {
   @apply h-8 lg:h-12 text-gray-700 font-light text-lg sm:text-xl lg:text-3xl focus:outline-none focus:bg-gray-100;
@@ -23,7 +23,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Login and Register styles */
+/* Login, Register, NewAdvert styles */
 
 .login-register-input {
   @apply w-full h-11 bg-white text-base text-gray-700 outline-none pl-12 pr-2 my-2 placeholder-gray-500 border border-gray-300 shadow-inner
@@ -66,7 +66,7 @@
   @apply h-12 bg-white text-gray-700 px-4 py-2 shadow-sm;
 }
 
-/* Dashboard and  UserProfile*/
+/* Dashboard and UserProfile */
 
 .dashboardElements{
   @apply w-10/12 md:w-1/2 border-gray-300 text-gray-600 bg-white shadow;
@@ -77,12 +77,21 @@
 }
 
 /* buttons animation */
+
 .button-animation-hover{
   @apply hover:opacity-80 duration-150;
 }
 
+/* Chat styles */
+
+.userMessage {
+  @apply bg-gray-300 float-right rounded rounded-tr-none rounded-bl-xl
+}
+
+/* other */
+
 body::-webkit-scrollbar {
-  width: 1em;
+  width: 0.7em;
 }
 
 body::-webkit-scrollbar-track {

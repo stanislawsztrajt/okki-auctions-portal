@@ -10,6 +10,8 @@ import Liked from '../views/Liked.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Help from '../views/Help.vue'
 import ChangeUserInfo from '../views/ChangeUserInfo.vue'
+import Messages from '../views/Messages.vue'
+import Chat from '../views/Chat.vue'
 
 const routes = [
   {
@@ -69,6 +71,18 @@ const routes = [
     name: 'ChangeUserInfo',
     component: ChangeUserInfo,
   },
+  {
+    path: '/messages',
+    name: 'Messages',
+    component: Messages,
+  },
+  {
+    path: '/chat/:id',
+    name: 'Chat',
+    component: Chat,
+    props: true,
+  },
+
 ]
 
 const router = createRouter({

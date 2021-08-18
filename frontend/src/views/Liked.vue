@@ -1,12 +1,46 @@
 <template>
   <div>
     <Menu />
+    <Loading v-show="this.loading" />
     <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
-      <Advert
-        v-for="advert in adverts"
-        :key="advert.code"
-        :advert="advert"
-      />
+      <div class="flex flex-row justify-center md:justify-start mb-6">
+        <div class="dashboardElements mt-6 p-4 text-2xl">
+          Twoje polubione ogłoszenia
+        </div>
+      </div>
+      <div class="border-b pb-6 border-gray-300">
+        <SearchInputs
+          class="sm:w-3/4"
+          ref="inputsComponent"
+          @search-adverts="searchAdverts"
+          @update-adverts="updateAdverts"
+          :searchInputItem="searchInputItem"
+          :searchInputLocation="searchInputLocation"
+        />
+        <SearchFilters
+          ref="filteringComponent"
+          @search-adverts="searchAdverts"
+          @update-adverts="updateAdverts"
+          :categoryOption="categoryOption"
+        />
+        <SearchSorting
+          ref="sortingComponent"
+          @search-adverts="searchAdverts"
+        />
+      </div>
+      <Loading v-show="loading" />
+      <div v-show="!loading">
+        <Advert
+          v-for="advert in adverts"
+          :key="advert.code"
+          :advert="advert"
+        />
+        <NoAdvertsFound
+          v-show="adverts.length === 0"
+          :searchInputItem="searchInputItem"
+          :searchInputLocation="searchInputLocation"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -15,6 +49,11 @@
 import axios from 'axios'
 
 import Menu from '../components/Menu'
+import Loading from '../components/Loading.vue'
+import SearchInputs from '../components/SearchInputs'
+import SearchFilters from '../components/SearchFilters'
+import SearchSorting from '../components/SearchSorting'
+import NoAdvertsFound from '../components/NoAdvertsFound'
 import Advert from '../components/Advert.vue'
 
 import API_URL from '../../API_URL'
@@ -22,17 +61,29 @@ import API_URL from '../../API_URL'
 export default {
   components: {
     Menu,
-    Advert
+    Loading,
+    SearchInputs,
+    SearchFilters,
+    SearchSorting,
+    NoAdvertsFound,
+    Advert,
   },
   data(){
     return{
       userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       ISjwt: this.$cookies.isKey('jwt'),
       user: {},
-      adverts: []
+      adverts: [],
+      advertsCopy: [],
+      loading: false,
+      searchInputItem: '',
+      searchInputLocation: '',
+      categoryOption: '',
     }
   },
   async created(){
+    this.loading = true
+
     if(!this.ISjwt){
       this.$router.push('/login')
     }
@@ -47,8 +98,33 @@ export default {
       .get(`${API_URL}/auctions/${advert}`)
       .then(res =>{
         this.adverts.push(res.data)
+        this.advertsCopy.push(res.data)
+        this.loading = false
       })
     })
-  }
+
+    this.searchAdverts()
+  },
+  methods: {
+    searchAdverts () {
+      // Resetowanie tablicy adverts
+      this.adverts = this.advertsCopy;
+
+      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie 
+      this.$refs.inputsComponent.filterByInputItem(this.adverts);
+
+      // Filtrowanie tablicy adverts po wyszukiwanej lokalizacji
+      this.$refs.inputsComponent.filterByInputLocation(this.adverts);
+
+      // Sortowanie tablicy adverts
+      this.$refs.sortingComponent.sortByOption(this.adverts);
+
+      // Filtrowanie tablicy adverts po kategoriach
+      this.$refs.filteringComponent.filterByCategory(this.adverts);
+    },
+    updateAdverts(adverts) {
+      this.adverts = adverts;
+    },
+  },
 }
 </script>

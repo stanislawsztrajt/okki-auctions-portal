@@ -4,7 +4,7 @@
     <main class="flex flex-col mt-10 md:mt-14 lg:mt-16">
       <SearchInputs
         class="w-10/12 mx-auto mb-10 md:mb-14 lg:mb-16"
-        @update-search-input-values="updateSearchInputValues"
+        @search-adverts="updateSearchInputValues"
         :searchInputItem="searchInputItem"
         :searchInputLocation="searchInputLocation"
       />

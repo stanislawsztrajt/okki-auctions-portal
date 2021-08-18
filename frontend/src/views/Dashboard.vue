@@ -1,6 +1,7 @@
 <template>
     <div>
       <Menu />
+      <Loading v-show="this.loading" />
       <div v-if="isEditAdvertLayer"></div>
       <ApproveLayer
         v-else-if="isDeleteAdvertLayer"
@@ -66,6 +67,7 @@ import axios from 'axios'
 import Menu from '../components/Menu.vue'
 import Advert from '../components/Advert.vue'
 import ApproveLayer from '../components/ApproveLayer.vue'
+import Loading from '../components/Loading.vue'
 
 import API_URL from '../../API_URL'
 
@@ -75,7 +77,8 @@ export default {
   components: {
     Menu,
     Advert,
-    ApproveLayer
+    ApproveLayer,
+    Loading
   },
   data(){
     return{
@@ -85,12 +88,16 @@ export default {
       user: {},
       adverts: [],
       activeIdAdvert: '',
+      loading: false,
 
       isEditAdvertLayer: false,
       isDeleteAdvertLayer: false
     }
   },
   async created() {
+    this.loading = true
+
+
     if(!this.ISjwt){
       this.$router.push('/login')
     }
@@ -111,6 +118,7 @@ export default {
         this.adverts.push(res.data)
       })
     })
+    this.loading = false
   },
   methods: {
     async deleteAdvert(){

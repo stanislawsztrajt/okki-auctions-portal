@@ -11,17 +11,21 @@
       <div class="border-b pb-6 border-gray-300">
         <SearchInputs
           class="sm:w-3/4"
-          @update-search-input-values="updateSearchInputValues"
+          ref="inputsComponent"
+          @search-adverts="searchAdverts"
+          @update-adverts="updateAdverts"
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
         <SearchFilters
-          @update-category-option="updateCategoryOption"
+          ref="filteringComponent"
+          @search-adverts="searchAdverts"
+          @update-adverts="updateAdverts"
           :categoryOption="categoryOption"
         />
         <SearchSorting
-          @update-sorting-option="updateSortingOption"
-          :sortingOption="sortingOption"
+          ref="sortingComponent"
+          @search-adverts="searchAdverts"
         />
       </div>
       <Loading v-show="loading" />
@@ -72,7 +76,6 @@ export default {
     return {
       searchInputItem: '',
       searchInputLocation: '',
-      sortingOption: '',
       categoryOption: '',
       loading: false,
       adverts: [],
@@ -86,63 +89,30 @@ export default {
     }
   },
   methods: {
-    searchAdversts () {
+    searchAdverts () {
       // Resetowanie tablicy adverts
       this.adverts = this.advertsCopy;
 
-      // Filtrowanie tablicy adverts po nazwach ogłoszeń
-      this.adverts = this.adverts.filter((adverst) => {
-        let advertTitle = adverst.title.toLowerCase()
-        let searchInputItem = this.searchInputItem.toLowerCase().split(' ')
-        return searchInputItem.every(searchingWord => advertTitle.includes(searchingWord));
-      })
-      // Filtrowanie tablicy adverts po lokalizacji
-      this.adverts = this.adverts.filter((adverst) => {
-        if(this.searchInputLocation.replace(/\s+/g, ' ').trim() !== '') {
-          return adverst.location.toLowerCase().replace(/\s+/g, ' ') === this.searchInputLocation.toLowerCase().replace(/\s+/g, ' ')
-        }
-        else {
-          return true
-        }
-      })
+      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie 
+      console.log("o to chodzi ", this.adverts);
+      this.$refs.inputsComponent.filterByInputItem(this.adverts);
 
+      // Filtrowanie tablicy adverts po wyszukiwanej lokalizacji
+      this.$refs.inputsComponent.filterByInputLocation(this.adverts);
 
-      this.sortByOption();
-      this.filterByCategory();
+      // Sortowanie tablicy adverts
+      this.$refs.sortingComponent.sortByOption(this.adverts);
+
+      // Filtrowanie tablicy adverts po kategoriach
+      this.$refs.filteringComponent.filterByCategory(this.adverts);
     },
-    filterByCategory() {
-      this.adverts = this.adverts.filter((advert) => {
-        return advert.category.includes(this.categoryOption)
-      })
-    },
-    sortByOption () {
-      switch(this.sortingOption) {
-        case 'najnowsze': {
-          this.adverts.sort((advertA,advertB) => new Date(advertB.createdAt) - new Date(advertA.createdAt) ? -1 : 1);
-          break;
-        }
-        case 'najtansze': {
-          this.adverts.sort((advertA, advertB) => (advertA.price > advertB.price) ? 1 : -1);
-          break;
-        }
-        case 'najdrozsze': {
-          this.adverts.sort((advertA, advertB) => (advertA.price < advertB.price) ? 1 : -1);
-          break;
-        }
-      }
-    },
-    updateSortingOption(sortingOption) {
-      this.sortingOption = sortingOption;
-      this.searchAdversts();
-    },
-    updateCategoryOption(categoryOption) {
-      this.categoryOption = categoryOption;
-      this.searchAdversts();
+    updateAdverts(adverts) {
+      this.adverts = adverts;
     },
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
-      this.searchAdversts()
+      this.searchAdverts()
     },
     toggleEditAdvertLayer(id){
       this.activeIdAdvert = id;
@@ -195,25 +165,22 @@ export default {
       }
     },
   },
-  created() {
-    this.searchInputItem = this.$route.params.value;
-    this.searchInputLocation = this.$route.params.location;
-    this.categoryOption = this.$route.params.category;
-    this.loading = true;
+  async created() {
+    this.searchInputItem = this.$route.params.value
+    this.searchInputLocation = this.$route.params.location
+    this.categoryOption = this.$route.params.category
+    this.loading = true
 
-    if(this.searchInputItem === undefined) {
-      this.searchInputItem = ''
-      this.searchInputLocation = ''
-      this.categoryOption = ''
-    }
-
-    fetch(`${API_URL}/auctions`)
-      .then(response => response.json())
-      .then(adverts => {
-        this.adverts, this.advertsCopy = adverts;
-        this.loading = false;
-        this.searchAdversts();
-      })
+    await axios.get(`${API_URL}/auctions`)
+    .then(res => {
+      this.adverts = res.data
+      this.advertsCopy = res.data
+      this.loading = false;
+      this.searchAdverts()
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
   },
 }
