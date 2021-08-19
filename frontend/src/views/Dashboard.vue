@@ -97,6 +97,7 @@ export default {
   async created() {
     this.loading = true
 
+    console.log(this.$cookies.get('user').id);
 
     if(!this.ISjwt){
       this.$router.push('/login')
