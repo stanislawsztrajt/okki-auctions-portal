@@ -57,4 +57,11 @@ module.exports = {
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },
+  // async find(ctx) {
+  //   const [auction] = await strapi.services.auction.find({
+  //     createdAt: 'arst'
+  //   });
+
+  //   return sanitizeEntity(auction, { model: strapi.models.auction });
+  // },
 };

@@ -57,13 +57,14 @@ export default {
     return{
       adverts: [],
       user: {},
+      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       loading: false,
     }
   },
   async created(){
     this.loading = true
 
-    if(this.id === this.$cookies.get('user').id){
+    if(this.id === this.userCookie.id){
       this.$router.push('/dashboard')
     }
 

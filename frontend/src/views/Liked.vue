@@ -2,13 +2,16 @@
   <div>
     <Menu />
     <Loading v-show="this.loading" />
-    <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48" v-if="user.likedAdverts">
       <div class="flex flex-row justify-center md:justify-start mb-6">
-        <div class="dashboardElements mt-6 p-4 text-2xl">
+        <div class="dashboardElements mt-6 p-4 text-2xl" v-if="user.likedAdverts.length > 0">
           Twoje polubione ogłoszenia
         </div>
+        <div class="dashboardElements mt-6 p-4 text-2xl" v-else>
+          Nie masz polubionych ogłoszeń
+        </div>
       </div>
-      <div class="border-b pb-6 border-gray-300">
+      <div class="border-b pb-6 border-gray-300" v-if="user.likedAdverts.length > 0">
         <SearchInputs
           class="sm:w-3/4"
           ref="inputsComponent"
@@ -29,7 +32,7 @@
         />
       </div>
       <Loading v-show="loading" />
-      <div v-show="!loading">
+      <div v-show="!loading" v-if="user.likedAdverts.length > 0">
         <Advert
           v-for="advert in adverts"
           :key="advert.code"
@@ -82,16 +85,20 @@ export default {
     }
   },
   async created(){
-    this.loading = true
-
     if(!this.ISjwt){
       this.$router.push('/login')
     }
+
+    this.loading = true
 
     await axios
     .get(`${API_URL}/users/${this.userCookie.id}`)
     .then(res => this.user = res.data)
     .catch(err => console.log(err.status))
+
+    if(this.user.likedAdverts.length === 0){
+      return this.loading = false
+    }
 
     await this.user.likedAdverts.forEach(async advert =>{
       await axios
@@ -110,7 +117,7 @@ export default {
       // Resetowanie tablicy adverts
       this.adverts = this.advertsCopy;
 
-      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie 
+      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie
       this.$refs.inputsComponent.filterByInputItem(this.adverts);
 
       // Filtrowanie tablicy adverts po wyszukiwanej lokalizacji

@@ -7,6 +7,7 @@ module.exports = {
         '84': '21rem',
         '108': '27rem',
         '112': '28rem',
+        '192': '46rem',
       }
     },
     screens: {

@@ -47,7 +47,7 @@
         dodaj komentarz
       </button>
     </div>
-    <div v-else class="text-2xl">
+    <div v-else class="text-2xl mt-10">
       Nie jestes zalogowany, nie mozesz dodac komentarza
       <router-link to="/login" class="font-extrabold">
         Zaloguj się

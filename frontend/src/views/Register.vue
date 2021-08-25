@@ -3,7 +3,7 @@
     <router-link to="/" class="text-white text-5xl focus:outline-none mb-3 font-light">okki</router-link>
     <div class="flex flex-col items-center bg-white w-84 md:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Utwórz swoje konto</h2>
-      <div class="p-10 w-full">
+      <form @submit.prevent="register" class="p-10 w-full">
         <div class="login-register-input-box">
           <label for="">Nazwa użytkownika</label>
           <div class="login-register-input-icon">
@@ -57,12 +57,13 @@
             type="password"
             v-model="repeatPasswordValue">
         </div>
-        <button
-          class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
-          @click="register">
-          Zarejestruj
-        </button>
-      </div>
+        <input
+          class="w-full h-11 text-center bg-gradient-to-r cursor-pointer from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
+          @submit="register"
+          type="submit"
+          value="Zarejestruj"
+        />
+      </form>
     </div>
     <div v-if="validationError" class="validation-alert mt-16 top-0 sm:top-3/4 sm:mt-24" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>

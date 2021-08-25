@@ -1,7 +1,8 @@
 <template>
   <div id="NewAdverst">
     <Menu />
-    <div class="w-3/4 lg:w-3/5 py-10 m-auto">
+    <Loading v-if="loading"/>
+    <div v-else class="w-3/4 lg:w-3/5 py-10 m-auto">
       <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
       <div class="new-adverst-main-box">
         <h1 class="new-adverst-title">Informacje podstawowe</h1>
@@ -61,7 +62,7 @@
         <h1 class="new-adverst-title">Zdjęcia i opis</h1>
         <div class="new-adverst-data-box">
           <label>Zdjęcia</label>
-          <div class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2">
+          <div v-if="urls.length < 4" class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2">
             <input
               type="file"
               accept="image/png, image/jpeg"
@@ -70,11 +71,30 @@
               @change="onFileChange($event)"
             >
           </div>
-          <img
-            :src="imageRes.url"
-            class="max-w-sm bg-gray-100 mt-2"
-            alt=""
-          >
+
+          <div class="grid grid-cols-1 2xl:grid-cols-2 h-auto">
+            <div
+              v-for="(url, index) in urls"
+              :key="url"
+              class="bg-cover bg-no-repeat bg-center grid-cols-1 m-2 h-72 flex flex-col"
+              :style="{ backgroundImage: 'url(' + url + ')' }"
+            >
+              <div
+                class=" text-black bg-white text-center text-sm md:text-base xl:text-xl p-2 w-full opacity-40"
+                v-if="index === 0"
+              >
+                To zdjęcie będzie główne
+              </div>
+              <div class="flex justify-end items-end h-full">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                @click="removeImage(index)"
+                class="h-10 w-10 text-red-600 button-animation-hover cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="new-adverst-data-box">
           <label>Opis</label>
@@ -134,6 +154,7 @@
 
 <script>
 import Menu from '../components/Menu'
+import Loading from '../components/Loading'
 
 import axios from 'axios'
 
@@ -145,7 +166,8 @@ import API_URL from '../../API_URL'
 export default {
   name: 'NewAdvert',
   components: {
-    Menu
+    Menu,
+    Loading
   },
   data(){
     return{
@@ -157,10 +179,17 @@ export default {
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
-      image: '',
-      imageRes: '',
+
+      loading: false,
+
+      urls: [],
+      images: [],
+      imageUrls: [],
+
+      //cookies
       userInfo: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : false,
+
       advertsIDs: [],
       categories: categoriesJSON,
       validationText: '',
@@ -188,30 +217,19 @@ export default {
   },
   methods: {
     async onFileChange(e){
-      this.image = e.target.files[0]
-
-      const data = new FormData()
-      data.append('file', this.image)
-      data.append("api_key", '');
-      data.append("api_secret", '');
-      data.append("cloud_name", 'dh35iucxu');
-      data.append("upload_preset", "qpfb0fma");
-
-
-      await axios.post(
-        `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
-        data
-      )
-      .then(res => {
-        console.log(res.data.secure_url)
-        this.imageRes = res.data
-      })
-      .catch(err => console.log(err))
+      const image = e.target.files[0]
+      this.images.push(image)
+      this.urls.push(URL.createObjectURL(image))
+      // this.image.push(e.target.files[0])
+    },
+    removeImage(index){
+      this.images.splice(index,1)
+      this.urls.splice(index,1)
     },
     async addAdvert(){
       clearTimeout(this.setTimeout)
 
-      if(!this.titleValue || !this.usernameValue || !this.priceValue || !this.categoryValue || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue || !this.image){
+      if(!this.titleValue || !this.usernameValue || !this.priceValue || !this.categoryValue || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
@@ -259,45 +277,90 @@ export default {
         return this.validationError = true
       }
 
-      this.used = true
+      this.used = true;
+      this.loading = true;
 
-      if(this.used) {
-        await axios.post(
-          `${API_URL}/auctions`, {
-          title: this.titleValue,
-          price: parseFloat(this.priceValue),
-          category: this.categoryValue,
-          description: this.descriptionValue,
-          location: this.locationValue,
-          phoneNumber: this.phoneNumberValue,
-          userID: this.userInfo.id,
-          images: [this.imageRes.url]
-        })
-        .then(async res =>{
-          // try{
-          this.advertsIDs.push(res.data.id)
-          // } catch(err){
-            // this.advertsIDs = []
-            // this.advertsIDs.push(res.data.id)
-          // }
-
-          await axios.put(`${API_URL}/users/${this.userInfo.id}`,
-          {
-            Adverts: this.advertsIDs
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${this.jwt}`
-            }
-          })
-          .then((res)=>{
-            console.log(res)
-            this.$router.push('/dashboard')
-          })
-          .catch(err=>console.log(err))
-        }) .catch(err=>{console.log(err)})
+      if(this.images.length === 0){
+        this.images = ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg']
       }
+
+      await this.images.forEach(async (image, index) =>{
+        let isPostedImages = false;
+
+        const data = new FormData()
+        data.append('file', image)
+        data.append("api_key", '');
+        data.append("api_secret", '');
+        data.append("cloud_name", 'dh35iucxu');
+        data.append("upload_preset", "qpfb0fma");
+
+        await axios.post(
+          `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
+          data
+        )
+        .then(async res => {
+          console.log(res.data);
+          console.log(res.data.secure_url);
+          await this.imageUrls.push(res.data.url);
+          if(index+1 === this.images.length) isPostedImages = true;
+        })
+        .catch(err => console.log(err))
+
+
+        if(isPostedImages){
+          if(this.used) {
+            await axios.post(
+              `${API_URL}/auctions`, {
+              title: this.titleValue,
+              price: parseFloat(this.priceValue),
+              category: this.categoryValue,
+              description: this.descriptionValue,
+              location: this.locationValue,
+              phoneNumber: this.phoneNumberValue,
+              userID: this.userInfo.id,
+              images: this.imageUrls
+            })
+            .then(async res =>{
+              this.advertsIDs.push(res.data.id)
+
+              await axios.put(`${API_URL}/users/${this.userInfo.id}`,
+              {
+                Adverts: this.advertsIDs
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${this.jwt}`
+                }
+              })
+              .then((res)=>{
+                console.log(res)
+                this.$router.push('/dashboard')
+              })
+              .catch(err=>console.log(err))
+            }) .catch(err=>{console.log(err)})
+          }
+        }
+      })
     },
   }
 }
+/*
+      const data = new FormData()
+      data.append('file', this.image)
+      data.append("api_key", '');
+      data.append("api_secret", '');
+      data.append("cloud_name", 'dh35iucxu');
+      data.append("upload_preset", "qpfb0fma");
+
+
+      await axios.post(
+        `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
+        data
+      )
+      .then(res => {
+        console.log(res.data.secure_url)
+        this.imageRes = res.data
+      })
+      .catch(err => console.log(err))
+*/
 </script>

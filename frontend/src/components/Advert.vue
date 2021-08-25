@@ -3,7 +3,11 @@
     :to="`/advert/${advert.id}`"
     class="flex flex-col sm:flex-row w-10/12 border-gray-300 my-4 text-gray-600 bg-white shadow"
   >
-    <div style="min-width: 18rem" class="h-32 sm:h-48 w-full sm:w-72 bg-gray-300 bg-cover bg-no-repeat bg-center border-gray-200 border-b-2 sm:border-r-2 sm:border-b-0" :style="{ backgroundImage: 'url(' + advert.images + ')' }"></div>
+    <div
+      style="min-width: 18rem"
+      class="h-32 sm:h-48 w-full sm:w-72 bg-gray-300 bg-cover bg-no-repeat bg-center border-gray-200 border-b-2 sm:border-r-2 sm:border-b-0"
+      :style="{ backgroundImage: 'url(' + advert.images[0] + ')' }"
+    ></div>
     <div class="px-3 py-2 sm:px-5 sm:py-4 w-full">
       <h2 class="sm:text-2xl">
         {{ advert.title }}

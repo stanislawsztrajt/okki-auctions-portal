@@ -95,13 +95,10 @@ export default {
     }
   },
   async created() {
-    this.loading = true
-
-    console.log(this.$cookies.get('user').id);
-
     if(!this.ISjwt){
       this.$router.push('/login')
     }
+    this.loading = true
 
     await axios.get(`${API_URL}/users/${this.userCookie.id}`)
     .then(res => {
