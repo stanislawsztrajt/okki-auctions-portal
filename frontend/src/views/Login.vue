@@ -42,7 +42,7 @@
         Nowy na okki? <span class="text-green-600 ml-2"> Zarejestruj się</span>
       </router-link>
     </div>
-    <button class="text-white font-xs mt-4 underline hover:opacity-80 transition duration-150">Zapomniałeś hasła?</button>
+    <router-link to="/forgot-password" class="text-white font-xs mt-4 underline hover:opacity-80 transition duration-150">Zapomniałeś hasła?</router-link>
     <div v-if="loginError" class="validation-alert top-0 sm:top-3/4" role="alert">
       <span class="block sm:inline">Podany login i/lub hasło są nieprawidłowe</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
@@ -62,7 +62,7 @@ export default {
       return{
         emailValue: '',
         passwordValue: '',
-        infoUser: '',
+        user: '',
         jwt: this.$cookies.isKey('jwt'),
 
         loginError: false,
@@ -86,11 +86,11 @@ export default {
         })
 
         .then(async res=>{
-          this.infoUser = res.data
+          this.user = res.data
           console.log(res.data.user)
 
-          await this.$cookies.set('jwt',this.infoUser.jwt, '7d')
-          await this.$cookies.set('user',this.infoUser.user, '7d')
+          await this.$cookies.set('jwt',this.user.jwt, '7d')
+          await this.$cookies.set('user',this.user.user, '7d')
 
           this.$router.push('/dashboard')
         })

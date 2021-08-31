@@ -48,7 +48,7 @@
         </svg>
       </router-link>
 
-      <div v-else>to nic takiego</div>
+      <!-- <div v-else>to nic takiego</div> -->
     </div>
   </router-link>
 </template>

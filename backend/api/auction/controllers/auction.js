@@ -57,11 +57,17 @@ module.exports = {
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },
-  // async find(ctx) {
-  //   const [auction] = await strapi.services.auction.find({
-  //     createdAt: 'arst'
-  //   });
+  async find(ctx) {
+    const auctions = await strapi.services.auction.find();
 
-  //   return sanitizeEntity(auction, { model: strapi.models.auction });
-  // },
+    auctions.map(async auction =>{
+      // 2592000000 = 1 month
+      if(Date.parse(auction.createdAt) <= Date.parse(auction.createdAt) + (Date.parse(new Date()) - Date.parse(auction.createdAt))){
+        const entity = await strapi.services.auction.delete({ id: auction.id });
+        return sanitizeEntity(entity, { model: strapi.models.auction });
+      }
+    })
+
+    return sanitizeEntity(auctions, { model: strapi.models.auction });
+  },
 };

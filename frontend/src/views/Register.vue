@@ -119,11 +119,11 @@ export default {
           return this.validationError = true
         }
 
-        if(this.usernameValue.length > 20){
+        if(this.usernameValue.length > 30){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
-          this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 20 znaki)'
+          this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 30 znaki)'
           return this.validationError = true
         }
 
@@ -135,11 +135,11 @@ export default {
           return this.validationError = true
         }
 
-        if(this.passwordValue.length > 20){
+        if(this.passwordValue.length > 30){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
-          this.validationText = 'Hasło jest za długie (maksymalnie 20 znaków)'
+          this.validationText = 'Hasło jest za długie (maksymalnie 30 znaków)'
           return this.validationError = true
         }
 

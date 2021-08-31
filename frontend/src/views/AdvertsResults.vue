@@ -93,8 +93,7 @@ export default {
       // Resetowanie tablicy adverts
       this.adverts = this.advertsCopy;
 
-      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie 
-      console.log("o to chodzi ", this.adverts);
+      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie
       this.$refs.inputsComponent.filterByInputItem(this.adverts);
 
       // Filtrowanie tablicy adverts po wyszukiwanej lokalizacji
@@ -123,46 +122,34 @@ export default {
       this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
     },
     async deleteAdvert(){
-      try{
-        await axios.get(`${API_URL}/users/${this.userCookie.id}`)
-        .then(async res =>{
-          const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
-          let advertsIDs = res.data.Adverts;
-          advertsIDs.splice(indexId, 1);
+      await axios.get(`${API_URL}/users/${this.userCookie.id}`)
+      .then(async res =>{
+        const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
+        let advertsIDs = res.data.Adverts;
+        advertsIDs.splice(indexId, 1);
 
-          await axios.put(`${API_URL}/users/${this.userCookie.id}`,
-          {
-            Adverts: advertsIDs
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${this.jwt}`
-            }
-          })
-          .then(res => {
-            console.log(res.status)
-            window.location.reload()
-          })
-          .catch(err => console.log(err))
-        })
-        .catch(err =>{
-          console.log(err)
-        })
-
-        await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
+        await axios.put(`${API_URL}/users/${this.userCookie.id}`,
+        { Adverts: advertsIDs },
+        {
           headers: {
             Authorization: `Bearer ${this.jwt}`
           }
         })
-        .then(res =>{
-          console.log(res.status)
-        })
-        .catch(err =>{
-          console.log(err)
-        })
-      } catch(err) {
-        console.log(err)
-      }
+        .then((res) => console.log(res))
+        .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
+
+      await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
+        headers: {
+          Authorization: `Bearer ${this.jwt}`
+        }
+      })
+      .then(res => {
+        console.log(res)
+        window.location.reload()
+      })
+      .catch(err => console.log(err))
     },
   },
   async created() {

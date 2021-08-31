@@ -138,7 +138,7 @@
       </div>
 
       <button
-        class="w-52 md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150"
+        class="new-advert-button"
         @click="addAdvert"
       >
         Dodaj ogłoszeniee
@@ -284,7 +284,7 @@ export default {
         this.images = ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg']
       }
 
-      await this.images.forEach(async (image, index) =>{
+      await this.images.forEach(async image =>{
         let isPostedImages = false;
 
         const data = new FormData()
@@ -300,9 +300,8 @@ export default {
         )
         .then(async res => {
           console.log(res.data);
-          console.log(res.data.secure_url);
           await this.imageUrls.push(res.data.url);
-          if(index+1 === this.images.length) isPostedImages = true;
+          if(this.imageUrls.length === this.images.length) isPostedImages = true;
         })
         .catch(err => console.log(err))
 
@@ -319,6 +318,11 @@ export default {
               phoneNumber: this.phoneNumberValue,
               userID: this.userInfo.id,
               images: this.imageUrls
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.jwt}`
+              }
             })
             .then(async res =>{
               this.advertsIDs.push(res.data.id)

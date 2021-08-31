@@ -10,6 +10,8 @@ import Liked from '../views/Liked.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Help from '../views/Help.vue'
 import ChangeUserInfo from '../views/ChangeUserInfo.vue'
+import ForgotPassword from '../views/ForgotPassword.vue'
+import ResetPassword from '../views/ResetPassword.vue'
 import Messages from '../views/Messages.vue'
 import Chat from '../views/Chat.vue'
 
@@ -70,6 +72,16 @@ const routes = [
     path: '/change-user-info',
     name: 'ChangeUserInfo',
     component: ChangeUserInfo,
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPassword,
   },
   {
     path: '/messages',
