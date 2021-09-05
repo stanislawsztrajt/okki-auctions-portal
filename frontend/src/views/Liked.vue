@@ -20,12 +20,15 @@
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
-        <SearchFilters
-          ref="filteringComponent"
-          @search-adverts="searchAdverts"
-          @update-adverts="updateAdverts"
-          :categoryOption="categoryOption"
-        />
+        <div id="SearchFilteringElements" class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
+          <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
+          <SearchFilteringElements
+            ref="filteringComponent"
+            @search-adverts="searchAdverts"
+            @update-adverts="updateAdverts"
+            :categoryOption="categoryOption"
+          />
+        </div>
         <SearchSorting
           ref="sortingComponent"
           @search-adverts="searchAdverts"
@@ -54,7 +57,7 @@ import axios from 'axios'
 import Menu from '../components/Menu'
 import Loading from '../components/Loading.vue'
 import SearchInputs from '../components/SearchInputs'
-import SearchFilters from '../components/SearchFilters'
+import SearchFilteringElements from '../components/SearchFilteringElements'
 import SearchSorting from '../components/SearchSorting'
 import NoAdvertsFound from '../components/NoAdvertsFound'
 import Advert from '../components/Advert.vue'
@@ -66,7 +69,7 @@ export default {
     Menu,
     Loading,
     SearchInputs,
-    SearchFilters,
+    SearchFilteringElements,
     SearchSorting,
     NoAdvertsFound,
     Advert,

@@ -12,17 +12,22 @@
         <SearchInputs
           class="sm:w-3/4"
           ref="inputsComponent"
-          @search-adverts="searchAdverts"
+          @update-search-input-values="updateSearchInputValues"
           @update-adverts="updateAdverts"
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
-        <SearchFilters
-          ref="filteringComponent"
-          @search-adverts="searchAdverts"
-          @update-adverts="updateAdverts"
-          :categoryOption="categoryOption"
-        />
+        <div class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
+          <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
+          <SearchFilteringElements
+            ref="filteringComponent"
+            @select-change="updateAppliedFilters"
+            @update-adverts="updateAdverts"
+            :appliedFiltersCookies="appliedFilters"
+            :selectDefaultOption="'Wszystko'"
+            :isRequired="false"
+          />
+        </div>
         <SearchSorting
           ref="sortingComponent"
           @search-adverts="searchAdverts"
@@ -53,7 +58,7 @@ import Menu from '../components/Menu'
 import ApproveLayer from '../components/ApproveLayer'
 import Loading from '../components/Loading'
 import SearchInputs from '../components/SearchInputs'
-import SearchFilters from '../components/SearchFilters'
+import SearchFilteringElements from '../components/SearchFilteringElements'
 import SearchSorting from '../components/SearchSorting'
 import NoAdvertsFound from '../components/NoAdvertsFound'
 import Advert from '../components/Advert'
@@ -67,7 +72,7 @@ export default {
     ApproveLayer,
     Loading,
     SearchInputs,
-    SearchFilters,
+    SearchFilteringElements,
     SearchSorting,
     NoAdvertsFound,
     Advert
@@ -76,34 +81,40 @@ export default {
     return {
       searchInputItem: '',
       searchInputLocation: '',
-      categoryOption: '',
+      appliedFilters: {},
       loading: false,
       adverts: [],
       advertsCopy: [],
       userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : null,
       activeIdAdvert: '',
-
+      searchData: {},
+      
       isEditAdvertLayer: false,
       isDeleteAdvertLayer: false
     }
   },
   methods: {
     searchAdverts () {
-      // Resetowanie tablicy adverts
+      this.searchData['item'] = this.searchInputItem
+      this.searchData['location'] = this.searchInputLocation
+      this.searchData['filters'] = this.appliedFilters
+      this.$cookies.set('searchData', this.searchData, '5MIN')
+
+      // Reseting the adverts array
       this.adverts = this.advertsCopy;
 
-      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie
+      // Filter the adverts array by the searched item
       this.$refs.inputsComponent.filterByInputItem(this.adverts);
 
-      // Filtrowanie tablicy adverts po wyszukiwanej lokalizacji
+      // Filter the adverts table by the searched location
       this.$refs.inputsComponent.filterByInputLocation(this.adverts);
 
-      // Sortowanie tablicy adverts
-      this.$refs.sortingComponent.sortByOption(this.adverts);
+      // Sorting the adverts array
+      this.$refs.sortingComponent.sortAdverts(this.adverts);
 
-      // Filtrowanie tablicy adverts po kategoriach
-      this.$refs.filteringComponent.filterByCategory(this.adverts);
+      // Filter the adverts array by categories
+      this.$refs.filteringComponent.filterAdverts(this.adverts, this.appliedFilters);
     },
     updateAdverts(adverts) {
       this.adverts = adverts;
@@ -111,6 +122,10 @@ export default {
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
+      this.searchAdverts()
+    },
+    updateAppliedFilters(filters) {
+      this.appliedFilters = filters
       this.searchAdverts()
     },
     toggleEditAdvertLayer(id){
@@ -122,40 +137,63 @@ export default {
       this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
     },
     async deleteAdvert(){
-      await axios.get(`${API_URL}/users/${this.userCookie.id}`)
-      .then(async res =>{
-        const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
-        let advertsIDs = res.data.Adverts;
-        advertsIDs.splice(indexId, 1);
+      try{
+        await axios.get(`${API_URL}/users/${this.userCookie.id}`)
+        .then(async res =>{
+          const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
+          let advertsIDs = res.data.Adverts;
+          advertsIDs.splice(indexId, 1);
 
-        await axios.put(`${API_URL}/users/${this.userCookie.id}`,
-        { Adverts: advertsIDs },
-        {
+          await axios.put(`${API_URL}/users/${this.userCookie.id}`,
+          {
+            Adverts: advertsIDs
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.jwt}`
+            }
+          })
+          .then(res => {
+            console.log(res.status)
+            window.location.reload()
+          })
+          .catch(err => console.log(err))
+        })
+        .catch(err =>{
+          console.log(err)
+        })
+
+        await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
           headers: {
             Authorization: `Bearer ${this.jwt}`
           }
         })
-        .then((res) => console.log(res))
-        .catch(err => console.log(err))
-      })
-      .catch(err => console.log(err))
-
-      await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
-        headers: {
-          Authorization: `Bearer ${this.jwt}`
-        }
-      })
-      .then(res => {
-        console.log(res)
-        window.location.reload()
-      })
-      .catch(err => console.log(err))
+        .then(res =>{
+          console.log(res.status)
+        })
+        .catch(err =>{
+          console.log(err)
+        })
+      } catch(err) {
+        console.log(err)
+      }
     },
   },
   async created() {
-    this.searchInputItem = this.$route.params.value
-    this.searchInputLocation = this.$route.params.location
-    this.categoryOption = this.$route.params.category
+    if(this.$cookies.isKey('searchData')) {
+      this.searchInputItem = this.$cookies.get('searchData').item
+      this.searchInputLocation = this.$cookies.get('searchData').location
+      this.appliedFilters = this.$cookies.get('searchData').filters
+    }
+
+    if(this.$route.params.item || this.$route.params.item === '') {
+      this.searchInputItem = this.$route.params.item
+      this.searchInputLocation = this.$route.params.location
+      Object.keys(this.appliedFilters).forEach(key => this.appliedFilters[key] = '')
+      this.appliedFilters['category'] = this.$route.params.category
+      this.appliedFilters['subcategory'] = ''
+    }
+
     this.loading = true
 
     await axios.get(`${API_URL}/auctions`)
@@ -168,7 +206,6 @@ export default {
     .catch(err => {
       console.log(err)
     })
-
   },
 }
 

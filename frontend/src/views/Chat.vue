@@ -101,11 +101,7 @@ export default {
   },
   methods: {
     saveMessage() {
-      // tutaj mozna to dac
-
-      if(this.message === '') {
-        return
-      }
+      if(this.message === '') return
 
       db.collection(this.dbCollectionCode).add({
         message: this.message,

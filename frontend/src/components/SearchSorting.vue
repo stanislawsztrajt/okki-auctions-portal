@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    sortByOption (advertsCopy) {
+    sortAdverts(advertsCopy) {
       this.adverts = advertsCopy
       switch(this.sorting) {
         case 'najnowsze': {

@@ -4,7 +4,7 @@
     <main class="flex flex-col mt-10 md:mt-14 lg:mt-16">
       <SearchInputs
         class="w-10/12 mx-auto mb-10 md:mb-14 lg:mb-16"
-        @search-adverts="updateSearchInputValues"
+        @update-search-input-values="updateSearchInputValues"
         :searchInputItem="searchInputItem"
         :searchInputLocation="searchInputLocation"
       />
@@ -44,7 +44,7 @@ export default {
   methods: {
     // Funkcja która przenosi i przekazuje zmienne do AdvertsResults.vue
     shareSearchInputValues () {
-      this.$router.push({name: "AdvertsResults", params: {value: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
+      this.$router.push({name: "AdvertsResults", params: {item: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
     },
     // Funkcja aktualizująca wartość zmiennej categoryOption i wywołująca funkcję shareSearchInputValues
     updateCategoryOption(categoryOption) {

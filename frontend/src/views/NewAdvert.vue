@@ -2,7 +2,11 @@
   <div id="NewAdverst">
     <Menu />
     <Loading v-if="loading"/>
-    <div v-else class="w-3/4 lg:w-3/5 py-10 m-auto">
+    <form 
+      v-else 
+      @submit.prevent="addAdvert"
+      class="w-3/4 lg:w-3/5 py-10 m-auto"
+    >
       <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
       <div class="new-adverst-main-box">
         <h1 class="new-adverst-title">Informacje podstawowe</h1>
@@ -30,36 +34,17 @@
           >
         </div>
         <div class="new-adverst-data-box">
-          <h2>Kategoria</h2>
-          <select
-            name="Kategorie"
+          <label>Opis</label>
+          <textarea
+            class="bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full md:w-3/5 h-72"
+            placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
             required
-            class="new-adverst-input"
-            v-model="categoryValue"
+            v-model.trim="descriptionValue"
+            minlength="50"
+            maxlength="1000"
           >
-            <option value="" disabled selected hidden>Wybierz kategorię</option>
-            <option
-              v-for="category in categories"
-              :key="category.value"
-              :value="category.value">
-              {{ category.name }}
-            </option>
-          </select>
+          </textarea>
         </div>
-        <div class="new-adverst-data-box">
-          <h2>Twoje imię</h2>
-          <input
-            type="text"
-            placeholder="Np. Michał"
-            required
-            class="new-adverst-input"
-            v-model="usernameValue"
-            maxlength="20"
-          >
-        </div>
-      </div>
-      <div class="new-adverst-main-box">
-        <h1 class="new-adverst-title">Zdjęcia i opis</h1>
         <div class="new-adverst-data-box">
           <label>Zdjęcia</label>
           <div v-if="urls.length < 4" class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2">
@@ -96,20 +81,16 @@
           </div>
 
         </div>
-        <div class="new-adverst-data-box">
-          <label>Opis</label>
-          <textarea
-            class="bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full md:w-3/5 h-72"
-            placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
-            required
-            v-model.trim="descriptionValue"
-            minlength="50"
-            maxlength="1000"
-          >
-          </textarea>
-        </div>
       </div>
-
+      <div class="new-adverst-main-box">
+        <h1 class="new-adverst-title">Filtry</h1>
+        <SearchFilteringElements
+          class="text-white"
+          @select-change="saveFilters"
+          :selectDefaultOption="'Wybierz'"
+          :isRequired="true"
+        />
+      </div>
       <div class="new-adverst-main-box">
         <h1 class="new-adverst-title">Dane kontaktowe</h1>
         <div class="new-adverst-data-box">
@@ -136,14 +117,12 @@
           >
         </div>
       </div>
-
-      <button
+      <input
         class="new-advert-button"
-        @click="addAdvert"
+        type="submit"
+        value="Dodaj ogłoszenie"
       >
-        Dodaj ogłoszeniee
-      </button>
-    </div>
+    </form>
     <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
@@ -155,6 +134,7 @@
 <script>
 import Menu from '../components/Menu'
 import Loading from '../components/Loading'
+import SearchFilteringElements from '../components/SearchFilteringElements'
 
 import axios from 'axios'
 
@@ -167,18 +147,18 @@ export default {
   name: 'NewAdvert',
   components: {
     Menu,
-    Loading
+    Loading,
+    SearchFilteringElements
   },
   data(){
     return{
       // v-models
       titleValue: '',
-      usernameValue: '',
       priceValue: '',
-      categoryValue: '',
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
+      advertFilters: [],
 
       loading: false,
 
@@ -216,6 +196,9 @@ export default {
     })
   },
   methods: {
+    saveFilters(filters) {
+      this.advertFilters = Object.values(filters)
+    },
     async onFileChange(e){
       const image = e.target.files[0]
       this.images.push(image)
@@ -229,7 +212,7 @@ export default {
     async addAdvert(){
       clearTimeout(this.setTimeout)
 
-      if(!this.titleValue || !this.usernameValue || !this.priceValue || !this.categoryValue || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
+      if(!this.titleValue || !this.priceValue || !this.advertFilters || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
@@ -312,12 +295,12 @@ export default {
               `${API_URL}/auctions`, {
               title: this.titleValue,
               price: parseFloat(this.priceValue),
-              category: this.categoryValue,
               description: this.descriptionValue,
               location: this.locationValue,
               phoneNumber: this.phoneNumberValue,
               userID: this.userInfo.id,
-              images: this.imageUrls
+              images: this.imageUrls,
+              filters: this.advertFilters,
             },
             {
               headers: {

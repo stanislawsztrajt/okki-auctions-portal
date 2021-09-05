@@ -30,11 +30,17 @@ import Menu from "../components/Menu.vue"
 export default {
   data() {
     return {
-      users: []
+      users: [],
+      ISjwt: this.$cookies.isKey('jwt'),
     }
   },
   components: {
     Menu,
-  }
+  },
+  created() {
+    if(!this.ISjwt){
+      this.$router.push('/login')
+    }
+  },
 }
 </script>
