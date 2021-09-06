@@ -3,7 +3,7 @@
     <Menu />
     <Loading v-show="this.loading" />
     <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48" v-if="user.likedAdverts">
-      <div class="flex flex-row justify-center md:justify-start mb-6">
+      <div class="flex flex-row justify-start mb-6">
         <div class="dashboardElements mt-6 p-4 text-2xl" v-if="user.likedAdverts.length > 0">
           Twoje polubione ogłoszenia
         </div>
@@ -24,9 +24,10 @@
           <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
           <SearchFilteringElements
             ref="filteringComponent"
-            @search-adverts="searchAdverts"
+            @select-change="searchAdverts"
             @update-adverts="updateAdverts"
-            :categoryOption="categoryOption"
+            :selectDefaultOption="'Wszystko'"
+            :isRequired="false"
           />
         </div>
         <SearchSorting
@@ -81,10 +82,9 @@ export default {
       user: {},
       adverts: [],
       advertsCopy: [],
-      loading: false,
       searchInputItem: '',
       searchInputLocation: '',
-      categoryOption: '',
+      loading: false,
     }
   },
   async created(){
@@ -117,20 +117,20 @@ export default {
   },
   methods: {
     searchAdverts () {
-      // Resetowanie tablicy adverts
+      // Reseting the adverts array
       this.adverts = this.advertsCopy;
 
-      // Filtrowanie tablicy adverts po wyszukiwanym przedmiocie
+      // Filter the adverts array by the searched item
       this.$refs.inputsComponent.filterByInputItem(this.adverts);
 
-      // Filtrowanie tablicy adverts po wyszukiwanej lokalizacji
+      // Filter the adverts table by the searched location
       this.$refs.inputsComponent.filterByInputLocation(this.adverts);
 
-      // Sortowanie tablicy adverts
-      this.$refs.sortingComponent.sortByOption(this.adverts);
+      // Sorting the adverts array
+      this.$refs.sortingComponent.sortAdverts(this.adverts);
 
-      // Filtrowanie tablicy adverts po kategoriach
-      this.$refs.filteringComponent.filterByCategory(this.adverts);
+      // Filter the adverts array by categories
+      this.$refs.filteringComponent.filterAdverts(this.adverts);
     },
     updateAdverts(adverts) {
       this.adverts = adverts;

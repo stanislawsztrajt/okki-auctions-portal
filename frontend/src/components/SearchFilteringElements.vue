@@ -103,7 +103,9 @@ export default {
   methods: {
     filterAdverts(advertsCopy, appliedFilters) {  
       this.adverts = advertsCopy
-      this.categoryFilterVariables = appliedFilters
+      if(appliedFilters) {
+        this.categoryFilterVariables = appliedFilters
+      }
 
       this.appliedFilters = Object.values(this.categoryFilterVariables)
       this.appliedFilters = this.appliedFilters.filter((a) => a)

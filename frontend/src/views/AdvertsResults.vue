@@ -79,16 +79,16 @@ export default {
   },
   data() {
     return {
-      searchInputItem: '',
-      searchInputLocation: '',
-      appliedFilters: {},
-      loading: false,
-      adverts: [],
-      advertsCopy: [],
       userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
       jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : null,
       activeIdAdvert: '',
+      adverts: [],
+      advertsCopy: [],
+      searchInputItem: '',
+      searchInputLocation: '',
+      appliedFilters: {},
       searchData: {},
+      loading: false,
       
       isEditAdvertLayer: false,
       isDeleteAdvertLayer: false
