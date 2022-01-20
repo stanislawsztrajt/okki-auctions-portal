@@ -1,6 +1,7 @@
 <template>
   <div class=" h-screen">
     <Menu />
+    <Loading v-if="isLoading"/>
     <form
       class="h-2/3 flex flex-col items-center xl:items-start justify-center xl:ml-96 xl:mt-14"
       @submit.prevent="checkPassword"
@@ -25,12 +26,17 @@
       <input
         type="submit"
         value="Sprawdź"
-        class="new-advert-button cursor-pointer"
+        class="new-auction-button cursor-pointer"
         @submit="checkPassword"
       >
     </form>
+
+
     <div v-else class="flex flex-col items-center mt-12 text-white">
-      <form @submit.prevent="saveEditedUsername" class="new-adverst-main-box w-2/3 lg:w-1/2">
+      <!-- <div @click="deleteAccount" class="absolute p-5 bg-red-600 rounded-lg font-bold cursor-pointer button-animation-hover left-4 top-24">
+        Usuń konto
+      </div> -->
+      <form @submit.prevent="saveEditedUsername" class="new-auction-main-box w-2/3 lg:w-1/2">
         <label for="" class="text-lg exsm:text-xl lg:text-2xl">
           Podaj nową nazwa użtkownika
         </label>
@@ -53,7 +59,7 @@
         />
       </form>
 
-      <form @submit.prevent="saveEditedEmail" class="new-adverst-main-box w-2/3 lg:w-1/2">
+      <form @submit.prevent="saveEditedEmail" class="new-auction-main-box w-2/3 lg:w-1/2">
         <label for="" class="text-lg exsm:text-xl lg:text-2xl">
           Podaj nowy email
         </label>
@@ -76,7 +82,7 @@
         />
       </form>
 
-      <form @submit.prevent="saveEditedPassword" class="new-adverst-main-box w-2/3 lg:w-1/2">
+      <form @submit.prevent="saveEditedPassword" class="new-auction-main-box w-2/3 lg:w-1/2">
         <label for="" class="text-lg exsm:text-xl lg:text-2xl">
           Podaj nowe hasło
         </label>
@@ -148,22 +154,22 @@
 <script>
 import axios from 'axios'
 import API_URL from '../../API_URL'
+import Cookies from 'js-cookie';
+
 import Menu from '../components/Menu'
+import Loading from '../components/Loading'
+import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   components: {
-    Menu
+    Menu,
+    Loading
   },
+
   data(){
     return{
-      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
-      ISjwt: this.$cookies.isKey('jwt'),
-      jwt: this.$cookies.get('jwt'),
-
-      user: {},
-
-      usernameValue: this.$cookies.get('user').username,
-      emailValue: this.$cookies.get('user').email,
+      usernameValue: user.username,
+      emailValue: user.email,
       passwordValue: '',
       repeatPasswordValue: '',
 
@@ -177,28 +183,25 @@ export default {
       responseText: '',
 
       setTimeout: Function,
-      setTimeoutTime: 4000
+      setTimeoutTime: 4000,
+
+      isLoading: false,
+      isAdvertsDeleted: false,
+      isUserDeleted: false
     }
   },
   async created(){
-    if(!this.ISjwt){
-      this.$router.push('/login')
-    }
-
-    await axios.get(`${API_URL}/users/${this.userCookie.id}`)
-    .then(res => this.user = res.data)
-    .catch(err => console.log(err))
+    if(!jwt) this.$router.push('/login')
   },
   methods: {
     async checkPassword(){
       clearTimeout(this.setTimeout)
 
       await axios.post(`${API_URL}/auth/local`, {
-        identifier: this.userCookie.email,
+        identifier: user.email,
         password: this.checkPasswordValue
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
         this.isGivenPassword = true;
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false
@@ -207,8 +210,7 @@ export default {
         this.validationError = false
         return this.responseAlert = true
       })
-      .catch((err) =>{
-        console.log(err)
+      .catch(() =>{
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
@@ -218,7 +220,7 @@ export default {
     },
     async saveEditedUsername(){
       clearTimeout(this.setTimeout)
-      if(this.usernameValue === this.userCookie.username) return
+      if(this.usernameValue === Cookies.get('user').username) return
 
       if(!this.usernameValue){
         this.setTimeout = setTimeout(()=>{
@@ -244,70 +246,65 @@ export default {
         return this.validationError = true
       }
 
-      await axios.put(`${API_URL}/users/${this.userCookie.id}`, {
-        username: this.usernameValue
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.jwt}`
-        }
-      })
+      this.isLoading = true;
+
+      await axios.put(`${API_URL}/users/me`, { username: this.usernameValue }, authorization)
       .then(async res => {
-        this.user = res.data;
-        const username = this.userCookie.username;
+        this.isLoading = false
+        const jwtCopy = jwt;
 
         await this.$cookies.remove('user');
-        await this.$cookies.set('user',this.user, '7d')
+        await this.$cookies.remove('jwt');
+        await this.$cookies.set('user', res.data, '7d')
+        await this.$cookies.set('jwt', jwtCopy, '7d')
 
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false
         },this.setTimeoutTime)
-        this.responseText = `Pomyślnie zmieniono nazwe użytkownika z ${username} na ${res.data.username}`
+        this.responseText = `Pomyślnie zmieniono nazwe użytkownika.`
         return this.responseAlert = true
       })
-      .catch(err =>{
+      .catch(() =>{
+        this.isLoading = false
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
-        this.validationText = 'Nazwa użytkownika zajęta'
-        console.log(err)
+        this.validationText = 'Nazwa użytkownika jest zajęta.'
         return this.validationError = true
       })
     },
     async saveEditedEmail(){
       clearTimeout(this.setTimeout)
-      if(this.emailValue === this.userCookie.email) return
+      if(this.emailValue === Cookies.get('user').email) return
 
       if(!this.emailValue){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
-        this.validationText = 'Uzupełnij puste pole'
+        this.validationText = 'Uzupełnij puste pole.'
         return this.validationError = true
       }
 
-      await axios.put(`${API_URL}/users/${this.userCookie.id}`, {
-        email: this.emailValue
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.jwt}`
-        }
-      })
+      this.isLoading = true;
+
+      await axios.put(`${API_URL}/users/me`, { email: this.emailValue }, authorization)
       .then(async res => {
-        this.user = res.data;
-        const email = this.userCookie.email;
+        this.isLoading = false;
+        const jwtCopy = jwt;
 
         await this.$cookies.remove('user');
-        await this.$cookies.set('user',this.user, '7d')
+        await this.$cookies.remove('jwt');
+        await this.$cookies.set('user', res.data, '7d')
+        await this.$cookies.set('jwt', jwtCopy, '7d')
 
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false
         },this.setTimeoutTime)
-        this.responseText = `Pomyślnie zmieniono email z ${email} na ${res.data.email}`
+        this.responseText = `Pomyślnie zmieniono email.`
         return this.responseAlert = true
       })
       .catch(err => {
+        this.isLoading = false
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
@@ -316,8 +313,18 @@ export default {
         return this.validationError = true
       })
     },
+
     async saveEditedPassword(){
       clearTimeout(this.setTimeout)
+
+      if(!this.passwordValue){
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Uzupełnij puste pole'
+        return this.validationError = true
+      }
+
       if(this.passwordValue.length < 6){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
@@ -342,28 +349,26 @@ export default {
         return this.validationError = true
       }
 
-      await axios.put(`${API_URL}/users/${this.userCookie.id}`, {
+      this.isLoading = true;
+
+      await axios.put(`${API_URL}/users/me`, {
         password: this.passwordValue
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.jwt}`
-        }
-      })
+      },authorization)
       .then(async res => {
-        this.user = res.data;
-        const password = this.userCookie.password;
+        this.isLoading = false;
+        const jwtCopy = jwt;
 
         await this.$cookies.remove('user');
-        await this.$cookies.set('user',this.user, '7d')
+        await this.$cookies.remove('jwt');
+        await this.$cookies.set('user', res.data, '7d')
+        await this.$cookies.set('jwt', jwtCopy, '7d')
 
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false
         },this.setTimeoutTime)
-        this.responseText = `Pomyślnie zmieniono hasło z ${password} na ${res.data.password}`
+        this.responseText = `Pomyślnie zmieniono hasło`
         return this.responseAlert = true
       })
-      .catch(err => console.log(err))
     }
   }
 }

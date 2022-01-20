@@ -5,7 +5,7 @@
       <h2 class="text-2xl font-normal mt-10 text-green-600">Zaloguj się na konto</h2>
       <div class="p-10 w-full">
         <div class="login-register-input-box">
-          <label for="">Adres email</label>
+          <label for="">Nazwa użytkownika lub adres email</label>
           <div class="login-register-input-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
@@ -55,6 +55,7 @@
 import axios from 'axios'
 
 import API_URL from '../../API_URL'
+import { jwt } from '../constants/const-variables'
 
 export default {
     name: 'Login',
@@ -62,8 +63,6 @@ export default {
       return{
         emailValue: '',
         passwordValue: '',
-        user: '',
-        jwt: this.$cookies.isKey('jwt'),
 
         loginError: false,
 
@@ -72,9 +71,7 @@ export default {
       }
     },
     async created() {
-      if(this.jwt){
-        this.$router.push('/dashboard')
-      }
+      if(jwt) this.$router.push('/dashboard')
     },
     methods: {
       async login(){
@@ -84,15 +81,12 @@ export default {
           identifier: this.emailValue,
           password: this.passwordValue
         })
-
         .then(async res=>{
-          this.user = res.data
-          console.log(res.data.user)
-
-          await this.$cookies.set('jwt',this.user.jwt, '7d')
-          await this.$cookies.set('user',this.user.user, '7d')
-
-          this.$router.push('/dashboard')
+          await this.$cookies.set('jwt', res.data.jwt, '7d')
+          await this.$cookies.set('user', res.data.user, '7d')
+          
+          this.$router.go()
+          return this.$router.push('/dashboard')
         })
         .catch(() =>{
           this.setTimeout = setTimeout(() =>{
@@ -100,7 +94,7 @@ export default {
           },this.setTimeoutTime)
           return this.loginError = true
         })
-        },
+      },
     }
   }
 </script>

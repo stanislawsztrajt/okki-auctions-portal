@@ -1,43 +1,54 @@
 <template>
-  <form class="flex flex-col h-5/6 justify-center items-center" @submit.prevent="sendEmail">
-    <label class="text-5xl">Dlaczego zgłaszasz to ogloszenie ?</label>
-    <textarea
-      class="w-1/3 h-64 text-xl focus:outline-none mt-12"
-      v-model="message"
-      name="message"
-    ></textarea>
-    <div class="mt-12">
-      <input
-        class="bg-green-400 text-white p-5  rounded-lg cursor-pointer mx-10 button-animation-hover
-        text-lg w-40
-        sm:text-xl sm:w-44
-        md:text-2xl md:w-60
-        xl:text-3xl xl:w-84
-        "
-        type="submit"
-        value="Wyślij zgłoszenie"
-      >
-      <h1 v-if="isValidation" class="text-red-600">{{ validationText }}</h1>
-      <button
-        @click="toggleShowReportLayer"
-        class="bg-gray-700 text-green-400 p-5 rounded-lg cursor-pointer mx-10 button-animation-hover
-        text-lg w-40
-        sm:text-xl sm:w-44
-        md:text-2xl md:w-60
-        xl:text-3xl xl:w-84
-        "
-      >
-        Schowaj
-      </button>
-    </div>
-  </form>
+  <div class=" h-5/6 mt-4">
+    <Loading v-if="isLoading"/>
+    <form
+      class="flex flex-col h-5/6 justify-center items-center"
+      @submit.prevent="sendEmail"
+      v-else
+    >
+      <label class="text-5xl text-center">Dlaczego zgłaszasz to ogloszenie ?</label>
+      <textarea
+        class="w-2/3 lg:w-1/3 h-64 text-xl focus:outline-none mt-12"
+        v-model="message"
+        name="message"
+      ></textarea>
+      <div class="mt-12">
+        <input
+          class="bg-green-400 text-white p-5 rounded-lg cursor-pointer mx-10 button-animation-hover
+          text-lg w-40
+          pl-3
+          sm:text-xl sm:w-44
+          md:text-2xl md:w-60
+          xl:text-3xl xl:w-84
+          "
+          type="submit"
+          value="Wyślij zgłoszenie"
+        >
+        <h1 v-if="isValidation" class="text-red-600">{{ validationText }}</h1>
+        <button
+          @click="toggleShowReportLayer"
+          class="bg-gray-700 text-green-400 p-5 rounded-lg cursor-pointer mx-10 button-animation-hover
+          text-lg w-40
+          sm:text-xl sm:w-44
+          md:text-2xl md:w-60
+          xl:text-3xl xl:w-84
+          "
+        >
+          Schowaj
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
 import emailjs from 'emailjs-com'
-
+import Loading from './Loading.vue'
 
 export default {
+  components: {
+    Loading
+  },
   data(){
     return{
       message: '',
@@ -83,6 +94,7 @@ export default {
       e.target.querySelector('textarea').value = '';
       this.message = '';
       this.toggleShowReportLayer();
+      this.isLoading = false;
     },
   }
 }

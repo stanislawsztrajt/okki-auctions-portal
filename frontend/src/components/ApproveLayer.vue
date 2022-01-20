@@ -7,13 +7,13 @@
       <div class="mt-10">
         <button
           class="bg-green-400 text-white text-4xl p-4 w-40 rounded-xl button-animation-hover"
-          @click="deleteAdvert"
+          @click="deleteAuction"
         >
           Tak
         </button>
         <button
           class="bg-gray-700 text-green-400 text-4xl p-4 w-40 ml-10 rounded-xl button-animation-hover"
-          @click="toggleDeleteAdvertLayer('')"
+          @click="toggleDeleteAuctionLayer('')"
         >
           Nie
         </button>
@@ -25,10 +25,10 @@
 <script>
 export default {
   methods: {
-    deleteAdvert(){
+    deleteAuction(){
       this.$emit('delete-advert')
     },
-    toggleDeleteAdvertLayer(id){
+    toggleDeleteAuctionLayer(id){
       this.$emit('toggle-delete-advert-layer', id)
     }
   }

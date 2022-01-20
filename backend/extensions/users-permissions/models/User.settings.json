@@ -58,15 +58,6 @@
       "via": "users",
       "plugin": "users-permissions",
       "configurable": false
-    },
-    "Adverts": {
-      "type": "json"
-    },
-    "comments": {
-      "type": "json"
-    },
-    "likedAdverts": {
-      "type": "json"
     }
   }
 }

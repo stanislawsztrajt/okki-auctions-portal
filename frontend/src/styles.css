@@ -8,7 +8,7 @@
   @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl hover:shadow-inner hover:bg-gray-100 transition duration-100;
 }
 
-.menu-element-new-adverst {
+.menu-element-new-auction {
   @apply lg:px-7 text-green-600 text-2xl lg:border-r lg:border-l border-gray-200;
 }
 
@@ -44,23 +44,23 @@
 
 /* NewAdverst styles */
 
-.new-adverst-main-box {
+.new-auction-main-box {
   @apply bg-green-600 rounded-xl shadow p-7 mb-6;
 }
 
-.new-adverst-title {
+.new-auction-title {
   @apply text-white text-2xl font-semibold mb-5;
 }
 
-.new-adverst-data-box {
+.new-auction-data-box {
   @apply flex flex-col text-white mb-4;
 }
 
-.new-adverst-input, .filtering-input {
+.new-auction-input, .filtering-input {
   @apply h-12 w-full md:w-4/5 bg-gray-100 text-lg text-gray-700 px-4 py-2;
 }
 
-.new-advert-button{
+.new-auction-button{
   @apply w-52 md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150
 }
 
@@ -114,4 +114,14 @@ body::-webkit-scrollbar-thumb {
 
 body::-webkit-scrollbar-thumb:hover {
   opacity: 0.8;
+}
+
+
+.auction-textarea{
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.auction-textarea::-webkit-scrollbar {
+  display: none;
 }

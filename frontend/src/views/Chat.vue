@@ -54,12 +54,12 @@ import Loading from '../components/Loading.vue'
 import API_URL from '../../API_URL'
 
 import { db } from '@/main'
+import { jwt, user } from '../constants/const-variables'
 
 export default {
   data() {
     return {
-      ISjwt: this.$cookies.isKey('jwt'),
-      user: this.$cookies.get('user') ? this.$cookies.get('user') : false,
+      user: user,
       secondUser: {},
       message: '',
       messages: [],
@@ -79,7 +79,7 @@ export default {
   async created() {
     this.loading = true
 
-    if(!this.ISjwt){
+    if(!jwt){
       this.$router.push('/login')
     }
 

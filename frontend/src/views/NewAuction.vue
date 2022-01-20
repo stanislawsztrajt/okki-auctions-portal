@@ -1,40 +1,40 @@
 <template>
-  <div id="NewAdverst">
+  <div id="NewAuction">
     <Menu />
-    <Loading v-if="loading"/>
+    <Loading v-if="isLoading"/>
     <div v-else class="w-3/4 lg:w-3/5 py-10 m-auto">
       <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
-      <div class="new-adverst-main-box">
-        <h1 class="new-adverst-title">Informacje podstawowe</h1>
-        <div class="new-adverst-data-box">
+      <div class="new-auction-main-box">
+        <h1 class="new-auction-title">Informacje podstawowe</h1>
+        <div class="new-auction-data-box">
           <label class="text-gray-100 mb-1">Tytuł ogłoszenia</label>
           <input
             type="text"
             placeholder="Np. Opel Corsa 2014 1.4 benzyna"
             required
-            class="new-adverst-input"
+            class="new-auction-input"
             v-model.trim="titleValue"
             maxlength="70"
             minlength="8"
           >
         </div>
-        <div class="new-adverst-data-box">
+        <div class="new-auction-data-box">
           <h2>Cena</h2>
           <input
             type="number"
             placeholder="Np. 8600"
             required
-            class="new-adverst-input"
+            class="new-auction-input"
             v-model="priceValue"
             maxlength="15"
           >
         </div>
-        <div class="new-adverst-data-box">
+        <div class="new-auction-data-box">
           <h2>Kategoria</h2>
           <select
             name="Kategorie"
             required
-            class="new-adverst-input"
+            class="new-auction-input"
             v-model="categoryValue"
           >
             <option value="" disabled selected hidden>Wybierz kategorię</option>
@@ -46,21 +46,21 @@
             </option>
           </select>
         </div>
-        <div class="new-adverst-data-box">
+        <div class="new-auction-data-box">
           <h2>Twoje imię</h2>
           <input
             type="text"
             placeholder="Np. Michał"
             required
-            class="new-adverst-input"
+            class="new-auction-input"
             v-model="usernameValue"
             maxlength="20"
           >
         </div>
       </div>
-      <div class="new-adverst-main-box">
-        <h1 class="new-adverst-title">Zdjęcia i opis</h1>
-        <div class="new-adverst-data-box">
+      <div class="new-auction-main-box">
+        <h1 class="new-auction-title">Zdjęcia i opis</h1>
+        <div class="new-auction-data-box">
           <label>Zdjęcia</label>
           <div v-if="urls.length < 4" class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2">
             <input
@@ -96,7 +96,7 @@
           </div>
 
         </div>
-        <div class="new-adverst-data-box">
+        <div class="new-auction-data-box">
           <label>Opis</label>
           <textarea
             class="bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full md:w-3/5 h-72"
@@ -110,26 +110,26 @@
         </div>
       </div>
 
-      <div class="new-adverst-main-box">
-        <h1 class="new-adverst-title">Dane kontaktowe</h1>
-        <div class="new-adverst-data-box">
+      <div class="new-auction-main-box">
+        <h1 class="new-auction-title">Dane kontaktowe</h1>
+        <div class="new-auction-data-box">
           <label>Lokalizacja</label>
           <input
             type="text"
             placeholder="Np. Warszawa"
             required
-            class="new-adverst-input"
+            class="new-auction-input"
             v-model="locationValue"
-            maxlength="50"
+            maxlength="30"
           >
         </div>
-        <div class="new-adverst-data-box">
+        <div class="new-auction-data-box">
           <label>Numer Telefonu</label>
           <input
             type="number"
             placeholder="Np. 111222333"
             required
-            class="new-adverst-input"
+            class="new-auction-input"
             v-model="phoneNumberValue"
             minlength="9"
             maxlength="12"
@@ -138,7 +138,7 @@
       </div>
 
       <button
-        class="new-advert-button"
+        class="new-auction-button"
         @click="addAdvert"
       >
         Dodaj ogłoszeniee
@@ -161,7 +161,7 @@ import axios from 'axios'
 import categoriesJSON from '../jsons files/categories.json'
 
 import API_URL from '../../API_URL'
-
+import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   name: 'NewAdvert',
@@ -180,17 +180,12 @@ export default {
       locationValue: '',
       phoneNumberValue: '',
 
-      loading: false,
+      isLoading: false,
 
       urls: [],
       images: [],
       imageUrls: [],
 
-      //cookies
-      userInfo: this.$cookies.get('user') ? this.$cookies.get('user') : false,
-      jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : false,
-
-      advertsIDs: [],
       categories: categoriesJSON,
       validationText: '',
       validationError: false,
@@ -202,25 +197,15 @@ export default {
   async created(){
     this.categories.sort((categoryA, categoryB) => (categoryA.name > categoryB.name) ? 1 : -1);
 
-    if(!this.jwt){
+    if(!jwt){
       this.$router.push('/login')
     }
-
-    await axios.get(`${API_URL}/users/${this.userInfo.id}`)
-    .then(res=>{
-      console.log(res)
-      this.advertsIDs = res.data.Adverts
-    })
-    .catch(err =>{
-      console.log(err)
-    })
   },
-  methods: {
+  methods: { 
     async onFileChange(e){
       const image = e.target.files[0]
       this.images.push(image)
       this.urls.push(URL.createObjectURL(image))
-      // this.image.push(e.target.files[0])
     },
     removeImage(index){
       this.images.splice(index,1)
@@ -252,6 +237,14 @@ export default {
         this.validationText = 'Opis ogłoszenia jest za krótki (co najmniej 50 znaków)'
         return this.validationError = true
       }
+      
+      if(this.descriptionValue.length > 10000){
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Opis ogłoszenia jest zbyt długi (najwiecej 10000 znaków)'
+        return this.validationError = true
+      }
 
       if(this.phoneNumberValue.length < 9) {
         this.setTimeout = setTimeout(()=>{
@@ -278,7 +271,7 @@ export default {
       }
 
       this.used = true;
-      this.loading = true;
+      this.isLoading = true;
 
       if(this.images.length === 0){
         this.images = ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg']
@@ -299,7 +292,6 @@ export default {
           data
         )
         .then(async res => {
-          console.log(res.data);
           await this.imageUrls.push(res.data.url);
           if(this.imageUrls.length === this.images.length) isPostedImages = true;
         })
@@ -308,63 +300,25 @@ export default {
 
         if(isPostedImages){
           if(this.used) {
-            await axios.post(
-              `${API_URL}/auctions`, {
+            const data = {
               title: this.titleValue,
               price: parseFloat(this.priceValue),
               category: this.categoryValue,
               description: this.descriptionValue,
               location: this.locationValue,
               phoneNumber: this.phoneNumberValue,
-              userID: this.userInfo.id,
-              images: this.imageUrls
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${this.jwt}`
-              }
-            })
-            .then(async res =>{
-              this.advertsIDs.push(res.data.id)
+              user_id: user.id,
+              images: this.imageUrls,
+            }
 
-              await axios.put(`${API_URL}/users/${this.userInfo.id}`,
-              {
-                Adverts: this.advertsIDs
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${this.jwt}`
-                }
-              })
-              .then((res)=>{
-                console.log(res)
-                this.$router.push('/dashboard')
-              })
-              .catch(err=>console.log(err))
-            }) .catch(err=>{console.log(err)})
+            await axios.post(`${API_URL}/auctions`, data, authorization)
+            .then(() => this.$router.push('/dashboard')) 
+            .catch(err=>{console.log(err)})
           }
         }
       })
     },
   }
 }
-/*
-      const data = new FormData()
-      data.append('file', this.image)
-      data.append("api_key", '');
-      data.append("api_secret", '');
-      data.append("cloud_name", 'dh35iucxu');
-      data.append("upload_preset", "qpfb0fma");
 
-
-      await axios.post(
-        `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
-        data
-      )
-      .then(res => {
-        console.log(res.data.secure_url)
-        this.imageRes = res.data
-      })
-      .catch(err => console.log(err))
-*/
 </script>

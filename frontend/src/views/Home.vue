@@ -42,9 +42,9 @@ export default {
     }
   },
   methods: {
-    // Funkcja która przenosi i przekazuje zmienne do AdvertsResults.vue
+    // Funkcja która przenosi i przekazuje zmienne do AuctionsResults.vue
     shareSearchInputValues () {
-      this.$router.push({name: "AdvertsResults", params: {value: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
+      this.$router.push({name: "AuctionsResults", params: {value: this.searchInputItem, location: this.searchInputLocation, category: this.categoryOption}})
     },
     // Funkcja aktualizująca wartość zmiennej categoryOption i wywołująca funkcję shareSearchInputValues
     updateCategoryOption(categoryOption) {

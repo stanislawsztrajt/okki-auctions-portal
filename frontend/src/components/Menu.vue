@@ -4,7 +4,7 @@
       <router-link to="/">okki</router-link>
     </div>
     <div ref="menuElements" class="flex flex-row h-20 items-center bg-transparent mr-2 md:m-0">
-      <router-link to="/liked" class="menu-element">
+      <router-link to="/likeds" class="menu-element">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
         </svg>
@@ -28,7 +28,7 @@
         </svg>
         <span class="hidden lg:block">Logowanie</span>
       </router-link>
-      <router-link to='/new-advert' class="menu-element menu-element-new-adverst">
+      <router-link to='/new-auction' class="menu-element menu-element-new-auction">
         <span class="hidden lg:block">Dodaj ogłoszenie</span>
         <span class="block lg:hidden">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,14 +47,13 @@
 </template>
 
 <script>
+import { jwt } from '../constants/const-variables'
+
 export default {
   data(){
     return{
-      userInfo: this.$cookies.get('user') ? this.$cookies.get('user') : false,
-      jwt: this.$cookies.isKey('jwt') ? this.$cookies.get('user') : false
+      jwt: jwt
     }
   },
-  methods: {
-  }
 }
 </script>

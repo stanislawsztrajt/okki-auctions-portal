@@ -1,12 +1,12 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Home from '../views/Home.vue'
-import NewAdvert from '../views/NewAdvert.vue'
-import AdvertsResults from '../views/AdvertsResults.vue'
-import Advert from '../views/Advert.vue'
+import NewAuction from '../views/NewAuction.vue'
+import AuctionsResults from '../views/AuctionsResults.vue'
+import Auction from '../views/Auction.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
-import Liked from '../views/Liked.vue'
+import Likeds from '../views/Likeds.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Help from '../views/Help.vue'
 import ChangeUserInfo from '../views/ChangeUserInfo.vue'
@@ -22,19 +22,19 @@ const routes = [
     component: Home
   },
   {
-    path: '/new-advert',
-    name: 'NewAdvert',
-    component: NewAdvert
+    path: '/new-auction',
+    name: 'NewAuction',
+    component: NewAuction
   },
   {
-    path: '/adverts-results',
-    name: 'AdvertsResults',
-    component: AdvertsResults,
+    path: '/auctions-results',
+    name: 'AuctionsResults',
+    component: AuctionsResults,
   },
   {
-    path: '/advert/:id',
-    name: 'Advert',
-    component: Advert,
+    path: '/auction/:id',
+    name: 'Auction',
+    component: Auction,
     props: true,
   },
   {
@@ -53,9 +53,9 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: '/liked',
-    name: 'Liked',
-    component: Liked,
+    path: '/likeds',
+    name: 'Likeds',
+    component: Likeds,
   },
   {
     path: '/users/:id',

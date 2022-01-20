@@ -7,6 +7,13 @@ const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
  */
 
 module.exports = {
+  async findUserAuctions(ctx){
+    const { id } = ctx.params;
+
+    const entity = await strapi.services.auction.find({ user_id: id })
+
+    return sanitizeEntity(entity, { model: strapi.models.auction });
+  },
   async update(ctx) {
     const { id } = ctx.params;
 
@@ -14,7 +21,7 @@ module.exports = {
 
     const [auction] = await strapi.services.auction.find({
       id: ctx.params.id,
-      'userID': ctx.state.user.id,
+      'user_id': ctx.state.user.id,
     });
 
     if (!auction) {
@@ -39,7 +46,7 @@ module.exports = {
 
     const [auction] = await strapi.services.auction.find({
       id: ctx.params.id,
-      'userID': ctx.state.user.id,
+      'user_id': ctx.state.user.id,
     });
 
     if (!auction) {
@@ -62,7 +69,7 @@ module.exports = {
 
     auctions.map(async auction =>{
       // 2592000000 = 1 month
-      if(Date.parse(auction.createdAt) <= Date.parse(auction.createdAt) + (Date.parse(new Date()) - Date.parse(auction.createdAt))){
+      if(Date.parse(auction.createdAt) + 2592000000 <= Date.parse(auction.createdAt) + (Date.parse(new Date()) - Date.parse(auction.createdAt))){
         const entity = await strapi.services.auction.delete({ id: auction.id });
         return sanitizeEntity(entity, { model: strapi.models.auction });
       }

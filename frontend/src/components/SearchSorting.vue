@@ -5,7 +5,7 @@
       name="Sortowanie" 
       class="sortingElement sm:w-48 text-lg"
       v-model="this.sorting"
-      @change="this.$emit('search-adverts')"
+      @change="this.$emit('search-auctions')"
     >
       <option value="" selected disabled hidden>Domyślnie</option>
       <option 
@@ -28,23 +28,23 @@ export default {
         {name: 'Najtańsze', value: 'najtansze'},
         {name: 'Najdroższe', value: 'najdrozsze'}
       ],
-      adverts: [], 
+      auctions: [],
     }
   },
   methods: {
-    sortByOption (advertsCopy) {
-      this.adverts = advertsCopy
+    sortByOption (auctionsCopy) {
+      this.auctions = auctionsCopy
       switch(this.sorting) {
         case 'najnowsze': {
-          this.adverts.sort((advertA,advertB) => new Date(advertB.createdAt) - new Date(advertA.createdAt) ? -1 : 1);
+          this.auctions.sort((auctionA,auctionB) => new Date(auctionB.createdAt) - new Date(auctionA.createdAt) ? -1 : 1);
           break;
         }
         case 'najtansze': {
-          this.adverts.sort((advertA, advertB) => (advertA.price > advertB.price) ? 1 : -1);
+          this.auctions.sort((auctionA, auctionB) => (auctionA.price > auctionB.price) ? 1 : -1);
           break;
         }
         case 'najdrozsze': {
-          this.adverts.sort((advertA, advertB) => (advertA.price < advertB.price) ? 1 : -1);
+          this.auctions.sort((auctionA, auctionB) => (auctionA.price < auctionB.price) ? 1 : -1);
           break;
         }
       }

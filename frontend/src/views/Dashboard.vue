@@ -1,17 +1,18 @@
 <template>
     <div>
       <Menu />
-      <Loading v-show="this.loading" />
-      <div v-if="isEditAdvertLayer"></div>
+      <Loading v-show="this.isLoading" />
+      <div v-if="isEditAuctionLayer"></div>
       <ApproveLayer
-        v-else-if="isDeleteAdvertLayer"
-        @delete-advert="deleteAdvert"
-        @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
+        v-else-if="isDeleteAuctionLayer"
+        @delete-auction="deleteAuction"
+        @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
       />
       <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-6 p-4 text-2xl">
             Witaj!<span class="ml-2 font-bold">{{ user.username }}</span>
+            id: {{ user.id }}
           </div>
         </div>
         <div class="flex flex-row justify-center md:justify-start">
@@ -31,14 +32,16 @@
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-4 p-4 text-2xl">Twoje ogłoszenia</div>
         </div>
-        <Advert
-          @toggle-edit-advert-layer="toggleEditAdvertLayer"
-          @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
-          v-for="advert in adverts"
-          :key="advert.code"
-          :advert="advert"
+        <Auction
+          @toggle-edit-auction-layer="toggleEditAuctionLayer"
+          @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
+          v-for="auction in auction"
+          :key="auction.id"
+          :auction="auction"
+          :likeds="[]"
         />
-        <div class="flex flex-row justify-center mt-10 md:justify-start">
+
+        <!-- <div class="flex flex-row justify-center mt-10 md:justify-start">
           <div v-if="!user.comments" class="dashboardElements mt-4 p-4 text-2xl">
             Nie ma komentarzy na twoim koncie
           </div>
@@ -56,7 +59,7 @@
             {{ comment.user.username }}
           </p>
           {{ comment.comment }}
-        </div>
+        </div> -->
       </div>
     </div>
 </template>
@@ -65,117 +68,68 @@
 import axios from 'axios'
 
 import Menu from '../components/Menu.vue'
-import Advert from '../components/Advert.vue'
+import Auction from '../components/Auction.vue'
 import ApproveLayer from '../components/ApproveLayer.vue'
 import Loading from '../components/Loading.vue'
 
 import API_URL from '../../API_URL'
-
+import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   name: 'Dashboard',
   components: {
     Menu,
-    Advert,
+    Auction,
     ApproveLayer,
     Loading
   },
   data(){
     return{
-      ISjwt: this.$cookies.isKey('jwt'),
-      jwt: this.$cookies.get('jwt') ? this.$cookies.get('jwt') : false,
-      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
+      user: user,
+      auction: [],
+      activeAuction_id: '',
+      isLoading: false,
 
-      user: {},
-      adverts: [],
-      activeIdAdvert: '',
-      loading: false,
-
-      isEditAdvertLayer: false,
-      isDeleteAdvertLayer: false
+      isEditAuctionLayer: false,
+      isDeleteAuctionLayer: false
     }
   },
   async created() {
-    if(!this.ISjwt){
-      this.$router.push('/login')
+    this.isLoading = true
+
+    if(!jwt) {
+      this.$router.go();
+      this.$router.push('/login');
+    } else{
+      await axios.get(`${API_URL}/user-auctions/${user.id}`)
+      .then(res => this.auction = res.data)
     }
-    this.loading = true
 
-    await axios.get(`${API_URL}/users/${this.userCookie.id}`)
-    .then(res => this.user = res.data)
-    .catch(err => console.log(err))
-
-    const advertsLength = this.user.Adverts.length;
-    await this.user.Adverts.forEach(async (advert, index) =>{
-      await axios
-      .get(`${API_URL}/auctions/${advert}`)
-      .then(res => this.adverts.push(res.data))
-      .catch(async (err) => {
-        console.log(err)
-        const advertIndex = this.user.Adverts.findIndex(el => el === advert)
-        this.user.Adverts.splice(advertIndex)
-
-        if(index+1 === advertsLength){
-          await axios.put(`${API_URL}/users/${this.userCookie.id}`,
-            {
-              Adverts: this.user.Adverts
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${this.jwt}`
-              }
-            })
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
-        }
-      })
-    })
-
-    this.loading = false
+    this.isLoading = false
   },
   methods: {
-    async deleteAdvert(){
-      await axios.get(`${API_URL}/users/${this.userCookie.id}`)
-      .then(async res =>{
-        const indexId = res.data.Adverts.findIndex(el => el === this.activeIdAdvert);
-        let advertsIDs = res.data.Adverts;
-        advertsIDs.splice(indexId, 1);
-
-        await axios.put(`${API_URL}/users/${this.userCookie.id}`,
-        { Adverts: advertsIDs },
-        {
-          headers: {
-            Authorization: `Bearer ${this.jwt}`
-          }
-        })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
-      })
-      .catch(err => console.log(err))
-
-      await axios.delete(`${API_URL}/auctions/${this.activeIdAdvert}`,{
-        headers: {
-          Authorization: `Bearer ${this.jwt}`
-        }
-      })
-      .then(res => {
-        console.log(res)
-        window.location.reload()
+    async deleteAuction(){
+      await axios.delete(`${API_URL}/auctions/${this.activeAuction_id}`, authorization)
+      .then(() => {
+        const index = this.auction.findIndex(auction => auction.id === this.activeAuction_id);
+        this.auction.splice(index, 1);
       })
       .catch(err => console.log(err))
     },
-    toggleEditAdvertLayer(id){
-      this.activeIdAdvert = id;
-      this.isEditAdvertLayer = !this.isEditAdvertLayer;
+    toggleEditAuctionLayer(id){
+      this.activeAuction_id = id;
+      this.isEditAuctionLayer = !this.isEditAuctionLayer;
     },
-    toggleDeleteAdvertLayer(id){
-      this.activeIdAdvert = id;
-      this.isDeleteAdvertLayer = !this.isDeleteAdvertLayer;
+    toggleDeleteAuctionLayer(id){
+      this.activeAuction_id = id;
+      this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
     },
-    logout(){
-      this.$cookies.remove('jwt');
-      this.$cookies.remove('user');
-      this.$router.push('/');
+    async logout(){
+      await this.$cookies.remove('jwt');
+      await this.$cookies.remove('user');
+
+      this.$router.push('/')
+      .then(() => this.$router.go())
     }
   },
 }

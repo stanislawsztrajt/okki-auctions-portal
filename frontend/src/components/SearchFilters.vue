@@ -8,7 +8,7 @@
           name="Kategorie" 
           class="filtering-input"
           v-model="this.category"
-          @change="this.$emit('search-adverts')"
+          @change="this.$emit('search-auctions')"
         >
           <option value="" selected>Wszystko</option>
           <option
@@ -32,7 +32,7 @@ export default {
     return {
       categories: categoriesJSON,
       category: '',
-      adverts: [],
+      auctions: [],
     }
   },
   props: {
@@ -46,12 +46,12 @@ export default {
     }
   },
   methods: {
-    filterByCategory(advertsCopy) {
-      this.adverts = advertsCopy
-      this.adverts = this.adverts.filter((advert) => {
+    filterByCategory(auctionsCopy) {
+      this.auctions = auctionsCopy
+      this.auctions = this.auctions.filter((advert) => {
         return advert.category.includes(this.category)
       })
-      this.$emit('update-adverts', this.adverts)
+      this.$emit('update-auctions', this.auctions)
     },
   },
 }

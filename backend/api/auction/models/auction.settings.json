@@ -18,7 +18,7 @@
     "category": {
       "type": "string"
     },
-    "userID": {
+    "user_id": {
       "type": "string"
     },
     "price": {
@@ -35,6 +35,9 @@
     },
     "description": {
       "type": "text"
+    },
+    "filters": {
+      "type": "json"
     }
   }
 }

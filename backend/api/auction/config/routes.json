@@ -25,6 +25,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/user-auctions/:id",
+      "handler": "auction.findUserAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/auctions",
       "handler": "auction.create",

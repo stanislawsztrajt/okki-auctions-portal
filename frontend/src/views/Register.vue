@@ -75,6 +75,7 @@
 
 <script>
 import API_URL from '../../API_URL'
+import { jwt } from '../constants/const-variables'
 
 export default {
     name: 'Register',
@@ -88,14 +89,12 @@ export default {
         validationText: '',
         validationError: false,
 
-        ISjwt: this.$cookies.isKey('jwt'),
-
         setTimeout: Function,
         setTimeoutTime: 4000,
       }
     },
     created() {
-      if(this.ISjwt){
+      if(jwt){
         this.$router.push('/dashboard')
       }
     },
@@ -127,6 +126,22 @@ export default {
           return this.validationError = true
         }
 
+        if(this.emailValue.length < 4){
+          this.setTimeout = setTimeout(()=>{
+            this.validationError = false
+          },this.setTimeoutTime)
+          this.validationText = 'Email jest zbyt krótka (co najmniej 4 znaki)'
+          return this.validationError = true
+        }
+
+        if(this.emailValue.length > 30){
+          this.setTimeout = setTimeout(()=>{
+            this.validationError = false
+          },this.setTimeoutTime)
+          this.validationText = 'Email jest zbyt długa (maksymalnie 30 znaki)'
+          return this.validationError = true
+        }
+
         if(this.passwordValue.length < 6){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
@@ -151,14 +166,10 @@ export default {
           return this.validationError = true
         }
 
-
         const user = {
           username: this.usernameValue,
           email: this.emailValue,
           password: this.passwordValue,
-          Adverts: [],
-          comments: [],
-          likedAdverts: []
         }
 
         const registerResponse = await fetch(`${API_URL}/auth/local/register`, {

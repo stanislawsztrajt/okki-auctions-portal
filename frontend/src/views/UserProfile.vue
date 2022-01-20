@@ -1,34 +1,33 @@
 <template>
   <div class="h-screen">
     <Menu />
-    <Loading v-show="this.loading" />
-    <div v-show="!this.loading" v-if="user" class="h-screen">
+    <Loading v-if="isLoading" />
+    <div v-else-if="!isLoading" class="h-screen">
       <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <div class="flex flex-row justify-center md:justify-start">
           <div class="dashboardElements mt-6 p-4 text-2xl">
             Witaj na koncie u<span class="ml-2 font-bold">{{ user.username }}</span> !
           </div>
         </div>
-        <div v-if="!adverts" class="dashboardElements mt-6 p-4 text-2xl flex flex-row justify-center md:justify-start">
+        <div v-if="!auctions" class="dashboardElements mt-6 p-4 text-2xl flex flex-row justify-center md:justify-start">
           Nie znaleziono ogłoszeń użytkownika
         </div>
         <div v-else>
           <div class="flex flex-row justify-center md:justify-start">
             <div class="dashboardElements mt-4 p-4 text-2xl">Ogłoszenia użytkownika</div>
           </div>
-          <Advert
-            @toggle-edit-advert-layer="toggleEditAdvertLayer"
-            @toggle-delete-advert-layer="toggleDeleteAdvertLayer"
-            v-for="advert in adverts"
-            :key="advert.code"
-            :advert="advert"
+          <Auction
+            v-for="auction in auctions"
+            :key="auction.code"
+            :auction="auction"
+            :likeds="[]"
           />
         </div>
         <Comments :id="id"/>
       </div>
     </div>
     <div v-else class="h-5/6 text-4xl flex justify-center items-center">
-      Nie znaleziono użytkownika o id: {{ id }}
+      Nie znaleziono użytkownika
     </div>
   </div>
 </template>
@@ -37,16 +36,17 @@
 import axios from 'axios'
 
 import Menu from '../components/Menu.vue'
-import Advert from '../components/Advert.vue'
-import Comments from '../components/Comments.vue'
+import Auction from '../components/Auction.vue'
+import Comments from '../components/comment/Comments.vue'
 import Loading from '../components/Loading.vue'
 
 import API_URL from '../../API_URL'
+import { jwt, user } from '../constants/const-variables'
 
 export default {
   components: {
     Menu,
-    Advert,
+    Auction,
     Comments,
     Loading
   },
@@ -55,43 +55,30 @@ export default {
   },
   data(){
     return{
-      adverts: [],
       user: {},
-      userCookie: this.$cookies.get('user') ? this.$cookies.get('user') : false,
-      loading: false,
+      auctions: [],
+      likeds: [],
+      isLoading: false
     }
   },
   async created(){
-    this.loading = true
-
-    if(this.id === this.userCookie.id){
-      this.$router.push('/dashboard')
-    }
+    this.isLoading = true
 
     await axios.get(`${API_URL}/users/${this.id}`)
-    .then(res =>{
-      this.user = res.data
-      console.log(res)
-    })
-    .catch(() =>{
-      this.user = undefined
-    })
-    try{
-      await this.user.Adverts.forEach(async advert =>{
-        await axios.get(`${API_URL}/auctions/${advert}`)
-        .then(res =>{
-          console.log(res)
-          this.adverts.push(res.data)
-        })
-        .catch((err) =>{
-          console.log(err)
-        })
-      })
-    } catch(err){
-      this.adverts = undefined
+    .then(res => this.user = res.data )
+    .catch(() => this.user = null)
+
+    await axios.get(`${API_URL}/user-auctions/${this.id}`)
+    .then(res => this.auctions = res.data )
+    .catch(() => this.auctions = null)
+
+    if(jwt){
+      await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
+      .then(res => this.likeds = res.data)
+      .catch(() => this.likeds = [])
     }
 
-    this.loading = false
+    this.isLoading = false
   }
 }
 </script>

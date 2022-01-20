@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "likeds",
+  "info": {
+    "name": "liked",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "auction_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  }
+}

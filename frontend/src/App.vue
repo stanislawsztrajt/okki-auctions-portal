@@ -12,8 +12,6 @@ export default {
   name: 'App',
   async created(){
     await axios.get(`${API_URL}/auctions`)
-    .then(res => console.log(res.status))
-    .catch(err => console.log(err))
   }
 }
 
