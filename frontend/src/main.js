@@ -6,7 +6,7 @@ import './styles.css'
 
 import VueCookies from 'vue3-cookies'
 
-import firebase from 'firebase'
+import firebase from 'firebase/app';
 // Required for side effects
 require('firebase/firestore');
 

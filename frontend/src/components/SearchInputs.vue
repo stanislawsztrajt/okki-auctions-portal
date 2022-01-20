@@ -14,7 +14,7 @@
       v-model.trim="inputLocation">
     <button
       class="text-green-600 focus:outline-none"
-      @click="this.$emit('search-auctions', inputItem, inputLocation)">
+      @click="this.$emit('update-search-input-values', inputItem, inputLocation)">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
@@ -39,17 +39,17 @@ export default {
     },
   },
   created() {
-    if(this.searchInputItem !== undefined) {
+    if(this.searchInputItem) {
       this.inputItem = this.searchInputItem
     }
-    if(this.searchInputLocation !== undefined) {
+    if(this.searchInputLocation) {
       this.inputLocation = this.searchInputLocation
     }
   },
   methods: {
     makeSureKeyIsEnter (e) {
       if (e.key === "Enter") {
-        this.$emit('search-auctions', this.inputItem, this.inputLocation);
+        this.$emit('update-search-input-values', this.inputItem, this.inputLocation);
       }
     },
     filterByInputItem(auctionsCopy) {
@@ -67,7 +67,6 @@ export default {
       this.auctions = auctionsCopy
       this.auctions = this.auctions.filter((auction) => {
         if(this.inputLocation.replace(/\s+/g, ' ').trim() !== '') {
-          console.log(auction.location.toLowerCase().replace(/\s+/g, ' '));
           return auction.location.toLowerCase().replace(/\s+/g, ' ') === this.inputLocation.toLowerCase().replace(/\s+/g, ' ')
         }
         else {

@@ -1,0 +1,81 @@
+{
+  "samochody-osobowe": [
+    {
+      "label": "Marka",
+      "vmodel": "carBrand",
+      "options": [
+        {"name": "Volkswagen", "value": "volkswagen", "models": ["80", "90", "100", "200", "A1", "A2", "A3", "A4", "A4 Allroad", "A5", "A6", "A6 Allroad", "A7", "A8", "Cabriolet", "Coupe", "Q5", "Q7", "Quattro", "R8", "Rs4", "Rs6", "S2", "S3", "S4", "S5", "S6", "S8", "TT", "V8"]},
+        {"name": "Renault", "value": "renault", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Ford", "value": "ford", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Peugeot", "value": "peugeot", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Mercedes-Benz", "value": "mercedes-Benz", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Opel", "value": "opel", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Skoda", "value": "skoda", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Audi", "value": "audi", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Toyota", "value": "toyota", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Citroen", "value": "citroen", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Fiat", "value": "fiat", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Dacia", "value": "dacia", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Hyundai", "value": "hyundai", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Kia", "value": "kia", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Seat", "value": "seat", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Nissan", "value": "nissan", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Volvo", "value": "volvo", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Suzuki", "value": "suzuki", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Mazda", "value": "mazda", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Mini", "value": "mini", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Jeep", "value": "jeep", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Land Rover", "value": "land-rover", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Mitsubishi", "value": "mitsubishi", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
+        {"name": "Honda", "value": "honda", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]}
+      ] 
+    },
+    {
+      "label": "Typ nadwozia",
+      "vmodel": "carBodyType",
+      "options": [
+        {"name": "Sedan", "value": "sedan"},
+        {"name": "Combi", "value": "combi"},
+        {"name": "Hatchback", "value": "hatchback"},
+        {"name": "SUV", "value": "suv"},
+        {"name": "Coupe", "value": "coupe"},
+        {"name": "Kabriolet", "value": "kabriolet"}
+      ] 
+    },
+    {
+      "label": "Skrzynia biegów",
+      "vmodel": "carGearbox",
+      "options": [
+        {"name": "Manualna", "value": "manualna"},
+        {"name": "Automatyczna", "value": "automatyczna"}
+      ] 
+    },
+    {
+      "label": "Paliwo",
+      "vmodel": "carFuel",
+      "options": [
+        {"name": "Benzyna", "value": "benzyna"},
+        {"name": "Diesel", "value": "diesel"},
+        {"name": "LPG", "value": "lpg"},
+        {"name": "Elektryczny", "value": "elektryczny"},
+        {"name": "Hybryda", "value": "hybryda"}
+      ] 
+    },
+    {
+      "label": "Kierownica",
+      "vmodel": "carSteeringWheel",
+      "options": [
+        {"name": "Po lewej", "value": "po-prawej"},
+        {"name": "Po prawej", "value": "po-lewej"}
+      ] 
+    },
+    {
+      "label": "Stan techniczny",
+      "vmodel": "carTechnicalCondition",
+      "options": [
+        {"name": "Nieuszkodzony", "value": "nieuszkodzony"},
+        {"name": "Uszkodzony", "value": "uszkodzony"}
+      ] 
+    }
+  ]
+}

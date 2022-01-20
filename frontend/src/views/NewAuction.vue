@@ -1,8 +1,12 @@
 <template>
   <div id="NewAuction">
     <Menu />
-    <Loading v-if="isLoading"/>
-    <div v-else class="w-3/4 lg:w-3/5 py-10 m-auto">
+    <Loading v-if="loading"/>
+    <form 
+      v-else 
+      @submit.prevent="createAuction"
+      class="w-3/4 lg:w-3/5 py-10 m-auto"
+    >
       <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
       <div class="new-auction-main-box">
         <h1 class="new-auction-title">Informacje podstawowe</h1>
@@ -36,15 +40,7 @@
             required
             class="new-auction-input"
             v-model="categoryValue"
-          >
-            <option value="" disabled selected hidden>Wybierz kategorię</option>
-            <option
-              v-for="category in categories"
-              :key="category.value"
-              :value="category.value">
-              {{ category.name }}
-            </option>
-          </select>
+          ></select>
         </div>
         <div class="new-auction-data-box">
           <h2>Twoje imię</h2>
@@ -108,6 +104,16 @@
           >
           </textarea>
         </div>
+
+        <div class="new-adverst-main-box">
+          <h1 class="new-adverst-title">Filtry</h1>
+          <SearchFilteringElements
+            class="text-white"
+            @select-change="saveFilters"
+            :selectDefaultOption="'Wybierz'"
+            :isRequired="true"
+          />
+        </div>
       </div>
 
       <div class="new-auction-main-box">
@@ -139,15 +145,12 @@
 
       <button
         class="new-auction-button"
-        @click="addAdvert"
-      >
-        Dodaj ogłoszeniee
-      </button>
-    </div>
+        @click="createAuction"
+      ></button>
+    </form>
     <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
-      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-      </span>
+      <span class="absolute top-0 bottom-0 right-0 px-4 py-3"></span>
     </div>
   </div>
 </template>
@@ -155,6 +158,7 @@
 <script>
 import Menu from '../components/Menu'
 import Loading from '../components/Loading'
+import SearchFilteringElements from '../components/SearchFilteringElements'
 
 import axios from 'axios'
 
@@ -167,18 +171,18 @@ export default {
   name: 'NewAdvert',
   components: {
     Menu,
-    Loading
+    Loading,
+    SearchFilteringElements
   },
   data(){
     return{
       // v-models
       titleValue: '',
-      usernameValue: '',
       priceValue: '',
-      categoryValue: '',
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
+      advertFilters: [],
 
       isLoading: false,
 
@@ -201,7 +205,10 @@ export default {
       this.$router.push('/login')
     }
   },
-  methods: { 
+  methods: {
+    saveFilters(filters) {
+      this.advertFilters = Object.values(filters)
+    },
     async onFileChange(e){
       const image = e.target.files[0]
       this.images.push(image)
@@ -211,10 +218,10 @@ export default {
       this.images.splice(index,1)
       this.urls.splice(index,1)
     },
-    async addAdvert(){
+    async createAuction(){
       clearTimeout(this.setTimeout)
 
-      if(!this.titleValue || !this.usernameValue || !this.priceValue || !this.categoryValue || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
+      if(!this.titleValue || !this.priceValue || !this.advertFilters || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
@@ -303,7 +310,6 @@ export default {
             const data = {
               title: this.titleValue,
               price: parseFloat(this.priceValue),
-              category: this.categoryValue,
               description: this.descriptionValue,
               location: this.locationValue,
               phoneNumber: this.phoneNumberValue,
