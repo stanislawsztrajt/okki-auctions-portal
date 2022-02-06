@@ -10,6 +10,14 @@
     },
     {
       "method": "GET",
+      "path": "/user-liked-auctions/:id",
+      "handler": "liked.findUserLikedArticles",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/likeds/count",
       "handler": "liked.count",
       "config": {

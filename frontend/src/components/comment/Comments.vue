@@ -1,12 +1,15 @@
 <template>
-  <div>
-    <div class="mt-20"></div>
-    <div
-      class="flex-col w-10/12 h-auto lg:h-62 xl:h-40 mt-6 p-4 bg-white"
-    >
-
-    </div>
-    <div>
+  <div class="mt-12">
+    <InfoElement 
+      :value="'Opinie użytkowników'"
+      :icon="'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'"
+    />
+    <AddComment
+      v-if="user.id !== id"
+      :id="id"
+      @push-comment="pushComment"
+    />
+    <div class="-mt-12">
       <Comment
         v-for="comment in comments"
         :key="comment.id"
@@ -14,12 +17,6 @@
         @delete-comment="deleteComment"
       />
     </div>
-
-    <AddComment
-      v-if="user.id !== id"
-      :id="id"
-      @push-comment="pushComment"
-    />
   </div>
 </template>
 
@@ -31,11 +28,13 @@ import { authorization, user } from '../../constants/const-variables'
 import API_URL from '../../../API_URL'
 import Comment from './Comment.vue'
 import AddComment from './AddComment.vue'
+import InfoElement from '../InfoElement.vue'
 
 export default {
   components: {
     Comment,
-    AddComment
+    AddComment, 
+    InfoElement
   },
   props: {
     id: String,

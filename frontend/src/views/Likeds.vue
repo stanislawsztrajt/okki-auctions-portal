@@ -62,7 +62,7 @@ import NoAuctionsFound from '../components/NoAuctionsFound'
 import Auction from '../components/Auction.vue'
 
 import API_URL from '../../API_URL'
-import { jwt, user } from '../constants/const-variables'
+import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   components: {
@@ -88,24 +88,23 @@ export default {
     }
   },
   async created(){
-    if(!this.ISjwt){
+    if(!jwt){
       this.$router.push('/login')
     }
 
     this.isLoading = true
 
     await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
-    .then(res =>{
-      this.likeds = res.data
-      this.likeds.forEach(async liked =>{
-        await axios.get(`${API_URL}/auctions/${liked.auction_id}`)
-        .then(res => this.auctions.push(res.data))
-      })
-    })
+    .then(res => this.likeds = res.data )
+
+    await axios.get(`${API_URL}/user-liked-auctions/${user.id}`, authorization)
+    .then(res => this.auctions = res.data)
+    .catch(err => console.log(err))
     
     if(this.auctions.length === this.likeds){
       this.searchAuctions()
     }
+
     this.isLoading = false
   },
   methods: {

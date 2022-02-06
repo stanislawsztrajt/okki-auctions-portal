@@ -34,15 +34,6 @@
           >
         </div>
         <div class="new-auction-data-box">
-          <h2>Kategoria</h2>
-          <select
-            name="Kategorie"
-            required
-            class="new-auction-input"
-            v-model="categoryValue"
-          ></select>
-        </div>
-        <div class="new-auction-data-box">
           <h2>Twoje imię</h2>
           <input
             type="text"
@@ -104,16 +95,16 @@
           >
           </textarea>
         </div>
+      </div>
 
-        <div class="new-adverst-main-box">
-          <h1 class="new-adverst-title">Filtry</h1>
-          <SearchFilteringElements
-            class="text-white"
-            @select-change="saveFilters"
-            :selectDefaultOption="'Wybierz'"
-            :isRequired="true"
-          />
-        </div>
+      <div class="new-auction-main-box">
+        <h1 class="new-auction-title">Filtry</h1>
+        <SearchFilteringElements
+          class="text-white"
+          @select-change="saveFilters"
+          :selectDefaultOption="'Wybierz'"
+          :isRequired="true"
+        />
       </div>
 
       <div class="new-auction-main-box">
@@ -146,7 +137,9 @@
       <button
         class="new-auction-button"
         @click="createAuction"
-      ></button>
+      >
+        Stwórz ogłoszenie
+      </button>
     </form>
     <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
@@ -161,11 +154,18 @@ import Loading from '../components/Loading'
 import SearchFilteringElements from '../components/SearchFilteringElements'
 
 import axios from 'axios'
-
+import convert from 'image-file-resize';
 import categoriesJSON from '../jsons files/categories.json'
 
 import API_URL from '../../API_URL'
 import { authorization, jwt, user } from '../constants/const-variables'
+import { 
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_UPLOAD_PRESET
+} from '../../secret.js'
+
 
 export default {
   name: 'NewAdvert',
@@ -281,48 +281,66 @@ export default {
       this.isLoading = true;
 
       if(this.images.length === 0){
-        this.images = ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg']
-      }
-
-      await this.images.forEach(async image =>{
-        let isPostedImages = false;
-
-        const data = new FormData()
-        data.append('file', image)
-        data.append("api_key", '');
-        data.append("api_secret", '');
-        data.append("cloud_name", 'dh35iucxu');
-        data.append("upload_preset", "qpfb0fma");
-
-        await axios.post(
-          `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
-          data
-        )
-        .then(async res => {
-          await this.imageUrls.push(res.data.url);
-          if(this.imageUrls.length === this.images.length) isPostedImages = true;
-        })
-        .catch(err => console.log(err))
-
-
-        if(isPostedImages){
-          if(this.used) {
-            const data = {
-              title: this.titleValue,
-              price: parseFloat(this.priceValue),
-              description: this.descriptionValue,
-              location: this.locationValue,
-              phoneNumber: this.phoneNumberValue,
-              user_id: user.id,
-              images: this.imageUrls,
-            }
-
-            await axios.post(`${API_URL}/auctions`, data, authorization)
-            .then(() => this.$router.push('/dashboard')) 
-            .catch(err=>{console.log(err)})
-          }
+        const data = {
+          title: this.titleValue,
+          price: parseFloat(this.priceValue),
+          description: this.descriptionValue,
+          location: this.locationValue,
+          phoneNumber: this.phoneNumberValue,
+          user_id: user.id,
+          images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
         }
-      })
+
+        await axios.post(`${API_URL}/auctions`, data, authorization)
+        .then(() => this.$router.push('/dashboard')) 
+        .catch(err=>{console.log(err)})
+      } else{
+        await this.images.forEach(async image =>{
+          let isPostedImages = false;
+
+          convert({ 
+            file: image,  
+            width: 800, 
+            height: 450, 
+            type: 'jpeg'
+          })
+          .then(async file => {
+            const data = new FormData()
+            data.append('file', file)
+            data.append("api_key", CLOUDINARY_API_KEY);
+            data.append("api_secret", CLOUDINARY_API_SECRET);
+            data.append("cloud_name", CLOUDINARY_CLOUD_NAME);
+            data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+            await axios.post(
+              `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
+              data
+            )
+            .then(async res => {
+              await this.imageUrls.push(res.data.url);
+              if(this.imageUrls.length === this.images.length) isPostedImages = true;
+            })
+            .catch(err => console.log(err))
+
+
+            if(isPostedImages && this.used){
+              const data = {
+                title: this.titleValue,
+                price: parseFloat(this.priceValue),
+                description: this.descriptionValue,
+                location: this.locationValue,
+                phoneNumber: this.phoneNumberValue,
+                user_id: user.id,
+                images: this.imageUrls,
+              }
+
+              await axios.post(`${API_URL}/auctions`, data, authorization)
+              .then(() => this.$router.push('/dashboard')) 
+              .catch(err=>{console.log(err)})
+            }
+          })
+        })
+      }
     },
   }
 }

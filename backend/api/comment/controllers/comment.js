@@ -8,14 +8,7 @@ const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
 
 module.exports = {
   async find(ctx) {
-    let entity = [];
-    if(ctx.request.header.user_profile_id){
-      entity = await strapi.services.comment.find({ 
-        user_profile_id: ctx.request.header.user_profile_id
-      });
-    } else{
-      return sanitizeEntity({ message: "Bad request" }, { model: strapi.models.comment });
-    }
+    const entity = await strapi.services.comment.find({ user_profile_id: { $eq: ctx.request.header.user_profile_id } });
     return sanitizeEntity(entity, { model: strapi.models.comment });
   },
 

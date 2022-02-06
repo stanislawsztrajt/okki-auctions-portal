@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* other */
+
+body {
+  background: #EEE;
+}
+
+body::-webkit-scrollbar {
+  width: 0.7em;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(58, 161, 123);
+  outline: 1px solid rgb(112, 144, 115);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  opacity: 0.8;
+}
+
 /* Menu styles */
 
 .menu-element {
@@ -70,15 +93,6 @@
   @apply h-12 bg-white text-gray-700 px-4 py-2 shadow-sm;
 }
 
-/* Dashboard and UserProfile */
-
-.dashboardElements{
-  @apply w-10/12 md:w-1/2 border-gray-300 text-gray-600 bg-white shadow;
-}
-
-.rateStars{
-  @apply hover:text-yellow-400 duration-100 cursor-pointer mr-10 text-yellow-300;
-}
 
 /* buttons animation */
 
@@ -97,26 +111,6 @@
   @apply mt-2 px-3 py-2 xl:p-2 text-green-700 xl:w-64 font-medium text-sm md:text-base xl:text-lg text-center button-animation-hover cursor-pointer
 }
 
-/* other */
-
-body::-webkit-scrollbar {
-  width: 0.7em;
-}
-
-body::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: rgb(58, 161, 123);
-  outline: 1px solid rgb(112, 144, 115);
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  opacity: 0.8;
-}
-
-
 .auction-textarea{
   overflow-x: hidden;
   overflow-y: scroll;
@@ -124,4 +118,9 @@ body::-webkit-scrollbar-thumb:hover {
 
 .auction-textarea::-webkit-scrollbar {
   display: none;
+}
+
+/* comment */
+.comment-emote{
+  @apply h-12 w-12 mt-1 p-1 rounded-full inline-block
 }

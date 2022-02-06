@@ -7,7 +7,19 @@ module.exports = {
         '84': '21rem',
         '108': '27rem',
         '112': '28rem',
+        '128': '32rem',
         '192': '46rem',
+        '9/16': 'calc(56.25% - 3.5rem)'
+      },
+
+      minHeight: {
+        '4': '1rem',
+        '24': '6rem',
+        '48': '12rem'
+      },
+      
+      colors: {
+        'main': '#EEE'
       }
     },
     screens: {

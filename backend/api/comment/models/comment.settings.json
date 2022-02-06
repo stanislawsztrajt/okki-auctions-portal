@@ -21,11 +21,11 @@
     "user_id": {
       "type": "string"
     },
-    "rate": {
-      "type": "integer"
-    },
     "user_profile_id": {
       "type": "string"
+    },
+    "rate": {
+      "type": "boolean"
     }
   }
 }

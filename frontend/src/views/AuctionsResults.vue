@@ -99,8 +99,10 @@ export default {
     this.categoryOption = this.$route.params.category
     this.isLoading = true
 
-    await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
-    .then(res => this.likeds = res.data)
+    if(jwt){
+      await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
+      .then(res => this.likeds = res.data)
+    }
 
     await axios.get(`${API_URL}/auctions`)
     .then(res => {

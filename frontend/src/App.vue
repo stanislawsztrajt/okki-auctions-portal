@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-import API_URL from '../API_URL'
+import axios from 'axios';
+import API_URL from '../API_URL';
+
 
 export default {
   name: 'App',

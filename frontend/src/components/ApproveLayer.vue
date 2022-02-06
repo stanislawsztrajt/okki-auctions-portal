@@ -26,7 +26,7 @@
 export default {
   methods: {
     deleteAuction(){
-      this.$emit('delete-advert')
+      this.$emit('delete-auction')
     },
     toggleDeleteAuctionLayer(id){
       this.$emit('toggle-delete-advert-layer', id)
