@@ -112,11 +112,11 @@ export default {
           return this.validationError = true
         }
 
-        if(this.usernameValue.length < 4){
+        if(this.usernameValue.length < 3){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
-          this.validationText = 'Nazwa użytkownika jest za krótka (co najmniej 4 znaki)'
+          this.validationText = 'Nazwa użytkownika jest za krótka (co najmniej 3 znaki)'
           return this.validationError = true
         }
 
@@ -128,11 +128,11 @@ export default {
           return this.validationError = true
         }
 
-        if(this.emailValue.length < 4){
+        if(this.emailValue.length < 6){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
-          this.validationText = 'Email jest zbyt krótka (co najmniej 4 znaki)'
+          this.validationText = 'Email jest zbyt krótka (co najmniej 6 znaki)'
           return this.validationError = true
         }
 

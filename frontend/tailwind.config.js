@@ -15,7 +15,7 @@ module.exports = {
       minHeight: {
         '4': '1rem',
         '24': '6rem',
-        '48': '12rem'
+        '56': '14rem'
       },
       
       colors: {

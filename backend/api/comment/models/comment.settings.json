@@ -13,16 +13,20 @@
   "pluginOptions": {},
   "attributes": {
     "body": {
-      "type": "text"
+      "type": "text",
+      "maxLength": 450
     },
     "username": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 30
     },
     "user_id": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 30
     },
     "user_profile_id": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 30
     },
     "rate": {
       "type": "boolean"

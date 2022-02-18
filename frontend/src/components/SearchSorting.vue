@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    sortAdverts(auctionsCopy) {
+    sortAuctionsf(auctionsCopy) {
       this.auctions = auctionsCopy
       switch(this.sorting) {
         case 'najnowsze': {

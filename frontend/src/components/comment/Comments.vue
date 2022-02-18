@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-12">
+  <div>
     <InfoElement 
       :value="'Opinie użytkowników'"
       :icon="'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'"
@@ -9,7 +9,7 @@
       :id="id"
       @push-comment="pushComment"
     />
-    <div class="-mt-12">
+    <div>
       <Comment
         v-for="comment in comments"
         :key="comment.id"
@@ -17,6 +17,7 @@
         @delete-comment="deleteComment"
       />
     </div>
+    <div class="p-10"></div>
   </div>
 </template>
 
@@ -38,27 +39,37 @@ export default {
   },
   props: {
     id: String,
+    changeDetector: Number
   },
   data(){
     return{
       comments: [],
-      userRating: 3,
+      rate: 0,
       user: user
     }
   },
   async created(){
-    await axios.get(`${API_URL}/comments`, { headers: { user_profile_id: this.id } })
-    .then(res => this.comments = res.data )
+    await axios.get(`${API_URL}/comments-in-users-profiles/${this.id}`)
+    .then(res => {
+      this.comments = res.data.comments;
+      this.rate = res.data.accucuracyRate
+    })
     .catch(err => console.log(err))
   },
   methods: {
-    pushComment(comment){
+    changeChangeDetector(){
+      this.$emit('change-change-detector')
+    },
+    async pushComment(comment){
       this.comments.push(comment);
+      this.changeChangeDetector();
     },
     async deleteComment(id){
-      const index = this.comments.findIndex(id => this.comments.id === id);
+      const index = this.comments.findIndex(comment => comment.id === id);
+      
       this.comments.splice(index,1);
       await axios.delete(`${API_URL}/comments/${id}`, authorization)
+      this.changeChangeDetector()
     }
   }
 }

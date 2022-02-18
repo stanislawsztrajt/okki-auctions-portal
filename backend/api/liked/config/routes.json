@@ -11,7 +11,7 @@
     {
       "method": "GET",
       "path": "/user-liked-auctions/:id",
-      "handler": "liked.findUserLikedArticles",
+      "handler": "liked.findUserLikedAuctions",
       "config": {
         "policies": []
       }

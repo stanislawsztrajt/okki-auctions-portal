@@ -23,15 +23,22 @@
           @action="() => $router.push('change-user-info')"
           :icon="'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4'"
         />
-        <InfoElement 
+
+        <InfoElement
           :value="'Twoje ogłoszenia'" 
           :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'" 
+          v-if="auctions.length > 0" 
+        />
+        <InfoElement
+          :value="'Nie masz ogłoszeń'" 
+          :icon="'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'" 
+          v-else
         />
 
         <Auction
           @toggle-edit-auction-layer="toggleEditAuctionLayer"
           @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
-          v-for="auction in auction"
+          v-for="auction in auctions"
           :key="auction.id"
           :auction="auction"
           :likeds="[]"
@@ -85,7 +92,7 @@ export default {
   data(){
     return {
       user: user,
-      auction: [],
+      auctions: [],
       activeAuction_id: '',
       isLoading: false,
 
@@ -101,15 +108,15 @@ export default {
       this.$router.push('/login');
     } else{
       await axios.get(`${API_URL}/user-auctions/${user.id}`)
-      .then(res => this.auction = res.data)
+      .then(res => this.auctions = res.data)
     }
 
     this.isLoading = false
   },
   methods: {
     async deleteAuction(){
-      const index = this.auction.findIndex(auction => auction.id === this.activeAuction_id);
-      this.auction.splice(index, 1);
+      const index = this.auctions.findIndex(auction => auction.id === this.activeAuction_id);
+      this.auctions.splice(index, 1);
       this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
       
       await axios.delete(`${API_URL}/auctions/${this.activeAuction_id}`, authorization)

@@ -25,6 +25,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/comments-in-users-profiles/:id",
+      "handler": "comment.findCommentsInUsersProfiles",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/comments",
       "handler": "comment.create",

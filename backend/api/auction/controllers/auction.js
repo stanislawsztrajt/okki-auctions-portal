@@ -70,8 +70,7 @@ module.exports = {
     auctions.map(async auction =>{
       // 2592000000 = 1 month
       if(Date.parse(auction.createdAt) + 2592000000 <= Date.parse(auction.createdAt) + (Date.parse(new Date()) - Date.parse(auction.createdAt))){
-        const entity = await strapi.services.auction.delete({ id: auction.id });
-        return sanitizeEntity(entity, { model: strapi.models.auction });
+        await strapi.services.auction.delete({ id: auction.id });
       }
     })
 

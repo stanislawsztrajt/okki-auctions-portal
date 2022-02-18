@@ -13,30 +13,39 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "category": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "user_id": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "price": {
-      "type": "float"
+      "type": "float",
+      "required": true
     },
     "phoneNumber": {
+      "required": true,
       "type": "string"
     },
     "images": {
+      "required": true,
       "type": "json"
     },
     "location": {
+      "required": true,
       "type": "string"
     },
     "description": {
+      "required": true,
       "type": "text"
     },
     "filters": {
+      "required": true,
       "type": "json"
     }
   }

@@ -3,15 +3,17 @@
     <Menu />
     <Loading v-if="isLoading" />
     <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
-      <div class="flex flex-row justify-center md:justify-start mb-6">
-        <div class="dashboardElements mt-6 p-4 text-2xl" v-if="likeds.length > 0">
-          Twoje polubione ogłoszenia
-        </div>
-        <div class="dashboardElements mt-6 p-4 text-2xl" v-else>
-          Nie masz polubionych ogłoszeń
-        </div>
-      </div>
-      <div class="border-b pb-6 border-gray-300" v-if="likeds.length > 0">
+      <InfoElement 
+        :value="'Twoje polubione ogłoszenia'"
+        :icon="'M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z'"
+        v-if="likeds.length > 0"
+      />
+      <InfoElement 
+        :value="'Nie masz polubionych ogłoszeń'"
+        :icon="'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'"
+        v-else
+      />
+      <div class="border-b pb-6 mt-8 border-gray-300" v-if="likeds.length > 0">
         <SearchInputs
           class="sm:w-3/4"
           ref="inputsComponent"
@@ -60,6 +62,7 @@ import SearchFilters from '../components/SearchFilters'
 import SearchSorting from '../components/SearchSorting'
 import NoAuctionsFound from '../components/NoAuctionsFound'
 import Auction from '../components/Auction.vue'
+import InfoElement from '../components/InfoElement.vue'
 
 import API_URL from '../../API_URL'
 import { authorization, jwt, user } from '../constants/const-variables'
@@ -73,6 +76,7 @@ export default {
     SearchSorting,
     NoAuctionsFound,
     Auction,
+    InfoElement
   },
   data(){
     return{

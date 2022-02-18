@@ -182,7 +182,7 @@ export default {
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
-      advertFilters: [],
+      auctionFilters: [],
 
       isLoading: false,
 
@@ -207,7 +207,7 @@ export default {
   },
   methods: {
     saveFilters(filters) {
-      this.advertFilters = Object.values(filters)
+      this.auctionFilters = Object.values(filters)
     },
     async onFileChange(e){
       const image = e.target.files[0]
@@ -221,7 +221,7 @@ export default {
     async createAuction(){
       clearTimeout(this.setTimeout)
 
-      if(!this.titleValue || !this.priceValue || !this.advertFilters || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
+      if(!this.titleValue || !this.priceValue || !this.auctionFilters || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
@@ -289,7 +289,10 @@ export default {
           phoneNumber: this.phoneNumberValue,
           user_id: user.id,
           images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
+          filters: {},
+          category: ""
         }
+        console.log(data)
 
         await axios.post(`${API_URL}/auctions`, data, authorization)
         .then(() => this.$router.push('/dashboard')) 
@@ -332,6 +335,8 @@ export default {
                 phoneNumber: this.phoneNumberValue,
                 user_id: user.id,
                 images: this.imageUrls,
+                filters: {},
+                category: ""
               }
 
               await axios.post(`${API_URL}/auctions`, data, authorization)

@@ -15,17 +15,16 @@
         </span>
       </div>
       
-      <svg @click="selectRate(true)" xmlns="http://www.w3.org/2000/svg" class="comment-emote button-animation-hover cursor-pointer bg-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg @click="selectRate(true)" xmlns="http://www.w3.org/2000/svg" :class="`comment-emote button-animation-hover cursor-pointer ${rate && rate !== null ? 'bg-green-500' : 'bg-green-700'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <svg @click="selectRate(false)" xmlns="http://www.w3.org/2000/svg" class="comment-emote button-animation-hover cursor-pointer ml-4 bg-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg @click="selectRate(false)" xmlns="http://www.w3.org/2000/svg" :class="`comment-emote button-animation-hover cursor-pointer ml-4 ${!rate && rate !== null ? 'bg-red-500' : 'bg-red-700'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     </div>
     <button @click="addComment" class="w-full xl:w-1/6 p-4 mt-4 rounded focus:outline-none bg-green-600 text-white button-animation-hover">
       Dodaj komentarz
     </button>
-    <div class="mt-20"></div>
   </div>
   <div v-else class="text-2xl mt-10">
     Nie jestes zalogowany, nie mozesz dodac komentarza
@@ -80,9 +79,10 @@ export default {
       }
 
       await axios.post(`${API_URL}/comments`, comment, authorization)
-      .then(res =>{
-        this.pushComment(res.data)
+      .then(async res =>{
+        this.pushComment(res.data);
         this.body = '';
+        this.rate = null;
       })
       .catch(err => console.log(err))
     }

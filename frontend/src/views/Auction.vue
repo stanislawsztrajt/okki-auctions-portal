@@ -18,32 +18,28 @@
             v-if="auction.images"
             class="flex flex-row flex-wrap justify-center items-center h-full"
           >
-            <div class="flex justify-start w-3/4 xl:w-9/16 absolute">
+            <div v-if="auction.images.length > 1" class="flex justify-between w-3/4 xl:w-9/16 absolute">
               <svg xmlns="http://www.w3.org/2000/svg"
-                class="h-10 w-10 xl:h-12 xl:w-12 ml-10 p-2 opacity-50 text-white bg-black  cursor-pointer"
+                class="h-10 w-10 xl:h-12 xl:w-12 ml-10 p-2 opacity-50 text-white bg-black cursor-pointer"
                 @click="decrement"
-                v-if="auction.images.length > 1"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h110" />
               </svg>
-            </div>
-            
-            <img 
-              class=" max-h-96 xl:max-h-full"
-              :src="auction.images[imageIndex]" 
-              alt=""
-            >
-            
-            <div class="flex justify-end w-3/4 xl:w-9/16 absolute">
+
               <svg xmlns="http://www.w3.org/2000/svg"
                 class="h-10 w-10 xl:h-12 xl:w-12 mr-10 p-2 opacity-50 text-white bg-black cursor-pointer"
                 @click="increment"
-                v-if="auction.images.length > 1"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </div>
+
+            <img 
+              class="max-h-96 xl:max-h-full"
+              :src="auction.images[imageIndex]" 
+              alt=""
+            >
           </div>
         </div>
         <div class="w-full xl:w-1/4 flex flex-col p-4 bg-white shadow ">
@@ -54,44 +50,81 @@
             <router-link :to="`/users/${user.id}`" class="inline ml-2">{{ user.username }}</router-link>
             <br>
           </h2>
-
+          
           <Liking
             v-if="auction.user_id !== userCookie.id && jwt"
             :likeds="likeds"
             :auction_id="auction.id"
             :route="'auctions'"
           />
-
           <router-link
             :to="`/chat/${user.id}`"
-            class=" mt-3 text-center text-lg 2xl:text-xl bg-gray-200 rounded-md p-2 text-green-600 hover:opacity-80 duration-100">
+            class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-green-600 hover:opacity-80 duration-100"
+            v-if="auction.user_id !== userCookie.id && jwt"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             Wyślij wiadomość
           </router-link>
-          <div class=" mt-3 text-center text-lg 2xl:text-xl bg-green-600 rounded-md p-2 text-white">
+          <div class=" mt-3 text-center text-md 2xl:text-lg bg-green-600 rounded-md p-2 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
             {{ auction.phoneNumber }}
           </div>
-          <button @click="toggleShowReportLayer" class=" mt-3 text-center text-lg 2xl:text-xl bg-red-600 rounded-md p-2 text-white hover:opacity-80 duration-100">
+          <div
+            class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-white duration-100"
+          >
+            <span v-if="rate > 55" class="text-green-500">
+              <svg class="h-6 w-6 inline mb-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <path d="M9.5 15a3.5 3.5 0 0 0 5 0" /></svg>
+              {{ rate }}% <span class="text-gray-600">Opinia użytkowników</span>
+            </span>
+            <span v-else-if="rate<45" class="text-red-500">
+              <svg class="h-6 w-6 inline mb-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0" /></svg>
+              {{ rate }}% <span class="text-gray-600">Opinia użytkowników</span>
+            </span>
+            <span v-else>
+              <svg class="h-6 w-6 inline mb-1"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <line x1="9" y1="15" x2="15" y2="15" /></svg>
+              {{ rate }}
+            </span>
+          </div>
+          <button 
+            @click="toggleShowReportLayer" 
+            class=" mt-3 text-center text-md 2xl:text-lg bg-red-600 rounded-md p-2 text-white hover:opacity-80 duration-100"
+            v-if="auction.user_id !== userCookie.id && jwt"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Zgłoś
           </button>
-          <div class=" mt-10 text-lg font-light">
+          <div class=" mt-4 text-lg font-light">
             <h3>{{ auction.published_at }}</h3>
-            <h3>{{ auction.location }}</h3>
+            <a 
+              target="blank" 
+              :href="`https://www.google.pl/maps/place/${auction.location}`"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-1 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg> 
+            {{ auction.location }}
+            </a>
           </div>
         </div>
       </div>
       <div class="w-3/4 flex flex-col xl:flex-row gap-8">
         <div class="w-full xl:w-3/4 bg-white h-full p-4 shadow">
           <h2 class="text-3xl lg:text-4xl bold">Opis ogłoszenia</h2>
-          <textarea class="w-full h-72 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none" disabled v-model="auction.description"></textarea>
+          <div 
+            class="w-full min-h-56 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none pointer-events-none" 
+            spellcheck="false" 
+            contenteditable="" 
+            disabled
+          >
+            {{auction.description}}
+          </div>
         </div> 
         <div class="w-full xl:w-1/4 p-4 text-xl xl:text-lg bg-white shadow text-center">
           <a 
@@ -142,6 +175,7 @@ export default {
       user: {},
       auction: {},
       likeds: [],
+      rate: 0,
 
       isReportLayerShow: false,
       isLoading: false,
@@ -162,7 +196,13 @@ export default {
       this.auction = res.data
 
       await axios.get(`${API_URL}/users/${res.data.user_id}`)
-      .then(res => this.user = res.data)
+      .then(async res => {
+        this.user = res.data
+
+        await axios.get(`${API_URL}/comments-in-users-profiles/${res.data.id}`)
+        .then(res => this.rate = res.data.accucuracyRate)
+        .catch(err => console.log(err))
+      })
     })
     .catch(() => this.user = false)
 

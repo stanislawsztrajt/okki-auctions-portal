@@ -7,11 +7,31 @@ const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
  */
 
 module.exports = {
-  async find(ctx) {
-    const entity = await strapi.services.comment.find({ user_profile_id: { $eq: ctx.request.header.user_profile_id } });
-    return sanitizeEntity(entity, { model: strapi.models.comment });
-  },
+  async findCommentsInUsersProfiles(ctx){
+    const { id } = ctx.params;
 
+    const entity = await strapi.services.comment.find({ user_profile_id: id });
+    
+    let positiveRate = 0;
+    entity.forEach(comment =>{
+      if(comment.rate === true){
+        positiveRate++
+      }
+    })
+
+    let accucuracyRate = 0;
+
+    if(entity.length > 0){
+      accucuracyRate = Math.round(positiveRate/entity.length*100);
+    } else{
+      accucuracyRate = 'Brak opini użytkowników'
+    }
+
+    return sanitizeEntity({
+      accucuracyRate,
+      comments: entity
+    }, { model: strapi.models.comment });
+  },
   async update(ctx) {
     const { id } = ctx.params;
 

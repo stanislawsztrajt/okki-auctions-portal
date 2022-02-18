@@ -12,7 +12,7 @@ module.exports = {
 
     return sanitizeEntity(entity, { model: strapi.models.liked });
   },
-  async findUserLikedArticles(ctx){
+  async findUserLikedAuctions(ctx){
     const { id } = ctx.params;
     
     const likeds = await strapi.services.liked.find({
