@@ -11,6 +11,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "sharp": "^0.28.1",
     "strapi": "3.6.3",
     "strapi-admin": "3.6.3",
     "strapi-connector-mongoose": "3.6.3",

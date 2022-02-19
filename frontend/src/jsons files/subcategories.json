@@ -1,19 +1,18 @@
 {
   "motoryzacja": [
     {"name": "Samochody osobowe", "value": "samochody-osobowe"},
-    {"name": "Motocykle", "value": "motocykle"},
-    {"name": "Części", "value": "czesci"}
+    {"name": "Motocykle i skutery", "value": "motocykle-skutery"}
   ],
   "dom-i-ogrod": [
     {"name": "Meble do domu", "value": "meble-do-domu"},
     {"name": "Meble do ogrodu", "value": "meble-do-ogrodu"},
     {"name": "Narzędzia", "value": "narzedzia"},
-    {"name": "Rośliny", "value": "rosliny"},
-    {"name": "Ozdobne", "value": "ozdobne"}
+    {"name": "Rośliny/sadzonki", "value": "rosliny-sadzonki"},
+    {"name": "Wyposażenie", "value": "wyposazenie"}
   ],
   "elektronika": [
     {"name": "Telefony", "value": "telefony"},
-    {"name": "Komputery stacjonarne", "value": "komputery-stacjonarne"},
+    {"name": "Komputery stacjonarne", "value": "komputery"},
     {"name": "Laptopy", "value": "laptopy"},
     {"name": "Konsole", "value": "konsole"},
     {"name": "Smartwatche", "value": "smartwatche"},
@@ -22,7 +21,7 @@
     {"name": "Myszki", "value": "myszki"},
     {"name": "Słuchawki", "value": "sluchawki"},
     {"name": "Sprzęt audio", "value": "sprzet-audio"},
-    {"name": "Akcesoria", "value": "akcesoria"}
+    {"name": "Akcesoria", "value": "elektronika-akcesoria"}
   ],
   "odziez": [
     {"name": "Koszulki", "value": "koszulki"},
@@ -30,7 +29,7 @@
     {"name": "Bluzy", "value": "bluzy"},
     {"name": "Kurtki", "value": "kurtki"},
     {"name": "Obuwie", "value": "obuwie"},
-    {"name": "Akcesoria", "value": "akcesoria"}
+    {"name": "Akcesoria", "value": "odziez-akcesoria"}
   ],
   "rolnictwo": [
     {"name": "Ciągniki", "value": "ciagniki"},
@@ -71,14 +70,6 @@
     {"name": "Komiksy", "value": "komiksy"},
     {"name": "Kursy i warsztaty", "value": "kursy-i-warsztaty"}
   ],
-  "budownictwo": [
-    {"name": "", "value": ""},
-    {"name": "", "value": ""},
-    {"name": "", "value": ""},
-    {"name": "", "value": ""},
-    {"name": "", "value": ""},
-    {"name": "", "value": ""}
-  ],
   "noclegi": [
     {"name": "Pokój", "value": "pokoj"},
     {"name": "Mieszkanie", "value": "mieszkanie"},
@@ -91,11 +82,11 @@
     {"name": "Budownictwo", "value": "budownictwo"},
     {"name": "Kierowca", "value": "kierowca"},
     {"name": "Prawo", "value": "prawo"},
-    {"name": "Produkcja", "value": "produkcja+"},
+    {"name": "Produkcja", "value": "produkcja"},
     {"name": "IT", "value": "it"},
     {"name": "Sprzedaż", "value": "sprzedaz"},
     {"name": "Obsługa klienta", "value": "obsluga-klienta"},
-    {"name": "Gastronomia / Hotelarstwo / Turystyka", "value": "obsluga-klienta"},
+    {"name": "Gastronomia / Hotelarstwo / Turystyka", "value": "gas-hot-tur"},
     {"name": "Praca fizyczna", "value": "praca-fizyczna"},
     {"name": "Praca dorywcza", "value": "praca-dorywcza"},
     {"name": "Inne", "value": "inne"}

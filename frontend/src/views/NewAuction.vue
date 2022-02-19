@@ -1,9 +1,9 @@
 <template>
   <div id="NewAuction">
     <Menu />
-    <Loading v-if="loading"/>
-    <form 
-      v-else 
+    <Loading v-if="isLoading"/>
+    <form
+      v-else
       @submit.prevent="createAuction"
       class="w-3/4 lg:w-3/5 py-10 m-auto"
     >
@@ -33,17 +33,6 @@
             maxlength="15"
           >
         </div>
-        <div class="new-auction-data-box">
-          <h2>Twoje imię</h2>
-          <input
-            type="text"
-            placeholder="Np. Michał"
-            required
-            class="new-auction-input"
-            v-model="usernameValue"
-            maxlength="20"
-          >
-        </div>
       </div>
       <div class="new-auction-main-box">
         <h1 class="new-auction-title">Zdjęcia i opis</h1>
@@ -53,7 +42,6 @@
             <input
               type="file"
               accept="image/png, image/jpeg"
-              required
               class=""
               @change="onFileChange($event)"
             >
@@ -99,9 +87,9 @@
 
       <div class="new-auction-main-box">
         <h1 class="new-auction-title">Filtry</h1>
-        <SearchFilteringElements
+        <SearchFilters
           class="text-white"
-          @select-change="saveFilters"
+          @select-change="updateFilters"
           :selectDefaultOption="'Wybierz'"
           :isRequired="true"
         />
@@ -113,7 +101,7 @@
           <label>Lokalizacja</label>
           <input
             type="text"
-            placeholder="Np. Warszawa"
+            placeholder="Np. Ul. Złota 5"
             required
             class="new-auction-input"
             v-model="locationValue"
@@ -134,12 +122,11 @@
         </div>
       </div>
 
-      <button
-        class="new-auction-button"
-        @click="createAuction"
+      <input
+        type="submit"
+        value="Stwórz ogłoszenie"
+        class="new-auction-button cursor-pointer"
       >
-        Stwórz ogłoszenie
-      </button>
     </form>
     <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
@@ -151,7 +138,7 @@
 <script>
 import Menu from '../components/Menu'
 import Loading from '../components/Loading'
-import SearchFilteringElements from '../components/SearchFilteringElements'
+import SearchFilters from '../components/SearchFilters'
 
 import axios from 'axios'
 import convert from 'image-file-resize';
@@ -159,7 +146,7 @@ import categoriesJSON from '../jsons files/categories.json'
 
 import API_URL from '../../API_URL'
 import { authorization, jwt, user } from '../constants/const-variables'
-import { 
+import {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
   CLOUDINARY_CLOUD_NAME,
@@ -172,7 +159,7 @@ export default {
   components: {
     Menu,
     Loading,
-    SearchFilteringElements
+    SearchFilters
   },
   data(){
     return{
@@ -206,7 +193,7 @@ export default {
     }
   },
   methods: {
-    saveFilters(filters) {
+    updateFilters(filters) {
       this.auctionFilters = Object.values(filters)
     },
     async onFileChange(e){
@@ -244,7 +231,7 @@ export default {
         this.validationText = 'Opis ogłoszenia jest za krótki (co najmniej 50 znaków)'
         return this.validationError = true
       }
-      
+
       if(this.descriptionValue.length > 10000){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
@@ -289,22 +276,22 @@ export default {
           phoneNumber: this.phoneNumberValue,
           user_id: user.id,
           images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
-          filters: {},
-          category: ""
+          filters: this.auctionFilters
         }
+
         console.log(data)
 
         await axios.post(`${API_URL}/auctions`, data, authorization)
-        .then(() => this.$router.push('/dashboard')) 
+        .then(() => this.$router.push('/dashboard'))
         .catch(err=>{console.log(err)})
       } else{
         await this.images.forEach(async image =>{
           let isPostedImages = false;
 
-          convert({ 
-            file: image,  
-            width: 800, 
-            height: 450, 
+          convert({
+            file: image,
+            width: 800,
+            height: 450,
             type: 'jpeg'
           })
           .then(async file => {
@@ -335,12 +322,11 @@ export default {
                 phoneNumber: this.phoneNumberValue,
                 user_id: user.id,
                 images: this.imageUrls,
-                filters: {},
-                category: ""
+                filters: this.auctionFilters
               }
 
               await axios.post(`${API_URL}/auctions`, data, authorization)
-              .then(() => this.$router.push('/dashboard')) 
+              .then(() => this.$router.push('/dashboard'))
               .catch(err=>{console.log(err)})
             }
           })

@@ -2,7 +2,7 @@
   <div v-if="jwt">
     <div v-if="route === 'auctions'" class="w-full flex flex-col">
       <router-link
-        to=""  
+        to=""
         v-if="!isLiked"
         @click="like"
         class="mt-8 text-center text-md 2xl:text-lg bg-green-600 rounded-md p-2 text-white hover:opacity-80 duration-100">
@@ -11,7 +11,7 @@
         </svg>
         Polub
       </router-link>
-      <router-link 
+      <router-link
         to=""
         v-else
         @click="disLike"
@@ -23,7 +23,7 @@
         Usuń polubienie
       </router-link>
     </div>
-    
+
     <div v-else class="w-full flex flex-col items-end">
       <router-link to="">
         <svg
@@ -67,7 +67,6 @@ export default {
     }
   },
   created(){
-    console.log(this.likeds)
     const isExist = this.likeds.findIndex(liked => liked.auction_id === this.auction_id)
 
     if(isExist >= 0){
@@ -84,7 +83,7 @@ export default {
         user_id: user.id,
         auction_id: this.auction_id
       }
-      
+
       this.isLiked = true
       await axios.post(`${API_URL}/likeds`, data, authorization)
       .then(res =>{

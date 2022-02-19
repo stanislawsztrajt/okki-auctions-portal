@@ -1,26 +1,26 @@
 [
-  { 
-    "question": "Czym jest okki?", 
+  {
+    "question": "Czym jest okki?",
     "answer": "Okki to portal ogłoszeniowy, na którym bezpłatnie można wystawiać ogłoszenia sprzedaży."
   },
-  { 
-    "question": "W jaki sposób mogę kupić przedmiot?", 
+  {
+    "question": "W jaki sposób mogę kupić przedmiot?",
     "answer": "Okki nie oferuje płatności bezpośrednio przez stronę. W celu zakupu należy skontaktować się ze sprzedającym, i osobiście omówić warunki sprzedaży."
   },
-  { 
-    "question": "Czy okki odpowiada za ewentualne oszustwa?", 
-    "answer": "Okki nie odpowiada za ewentualne oszustwa sprzedających. Dlatego przy droższych przedmiotach zalecamy płatność podczas odbioru osobistego."
+  {
+    "question": "Czy okki odpowiada za ewentualne oszustwa?",
+    "answer": "Okki nie odpowiada za ewentualne oszustwa sprzedających. Zalecamy płatność podczas odbioru osobistego."
   },
-  { 
-    "question": "Czy ilość ogłoszeń na jednym koncie jest ograniczona?", 
+  {
+    "question": "Czy ilość ogłoszeń na jednym koncie jest ograniczona?",
     "answer": "Na ten moment nie ma takiego ograniczenia."
   },
-  { 
-    "question": "Czy czas trwania jednego ogłoszenia jest ograniczony?", 
+  {
+    "question": "Czy czas trwania jednego ogłoszenia jest ograniczony?",
     "answer": "Jedno ogłoszenie może trwać maksymalnie 14 dni, po tym czasie zostanie automatycznie usunięte."
   },
-  { 
-    "question": "Czy mogę dodać jedno ogłoszenie kilka razy?", 
+  {
+    "question": "Czy mogę dodać jedno ogłoszenie kilka razy?",
     "answer": "Duplikowanie ogłoszeń jest zabronione. Jednak jeżeli dane ogłoszenie zostało automatycznie usunięte po 14 dniach, można je dodać ponownie."
   }
 ]

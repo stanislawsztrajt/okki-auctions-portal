@@ -4,35 +4,35 @@
       "label": "Marka",
       "vmodel": "carBrand",
       "options": [
-        {"name": "Volkswagen", "value": "volkswagen", "models": ["80", "90", "100", "200", "A1", "A2", "A3", "A4", "A4 Allroad", "A5", "A6", "A6 Allroad", "A7", "A8", "Cabriolet", "Coupe", "Q5", "Q7", "Quattro", "R8", "Rs4", "Rs6", "S2", "S3", "S4", "S5", "S6", "S8", "TT", "V8"]},
-        {"name": "Renault", "value": "renault", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Ford", "value": "ford", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Peugeot", "value": "peugeot", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Mercedes-Benz", "value": "mercedes-Benz", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Opel", "value": "opel", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Skoda", "value": "skoda", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Audi", "value": "audi", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Toyota", "value": "toyota", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Citroen", "value": "citroen", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Fiat", "value": "fiat", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Dacia", "value": "dacia", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Hyundai", "value": "hyundai", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Kia", "value": "kia", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Seat", "value": "seat", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Nissan", "value": "nissan", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Volvo", "value": "volvo", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Suzuki", "value": "suzuki", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Mazda", "value": "mazda", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Mini", "value": "mini", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Jeep", "value": "jeep", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Land Rover", "value": "land-rover", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Mitsubishi", "value": "mitsubishi", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]},
-        {"name": "Honda", "value": "honda", "models": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]}
-      ] 
+        {"name": "Volkswagen", "value": "volkswagen"},
+        {"name": "Renault", "value": "renault"},
+        {"name": "Ford", "value": "ford"},
+        {"name": "Peugeot", "value": "peugeot"},
+        {"name": "Mercedes-Benz", "value": "mercedes-Benz"},
+        {"name": "Opel", "value": "opel"},
+        {"name": "Skoda", "value": "skoda"},
+        {"name": "Audi", "value": "audi"},
+        {"name": "Toyota", "value": "toyota"},
+        {"name": "Citroen", "value": "citroen"},
+        {"name": "Fiat", "value": "fiat"},
+        {"name": "Dacia", "value": "dacia"},
+        {"name": "Hyundai", "value": "hyundai"},
+        {"name": "Kia", "value": "kia"},
+        {"name": "Seat", "value": "seat"},
+        {"name": "Nissan", "value": "nissan"},
+        {"name": "Volvo", "value": "volvo"},
+        {"name": "Suzuki", "value": "suzuki"},
+        {"name": "Mazda", "value": "mazda"},
+        {"name": "Mini", "value": "mini"},
+        {"name": "Jeep", "value": "jeep"},
+        {"name": "Land Rover", "value": "land-rover"},
+        {"name": "Mitsubishi", "value": "mitsubishi"},
+        {"name": "Honda", "value": "honda"}
+      ]
     },
     {
-      "label": "Typ nadwozia",
-      "vmodel": "carBodyType",
+      "label": "Rodzaj nadwozia",
+      "vmodel": "carType",
       "options": [
         {"name": "Sedan", "value": "sedan"},
         {"name": "Combi", "value": "combi"},
@@ -40,7 +40,7 @@
         {"name": "SUV", "value": "suv"},
         {"name": "Coupe", "value": "coupe"},
         {"name": "Kabriolet", "value": "kabriolet"}
-      ] 
+      ]
     },
     {
       "label": "Skrzynia biegów",
@@ -48,7 +48,7 @@
       "options": [
         {"name": "Manualna", "value": "manualna"},
         {"name": "Automatyczna", "value": "automatyczna"}
-      ] 
+      ]
     },
     {
       "label": "Paliwo",
@@ -59,7 +59,7 @@
         {"name": "LPG", "value": "lpg"},
         {"name": "Elektryczny", "value": "elektryczny"},
         {"name": "Hybryda", "value": "hybryda"}
-      ] 
+      ]
     },
     {
       "label": "Kierownica",
@@ -67,7 +67,7 @@
       "options": [
         {"name": "Po lewej", "value": "po-prawej"},
         {"name": "Po prawej", "value": "po-lewej"}
-      ] 
+      ]
     },
     {
       "label": "Stan techniczny",
@@ -75,7 +75,533 @@
       "options": [
         {"name": "Nieuszkodzony", "value": "nieuszkodzony"},
         {"name": "Uszkodzony", "value": "uszkodzony"}
-      ] 
+      ]
     }
+  ],
+  "motocykle-skutery" : [
+    {
+      "label": "Marka",
+      "vmodel": "motorcycleBrand",
+      "options": [
+        {"name": "BMW", "value": "bmw"},
+        {"name": "Yamaha", "value": "yamaha"},
+        {"name": "Romet", "value": "romet"},
+        {"name": "Junak", "value": "junak"},
+        {"name": "Benelli", "value": "benelli"},
+        {"name": "KTM", "value": "ktm"},
+        {"name": "Suzuki", "value": "suzuki"},
+        {"name": "Triumph", "value": "triumph"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "motorcycleType",
+      "options": [
+        {"name": "Turystyczny", "value": "turystyczne"},
+        {"name": "Chopper/Cruiser", "value": "chopper-cruiser"},
+        {"name": "Skuter", "value": "skutery"},
+        {"name": "Szosowy", "value": "szosowe"},
+        {"name": "Sportowe", "value": "sportowe"},
+        {"name": "Cross/Enduro", "value": "cross-enduro"}
+      ]
+    }
+  ],
+  "meble-do-domu": [
+    {
+      "label": "Rodzaj",
+      "vmodel": "homeFurnitutesType",
+      "options": [
+        {"name": "Biurka", "value": "biurka"},
+        {"name": "Stoły/stoliki", "value": "stoly-stoliki"},
+        {"name": "Łóżka", "value": "lozka"},
+        {"name": "Sofy/kanapy", "value": "sofy-kanapy"},
+        {"name": "Fotele", "value": "fotele"},
+        {"name": "Krzesła", "value": "krzesla"},
+        {"name": "Komody", "value": "komody"},
+        {"name": "Szafy", "value": "szafy"},
+        {"name": "Regały", "value": "regały"},
+        {"name": "Półki", "value": "polki"},
+        {"name": "Pufy/taborety", "value": "pufy-taborety"}
+      ]
+    }
+  ],
+  "meble-do-ogrodu": [
+    {
+      "label": "Rodzaj",
+      "vmodel": "garderFurnituresType",
+      "options": [
+        {"name": "Stoły/stoliki", "value": "stoly-stoliki"},
+        {"name": "Ławki", "value": "lawki"},
+        {"name": "Krzesła", "value": "krzesla"},
+        {"name": "Parasole ogrodowe", "value": "parasole-ogrodowe"},
+        {"name": "Huśtawki/hamaki", "value": "hustawki"},
+        {"name": "Baseny", "value": "baseny"},
+        {"name": "Altany", "value": "altany"},
+        {"name": "Latarnie/lampiony", "value": "latarnie-lampiony"},
+        {"name": "Grille", "value": "grille"},
+        {"name": "Skrzynie", "value": "skrzynie"}
+      ]
+    }
+  ],
+  "narzedzia": [
+    {
+      "label": "Rodzaj",
+      "vmodel": "toolsType",
+      "options": [
+        {"name": "Agregaty prądotwórcze", "value": "agregaty"},
+        {"name": "Detektory", "value": "detektory"},
+        {"name": "Drabiny", "value": "drabiny"},
+        {"name": "Kompresory samochodowe", "value": "kompresory-samochodowe"},
+        {"name": "Narzędzia budowlane", "value": "budowlane"},
+        {"name": "Narzędzia dla elektryków", "value": "dla-elektrykow"},
+        {"name": "Narzędzia hydrauliczne", "value": "hydrauliczne"},
+        {"name": "Narzędzia tnące i skrawające", "value": "tnace-skrawajace"},
+        {"name": "Podnośniki", "value": "podnosniki"},
+        {"name": "Przyrządy pomiarowe", "value": "pomiarowe"},
+        {"name": "Skrzynki narzędziowe", "value": "skrzynki-narzedziowe"},
+        {"name": "Sprężarki", "value": "sprezarki"},
+        {"name": "Śrubokręty", "value": "srubokrety"},
+        {"name": "Szczypce", "value": "szczypce"},
+        {"name": "Sekatory", "value": "sekatory"},
+        {"name": "Torby narzędziowe", "value": "torby-narzedziowe"},
+        {"name": "Wkrętarki", "value": "wkrętarki"},
+        {"name": "Wiertarki", "value": "wiertarki"},
+        {"name": "Zestawy narzędzi", "value": "zestawy"},
+        {"name": "Zszywacze/nitownice/gwoździarki", "value": "zszywacze-nitownice-gwozdziarki"}
+      ]
+    }
+  ],
+  "rosliny-sadzonki": [
+    {
+      "label": "Rodzaj",
+      "vmodel": "plantType",
+      "options": [
+        {"name": "Choinki", "value": "choinki"},
+        {"name": "Sadzonki drzew", "value": "sadzonki-drzew"},
+        {"name": "Krzewy", "value": "krzewy"},
+        {"name": "Kwiaty", "value": "kwiaty"}
+      ]
+    }
+  ],
+  "wyposazenie": [
+    {
+      "label": "Rodzaj",
+      "vmodel": "accessoriesType",
+      "options": [
+        {"name": "Akcesoria łazienkowe", "value": "akcesoria-lazienkowe"},
+        {"name": "Dekoracje", "value": "dekoracje"},
+        {"name": "Dywany", "value": "dywany"},
+        {"name": "Koce", "value": "koce"},
+        {"name": "Koszyki", "value": "koszyki"},
+        {"name": "Lustra", "value": "lustra"},
+        {"name": "Obrazy", "value": "obrazy"},
+        {"name": "Obrusy/serwetki", "value": "obrusy-serwetki"},
+        {"name": "Oświetlenie", "value": "oswietlenie"},
+        {"name": "Pokrowce", "value": "pokrowce"},
+        {"name": "Pościel", "value": "posciel"},
+        {"name": "Przybory kuchenne", "value": "przybory-kuchenne"},
+        {"name": "Pudełka", "value": "pudelka"},
+        {"name": "Ręczniki", "value": "reczniki"},
+        {"name": "Szkatułki", "value": "szkatulki"},
+        {"name": "Wystrój okien", "value": "wystroj-okien"},
+        {"name": "Zastawa stołowa", "value": "zastawa-stolowa"},
+        {"name": "Zegary", "value": "zegary"}
+      ]
+    }
+  ],
+  "telefony": [
+    {
+      "label": "Rodzaj",
+      "vmodel": "phoneType",
+      "options": [
+        {"name": "Stacjonarne", "value": "stacjonarne"},
+        {"name": "Komórkowe/smartfony", "value": "komorkowe"}
+      ]
+    },
+    {
+      "label": "Marka",
+      "vmodel": "phoneBrand",
+      "options": [
+        {"name": "Samsung", "value": "samsung"},
+        {"name": "Huawei", "value": "huawei"},
+        {"name": "Apple", "value": "apple"},
+        {"name": "Xiaomi", "value": "xiaomi"},
+        {"name": "LG", "value": "lg"},
+        {"name": "Sony", "value": "sony"},
+        {"name": "Honor", "value": "honor"},
+        {"name": "Motorola", "value": "motorola"},
+        {"name": "Lenovo", "value": "lenovo"},
+        {"name": "HTC", "value": "htc"},
+        {"name": "Inna", "value": "inna"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "phoneCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
+  ],
+  "komputery": [
+    {
+      "label": "Zastosowanie",
+      "vmodel": "pcPurpose",
+      "options": [
+        {"name": "Do użytku domowego", "value": "domowe"},
+        {"name": "Gamingowe", "value": "gamingowe"},
+        {"name": "Biurowe", "value": "biurowy"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "pcCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
+  ],
+  "laptopy": [
+    {
+      "label": "Zastosowanie",
+      "vmodel": "laptopPurpose",
+      "options": [
+        {"name": "Do użytku domowego", "value": "domowe"},
+        {"name": "Gamingowe", "value": "gamingowe"},
+        {"name": "Biurowe", "value": "biurowy"}
+      ]
+    },
+    {
+      "label": "Producent",
+      "vmodel": "laptopProducer",
+      "options": [
+        {"name": "Lenovo", "value": "Lenovo"},
+        {"name": "HP", "value": "HP"},
+        {"name": "Dell", "value": "Dell"},
+        {"name": "Acer", "value": "Acer"},
+        {"name": "Asus", "value": "Asus"},
+        {"name": "Microsoft", "value": "Microsoft"},
+        {"name": "Apple", "value": "Apple"},
+        {"name": "Razer", "value": "Razer"},
+        {"name": "MSI", "value": "MSI"},
+        {"name": "Samsung", "value": "Samsung"},
+        {"name": "Inna", "value": "inna"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "laptopCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
+  ],
+  "konsole": [
+    {
+      "label": "Producent",
+      "vmodel": "consoleProducer",
+      "options": [
+        {"name": "Xbox", "value": "xbox"},
+        {"name": "PlayStation", "value": "ps"},
+        {"name": "Nintendo Switch", "value": "ns"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "consoleCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
+  ],
+  "smartwatche": [
+    {
+      "label": "Stan",
+      "vmodel": "smartwatchCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
+  ],
+  "monitory": [
+    {
+      "label": "Stan",
+      "vmodel": "monitorCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    },
+    {
+      "label": "Rozdzielczość",
+      "vmodel": "monitorResolution",
+      "options": [
+        {"name": "3840 x 2160 (UHD 4K)", "value": "uhd4k"},
+        {"name": "3440 x 1440 (UWQHD)", "value": "uwqhd"},
+        {"name": "2560 x 1440 (WQHD)", "value": "wqhd"},
+        {"name": "1920 x 1080 (FUllHD)", "value": "fullhd"},
+        {"name": "1920 x 1200 (WUXGA)", "value": "wuxga"},
+        {"name": "Inna", "value": "inna"}
+      ]
+    },
+    {
+      "label": "Wielkość",
+      "vmodel": "monitorSize",
+      "options": [
+        {"name": "Do 21 cali", "value": "do21cali"},
+        {"name": "22 - 30 cali", "value": "22do30cali"},
+        {"name": "Ponad 30 cali", "value": "ponad30cali"}
+      ]
+    },
+    {
+      "label": "Odświeżanie",
+      "vmodel": "monitorRefreshing",
+      "options": [
+        {"name": "Do 60 Hz", "value": "do60hz"},
+        {"name": "61 Hz - 100 Hz", "value": "61Hz100Hz"},
+        {"name": "Ponad 100 Hz", "value": "ponad100Hz"}
+      ]
+    },
+    {
+      "label": "Matryca",
+      "vmodel": "monitorMatrixType",
+      "options": [
+        {"name": "IPS", "value": "ips"},
+        {"name": "VA", "value": "va"},
+        {"name": "TN", "value": "tn"},
+        {"name": "LED", "value": "led"},
+        {"name": "Inna", "value": "inna"}
+      ]
+    },
+    {
+      "label": "Ekran",
+      "vmodel": "monitorScreen",
+      "options": [
+        {"name": "Płaskie", "value": "plaskie"},
+        {"name": "Zakrzywione", "value": "zakrzywione"},
+        {"name": "Dotykowe", "value": "dotykowe"}
+      ]
+    }
+  ],
+  "klawiatury": [
+    {
+      "label": "Stan",
+      "vmodel": "keyboardCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "keyboardType",
+      "options": [
+        {"name": "Mechaniczne", "value": "mechaniczne"},
+        {"name": "Membranowe", "value": "membranowe"},
+        {"name": "Hybrydowe", "value": "hybrydowe"}
+      ]
+    },
+    {
+      "label": "Podświetlenie",
+      "vmodel": "keyboardBacklight",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Połączenie",
+      "vmodel": "keyboardConnection",
+      "options": [
+        {"name": "Przewodowe", "value": "przewodowe"},
+        {"name": "Bezprzewodowe", "value": "bezprzewodowe"}
+      ]
+    },
+    {
+      "label": "Kolor przełączników",
+      "vmodel": "keyboardSwitchColor",
+      "options": [
+        {"name": "Nie dotyczy", "value": "nie-dotyczy"},
+        {"name": "Niebieskie", "value": "niebieskie"},
+        {"name": "Czerwone", "value": "czerwone"},
+        {"name": "Brązowe", "value": "brazowe"},
+        {"name": "Srebrne", "value": "srebrne"},
+        {"name": "Białe", "value": "biale"},
+        {"name": "Zielone", "value": "zielone"},
+        {"name": "Inne", "value": "inne"}
+      ]
+    },
+    {
+      "label": "Blok numeryczny",
+      "vmodel": "keyboardNumericBlock",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    }
+  ],
+  "myszki": [
+    {
+      "label": "Zastosowanie",
+      "vmodel": "mousePurpose",
+      "options": [
+        {"name": "Do użytku domowego", "value": "domowe"},
+        {"name": "Gamingowe", "value": "gamingowe"},
+        {"name": "Biurowe", "value": "biurowy"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "mouseCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    },
+    {
+      "label": "Połączenie",
+      "vmodel": "mouseConnection",
+      "options": [
+        {"name": "Przewodowe", "value": "przewodowe"},
+        {"name": "Bezprzewodowe", "value": "bezprzewodowe"}
+      ]
+    },
+    {
+      "label": "Sensor",
+      "vmodel": "mouseSensor",
+      "options": [
+        {"name": "Optyczny", "value": "optyczny"},
+        {"name": "Laserowy", "value": "laserowy"},
+        {"name": "Blue Sensor", "value": "blue-sensor"}
+      ]
+    }
+  ],
+  "sluchawki": [
+    {
+      "label": "Zastosowanie",
+      "vmodel": "headphonesPurpose",
+      "options": [
+        {"name": "Do użytku domowego", "value": "domowe"},
+        {"name": "Gamingowe", "value": "gamingowe"},
+        {"name": "Biurowe", "value": "biurowy"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "headphonesCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "headphonesType",
+      "options": [
+        {"name": "Nauszne", "value": "nauszne"},
+        {"name": "Douszne", "value": "douszne"},
+        {"name": "Dokanałowe", "value": "dokanalowe"}
+      ]
+    },
+    {
+      "label": "Typ",
+      "vmodel": "headphonesType2",
+      "options": [
+        {"name": "Nie dotyczy", "value": "nie-dotyczy"},
+        {"name": "Zamknięte", "value": "zamkniete"},
+        {"name": "Otwarte", "value": "otwarte"},
+        {"name": "Półotwarte", "value": "polotwarte"}
+      ]
+    },
+    {
+      "label": "Wbudowany mikrofon",
+      "vmodel": "headphonesCondition",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Regulacja głośności",
+      "vmodel": "headphonesVolumeRegulation",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    }
+  ],
+  "sprzet-audio": [
+    {
+      "label": "Stan",
+      "vmodel": "speakersCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "speakersType",
+      "options": [
+        {"name": "Głośniki przenośne", "value": "Glosniki-przenosne"},
+        {"name": "Głośniki komputerowe", "value": "glosniki-komputerowe"},
+        {"name": "Kolumny głośnikowe", "value": "kolumny-glosnikowe"},
+        {"name": "Amplitunery i wzmacniacze", "value": "amplitunery-i-wzmacniacze"},
+        {"name": "Soundbary", "value": "soundbary"},
+        {"name": "Wieże", "value": "wieze"},
+        {"name": "Radia", "value": "radia"}
+      ]
+    }
+  ],
+  "elektronika-akcesoria": [
+
+  ],
+  "koszulki": [
+
+  ],
+  "spodnie": [
+
+  ],
+  "bluzy": [
+
+  ],
+  "kurtki": [
+
+  ],
+  "obuwie": [
+
+  ],
+  "odziez-akcesoria": [
+
+  ],
+  "ciagniki": [
+
+  ],
+  "kombajny": [
+
+  ],
+  "przyczepy": [
+
+  ],
+  "produkty-rolne": [
+
+  ],
+  "zwierzeta": [
+
   ]
 }

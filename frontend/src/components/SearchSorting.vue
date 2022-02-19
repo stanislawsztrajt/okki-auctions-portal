@@ -1,16 +1,16 @@
 <template>
   <div id="SearchSorting" class="flex flex-row items-center">
     <label class="sortingElement font-semibold flex items-center border-r">Sortuj</label>
-    <select 
-      name="Sortowanie" 
+    <select
+      name="Sortowanie"
       class="sortingElement sm:w-48 text-lg"
       v-model="this.sorting"
       @change="this.$emit('search-auctions')"
     >
       <option value="" selected disabled hidden>Domyślnie</option>
-      <option 
-        v-for="option in options" 
-        :key="option.name" 
+      <option
+        v-for="option in options"
+        :key="option.name"
         :value="option.value"
       >
       {{ option.name }}
@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    sortAuctionsf(auctionsCopy) {
+    sortAuctions(auctionsCopy) {
       this.auctions = auctionsCopy
       switch(this.sorting) {
         case 'najnowsze': {

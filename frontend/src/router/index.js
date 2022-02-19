@@ -14,6 +14,7 @@ import ForgotPassword from '../views/ForgotPassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import Messages from '../views/Messages.vue'
 import Chat from '../views/Chat.vue'
+import Rodo from '../views/Rodo.vue'
 
 const routes = [
   {
@@ -93,6 +94,11 @@ const routes = [
     name: 'Chat',
     component: Chat,
     props: true,
+  },
+  {
+    path: '/rodo',
+    name: 'Rodo',
+    component: Rodo
   },
 
 ]

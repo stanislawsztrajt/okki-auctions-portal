@@ -1,28 +1,27 @@
 <template>
   <div id="AuctionsResults">
     <Menu/>
-    <div v-if="isEditAuctionLayer"></div>
-    <ApproveLayer
-      v-else-if="isDeleteAuctionLayer"
-      @delete-auction="deleteAuction"
-      @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
-    />
-    <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <div class="border-b pb-6 border-gray-300">
         <SearchInputs
           class="sm:w-3/4"
           ref="inputsComponent"
-          @search-auctions="searchAuctions"
+          @update-search-input-values="updateSearchInputValues"
           @update-auctions="updateAuctions"
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
-        <SearchFilters
-          ref="filteringComponent"
-          @search-auctions="searchAuctions"
-          @update-auctions="updateAuctions"
-          :categoryOption="categoryOption"
-        />
+        <div class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
+          <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
+          <SearchFilters
+            ref="filteringComponent"
+            @select-change="updateAppliedFilters"
+            @update-auctions="updateAuctions"
+            :appliedFiltersCookies="appliedFilters"
+            :selectDefaultOption="'Wszystko'"
+            :isRequired="false"
+          />
+        </div>
         <SearchSorting
           ref="sortingComponent"
           @search-auctions="searchAuctions"
@@ -51,7 +50,6 @@
 import axios from 'axios'
 
 import Menu from '../components/Menu'
-import ApproveLayer from '../components/ApproveLayer'
 import Loading from '../components/Loading'
 import SearchInputs from '../components/SearchInputs'
 import SearchFilters from '../components/SearchFilters'
@@ -66,7 +64,6 @@ export default {
   name: 'AuctionsResults',
   components: {
     Menu,
-    ApproveLayer,
     Loading,
     SearchInputs,
     SearchFilters,
@@ -76,27 +73,34 @@ export default {
   },
   data() {
     return {
-      user: user,
-
       searchInputItem: '',
       searchInputLocation: '',
-      categoryOption: '',
-      activeAuction_id: '',
+      activeAuctionId: '',
+      appliedFilters: {},
+      searchData: {},
 
       auctions: [],
-      auctionsCopy: [], 
+      auctionsCopy: [],
       likeds: [],
 
-
-      isEditAuctionLayer: false,
-      isDeleteAuctionLayer: false,
       isLoading: false,
     }
   },
   async created() {
-    this.searchInputItem = this.$route.params.value
-    this.searchInputLocation = this.$route.params.location
-    this.categoryOption = this.$route.params.category
+    if(this.$cookies.isKey('searchData')) {
+      this.searchInputItem = this.$cookies.get('searchData').item
+      this.searchInputLocation = this.$cookies.get('searchData').location
+      this.appliedFilters = this.$cookies.get('searchData').filters
+    }
+
+    if(this.$route.params.item || this.$route.params.item === '') {
+      this.searchInputItem = this.$route.params.item
+      this.searchInputLocation = this.$route.params.location
+      Object.keys(this.appliedFilters).forEach(key => this.appliedFilters[key] = '')
+      this.appliedFilters['category'] = this.$route.params.category
+      this.appliedFilters['subcategory'] = ''
+    }
+
     this.isLoading = true
 
     if(jwt){
@@ -111,26 +115,24 @@ export default {
       this.isLoading = false;
       this.searchAuctions()
     })
-    .catch(err => {
-      console.log(err)
-    })
   },
   methods: {
     searchAuctions () {
-      // Resetowanie tablicy auctions
+      this.searchData['item'] = this.searchInputItem
+      this.searchData['location'] = this.searchInputLocation
+      this.searchData['filters'] = this.appliedFilters
+      this.$cookies.set('searchData', this.searchData, '5MIN')
+
+      // Reseting the adverts array
       this.auctions = this.auctionsCopy;
-
-      // Filtrowanie tablicy auctions po wyszukiwanym przedmiocie
+      // Filter the adverts array by the searched item
       this.$refs.inputsComponent.filterByInputItem(this.auctions);
-
-      // Filtrowanie tablicy auctions po wyszukiwanej lokalizacji
+      // Filter the adverts table by the searched location
       this.$refs.inputsComponent.filterByInputLocation(this.auctions);
-
-      // Sortowanie tablicy auctions
-      this.$refs.sortingComponent.sortByOption(this.auctions);
-
-      // Filtrowanie tablicy auctions po kategoriach
-      this.$refs.filteringComponent.filterByCategory(this.auctions);
+      // Sorting the adverts array
+      this.$refs.sortingComponent.sortAuctions(this.auctions);
+      // Filter the adverts array by categories
+      this.$refs.filteringComponent.filterAdverts(this.auctions, this.appliedFilters);
     },
     updateAuctions(auctions) {
       this.auctions = auctions;
@@ -138,6 +140,10 @@ export default {
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
+      this.searchAuctions()
+    },
+    updateAppliedFilters(filters) {
+      this.appliedFilters = filters
       this.searchAuctions()
     },
   },

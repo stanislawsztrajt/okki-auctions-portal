@@ -6,8 +6,9 @@
       type="text" name="inputHandler"
       @keypress="makeSureKeyIsEnter($event)"
       v-model.trim="inputItem" >
-    <input 
-      class="search-input w-2/5 border-l pl-5 border-gray-200 hidden sm:block" 
+    <span class="hidden sm:block h-12 w-1 border-l border-gray-200 mx-2"></span>
+    <input
+      class="search-input w-2/5 hidden sm:block"
       placeholder="lokalizacja"
       type="text"
       @keydown="makeSureKeyIsEnter($event)"
@@ -53,7 +54,7 @@ export default {
       }
     },
     filterByInputItem(auctionsCopy) {
-      // Filtrowanie tablicy auctions po nazwach ogłoszeń
+      // Filtering auctions array by item
       this.auctions = auctionsCopy
       this.auctions = this.auctions.filter((auction) => {
         let auctionTitle = auction.title.toLowerCase()
@@ -63,15 +64,12 @@ export default {
       this.$emit('update-auctions', this.auctions)
     },
     filterByInputLocation(auctionsCopy) {
-      // Filtrowanie tablicy auctions po lokalizacji
+      // Filtering auctions array by location
       this.auctions = auctionsCopy
       this.auctions = this.auctions.filter((auction) => {
-        if(this.inputLocation.replace(/\s+/g, ' ').trim() !== '') {
-          return auction.location.toLowerCase().replace(/\s+/g, ' ') === this.inputLocation.toLowerCase().replace(/\s+/g, ' ')
-        }
-        else {
-          return true
-        }
+        let auctionLocation = auction.location.toLowerCase()
+        let inputLocation = this.inputLocation.toLowerCase().split(' ')
+        return inputLocation.every(searchingWord => auctionLocation.includes(searchingWord));
       })
       this.$emit('update-auctions', this.auctions)
     }

@@ -7,7 +7,7 @@
       @submit.prevent="checkPassword"
       v-if="!isGivenPassword"
     >
-      <div class="flex flex-col w-2/3 bg-green-600 rounded-xl shadow p-7 mb-6 text-white">
+      <div class="flex flex-col w-2/3 bg-green-600 rounded-xl shadow p-7 text-white">
         <label for="" class="text-xl exsm:text-2xl lg:text-4xl">
           Podaj obecne hasło
         </label>

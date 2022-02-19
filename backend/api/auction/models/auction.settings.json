@@ -16,10 +16,6 @@
       "type": "string",
       "required": true
     },
-    "category": {
-      "type": "string",
-      "required": true
-    },
     "user_id": {
       "type": "string",
       "required": true
@@ -47,6 +43,12 @@
     "filters": {
       "required": true,
       "type": "json"
+    },
+    "numberOfLikes": {
+      "type": "integer"
+    },
+    "numberOfViews": {
+      "type": "integer"
     }
   }
 }
