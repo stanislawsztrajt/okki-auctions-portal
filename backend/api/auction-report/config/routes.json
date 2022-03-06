@@ -1,0 +1,80 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/reported-auctions",
+      "handler": "auction-report.findReportedAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reported-auctions/count",
+      "handler": "auction-report.countReportedAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/reported-auctions/:id",
+      "handler": "auction-report.deleteReportedAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+
+
+
+
+    {
+      "method": "GET",
+      "path": "/auction-reports",
+      "handler": "auction-report.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/auction-reports/count",
+      "handler": "auction-report.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/auction-reports/:id",
+      "handler": "auction-report.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auction-reports",
+      "handler": "auction-report.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/auction-reports/:id",
+      "handler": "auction-report.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/auction-reports/:id",
+      "handler": "auction-report.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

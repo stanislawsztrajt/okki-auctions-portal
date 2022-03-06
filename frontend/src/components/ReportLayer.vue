@@ -1,49 +1,54 @@
 <template>
-  <div class=" h-5/6 mt-4">
+  <div class="mt-4">
     <Loading v-if="isLoading"/>
-    <form
-      class="flex flex-col h-5/6 justify-center items-center"
-      @submit.prevent="sendEmail"
-      v-else
-    >
-      <label class="text-5xl text-center">Dlaczego zgłaszasz to ogloszenie ?</label>
-      <textarea
-        class="w-2/3 lg:w-1/3 h-64 text-xl focus:outline-none mt-12"
-        v-model="message"
-        name="message"
-      ></textarea>
-      <div class="mt-12">
-        <input
-          class="bg-green-400 text-white p-5 rounded-lg cursor-pointer mx-10 button-animation-hover
-          text-lg w-40
-          pl-3
-          sm:text-xl sm:w-44
-          md:text-2xl md:w-60
-          xl:text-3xl xl:w-84
-          "
-          type="submit"
-          value="Wyślij zgłoszenie"
-        >
-        <h1 v-if="isValidation" class="text-red-600">{{ validationText }}</h1>
-        <button
-          @click="toggleShowReportLayer"
-          class="bg-gray-700 text-green-400 p-5 rounded-lg cursor-pointer mx-10 button-animation-hover
-          text-lg w-40
-          sm:text-xl sm:w-44
-          md:text-2xl md:w-60
-          xl:text-3xl xl:w-84
-          "
-        >
-          Schowaj
-        </button>
+    <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 class="text-xl leading-6 font-medium text-gray-900" id="modal-title">
+                  {{  isAuctionRoute ? 'Dlaczego zgłaszasz to ogloszenie ?': 'Dlaczego zgłaszasz ten komentarz ?'  }}
+                </h3>
+                <div class="mt-2">
+                  <textarea placeholder="Tutaj wpisz swoją wiadomość" v-model="message" maxlength="500" class="text-gray-600 p-2 w-full h-36 focus:outline-none border rounded-md resize-none bg-gray-100 ">
+                  </textarea>
+                </div>
+                <div v-show="isValidation" class=" text-red-700 " role="alert">
+                  <span  class="block sm:inline">{{ validationText }}</span>
+                </div>
+                <div v-show="isSent" class=" text-green-700 " role="alert">
+                  <span  class="block sm:inline">Twoje zgłoszenie zostało wysłane!</span>
+                </div>
+                <div v-show="!isValidation && !isSent" role="alert">
+                  <span class="block sm:inline">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button @click="report" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Zgłoś</button>
+            <button @click="toggleReportLayer" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Anuluj</button>
+          </div>
+        </div>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
-import emailjs from 'emailjs-com'
+import axios from 'axios'
+
 import Loading from './Loading.vue'
+import API_URL from '../../API_URL'
+import { authorization, user } from '../constants/const-variables'
 
 export default {
   components: {
@@ -54,46 +59,73 @@ export default {
       message: '',
       validationText: '',
       isValidation: false,
+      isSent: false,
       isLoading: false,
+
+      isAuctionRoute: window.location.href.includes('auction')
     }
   },
   props: {
     id: String
   },
   methods: {
-    toggleShowReportLayer(){
-      this.$emit('toggle-show-report-layer')
+    toggleReportLayer(){
+      clearTimeout(this.setTimeoutFunction)
+      this.$emit('toggle-report-layer')
     },
-    async sendEmail(e){
+    async report(){
       clearTimeout(this.setTimeoutFunction)
 
-      if(this.message.length < 50) {
+      if(this.message.length < 20) {
         this.isValidation = true
         this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
-        return this.validationText = "Minimalna długość zgłoszenia to 50 znaków";
-      }
-      if(this.message.length > 2000) {
-        this.isValidation = true
-        this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
-        return this.validationText = "Maksymalna długość zgłoszenia to 3000 znaków";
+        return this.validationText = "Minimalna długość zgłoszenia to 20 znaków";
       }
 
       this.isLoading = true;
 
-      e.target.querySelector('textarea').value = `
-        ${e.target.querySelector('textarea').value}   ##################### ID ogłoszenia: ${this.id} #####################
-      `
+      fetch('https://api.ipify.org?format=json')
+      .then(x => x.json())
+      .then(async ({ ip }) => {
+        let data = {};
+        
+        if(this.isAuctionRoute){
+          data = {
+            auction_id: this.id,
+            user_ip: ip,
+            user_id: user.id,
+            message: this.message
+          }
+        } else{
+          data = {
+            comment_id: this.id,
+            user_ip: ip,
+            user_id: user.id,
+            message: this.message
+          }
+        }
 
-      await emailjs.sendForm('service_s05p4ig', 'template_ezjj7ii', e.target, 'user_LVEyaV5ufNlXrhsXxGVCF')
-      .then((result) => {
-        console.log('SUCCESS!', result.status, result.text);
-      }, (error) => {
-        console.log('FAILED...', error);
-      });
+        await axios.post(`${API_URL}/${this.isAuctionRoute ? 'auction': 'comment'}-reports`, data, authorization)
+        .then(() => {
+          this.isSent = true;
+          this.setTimeoutFunction = setTimeout(() => {
+            this.isSent = false
+            this.toggleReportLayer()
+          }, 1000)
+          this.message = '';
+        })
+        .catch(() => {
+          this.isValidation = true
+          this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
+          return this.validationText = this.isAuctionRoute ? "Już posiadasz zgłoszenie na to ogłoszenie." : "Już posiadasz zgłoszenie na ten komentarz";
+        })
+      })
+      .catch(() =>{
+        this.isValidation = true
+        this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
+        return this.validationText = "Aby wysłać zgłoszenie musisz wyłączyć ADBLOCK";
+      })
 
-      e.target.querySelector('textarea').value = '';
-      this.message = '';
-      this.toggleShowReportLayer();
       this.isLoading = false;
     },
   }

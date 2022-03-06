@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "auction_reports",
+  "info": {
+    "name": "auctionReport",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "string"
+    },
+    "user_ip": {
+      "type": "string",
+      "private": true
+    },
+    "auction_id": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/reported-comments",
+      "handler": "comment-report.findReportedComments",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/reported-comments/count",
+      "handler": "comment-report.countReportedComments",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/reported-comments/:id",
+      "handler": "comment-report.deleteReportedComments",
+      "config": {
+        "policies": []
+      }
+    },
+
+
+
+
+    {
+      "method": "GET",
+      "path": "/comment-reports",
+      "handler": "comment-report.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/comment-reports/count",
+      "handler": "comment-report.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/comment-reports/:id",
+      "handler": "comment-report.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/comment-reports",
+      "handler": "comment-report.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/comment-reports/:id",
+      "handler": "comment-report.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/comment-reports/:id",
+      "handler": "comment-report.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

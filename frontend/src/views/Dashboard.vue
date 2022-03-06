@@ -5,8 +5,9 @@
       <div v-if="isEditAuctionLayer"></div>
       <ApproveLayer
         v-else-if="isDeleteAuctionLayer"
-        @delete-auction="deleteAuction"
-        @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
+        :question="'Czy jesteś pewny/na, że chcesz usunąć to ogłoszenie?'"
+        @action="deleteAuction"
+        @toggle-layer="toggleDeleteAuctionLayer"
       />
       <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <InfoElement 
@@ -20,7 +21,7 @@
         />
         <ButtonElement 
           :value="'Zmień informacje o użytkowniku'" 
-          @action="() => $router.push('change-user-info')"
+          @action="() => $router.push('/dashboard/change-user-info')"
           :icon="'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4'"
         />
 
@@ -44,25 +45,12 @@
           :likeds="[]"
         />
 
-        <!-- <div class="flex flex-row justify-center mt-10 md:justify-start">
-          <div v-if="!user.comments" class="dashboardElements mt-4 p-4 text-2xl">
-            Nie ma komentarzy na twoim koncie
-          </div>
-          <div v-else class="dashboardElements mt-4 p-4 text-2xl">
-            Komentarze na twoim koncie
-          </div>
-        </div>
-        <div
-          v-for="comment in user.comments"
-          :key="comment"
-          class="w-10/12 h-auto lg:h-62 xl:h-40 mt-6 p-4 bg-white"
-        >
-          <p class="text-lg font-medium">
-            {{ comment.rate }}/6
-            {{ comment.user.username }}
-          </p>
-          {{ comment.comment }}
-        </div> -->
+        <RateElement :rate="rate"/>
+        <Comment
+          v-for="comment in comments"
+          :key="comment.id"
+          :comment="comment"
+        />
       </div>
     </div>
 </template>
@@ -70,14 +58,16 @@
 <script>
 import axios from 'axios'
 
+import API_URL from '../../API_URL'
+import { authorization, jwt, user } from '../constants/const-variables'
+
 import Menu from '../components/Menu.vue'
 import Auction from '../components/Auction.vue'
 import ApproveLayer from '../components/ApproveLayer.vue'
 import Loading from '../components/Loading.vue'
 import InfoElement from '../components/InfoElement.vue'
-import API_URL from '../../API_URL'
-import { authorization, jwt, user } from '../constants/const-variables'
 import ButtonElement from '../components/ButtonElement.vue'
+import RateElement from '../components/RateElement.vue'
 
 export default {
   name: 'Dashboard',
@@ -87,7 +77,8 @@ export default {
     ApproveLayer,
     Loading,
     InfoElement,
-    ButtonElement
+    ButtonElement,
+    RateElement
   },
   data(){
     return {
@@ -95,6 +86,8 @@ export default {
       auctions: [],
       activeAuction_id: '',
       isLoading: false,
+      rate: 'Brak opini użytkowników',
+      comments: [],
 
       isEditAuctionLayer: false,
       isDeleteAuctionLayer: false
@@ -103,12 +96,22 @@ export default {
   async created() {
     this.isLoading = true
 
+    if(user.role.name === 'Admin'){
+      this.$router.push('/admin-dashboard')
+    }
+    
     if(!jwt) {
       this.$router.go();
       this.$router.push('/login');
     } else{
       await axios.get(`${API_URL}/user-auctions/${user.id}`)
       .then(res => this.auctions = res.data)
+
+      await axios.get(`${API_URL}/comments-in-users-profiles/${this.id}`)
+      .then(res => {
+        this.comments = res.data.comments;
+        this.rate = res.data.accucuracyRate
+      })
     }
 
     this.isLoading = false

@@ -2,6 +2,52 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/comments-in-users-profiles/:id",
+      "handler": "comment.findCommentsInUsersProfiles",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/comments-in-users-profiles/:id",
+      "handler": "comment.findCommentsInUsersProfiles",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/hidden-comments",
+      "handler": "comment.findHiddenComments",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/count-hidden-comments",
+      "handler": "comment.countHiddenComments",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/publish-comment/:id",
+      "handler": "comment.publishComment",
+      "config": {
+        "policies": []
+      }
+    },
+
+
+
+
+
+
+    {
+      "method": "GET",
       "path": "/comments",
       "handler": "comment.find",
       "config": {
@@ -20,14 +66,6 @@
       "method": "GET",
       "path": "/comments/:id",
       "handler": "comment.findOne",
-      "config": {
-        "policies": []
-      }
-    },
-    {
-      "method": "GET",
-      "path": "/comments-in-users-profiles/:id",
-      "handler": "comment.findCommentsInUsersProfiles",
       "config": {
         "policies": []
       }

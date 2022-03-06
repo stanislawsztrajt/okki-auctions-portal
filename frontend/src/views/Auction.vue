@@ -1,22 +1,28 @@
 <template>
-  <div class="">
+  <div>
     <Menu />
     <Loading v-if="isLoading" />
     <main
       v-else
-      v-show="!isReportLayerShow"
       class="flex flex-col items-center gap-8"
     >
-      <div class="w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4 ">
-        <p class="text-xl lg:text-2xl">{{auction.title}}</p>
-        <p class="text-3xl lg:text-4xl text-green-600 font-bold">{{ auction.price }}zł</p>
+      <div class="w-11/12 xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4 ">
+        <p 
+          class="text-xl lg:text-2xl pointer-events-none"
+          spellcheck="false" 
+          contenteditable="" 
+          disabled
+        >
+          {{auction.title}}
+        </p>
+        <p class="text-2xl lg:text-3xl text-green-600 font-bold">{{ auction.price }}zł</p>
       </div>
       
-      <div class="w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
+      <div class="w-11/12 xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
         <div class="w-full xl:w-3/4 bg-white p-4 shadow">
           <div
             v-if="auction.images"
-            class="flex flex-row flex-wrap justify-center items-center h-full"
+            class="flex flex-row flex-wrap justify-center items-center h-full mt-1 xl:mt-0"
           >
             <div v-if="auction.images.length > 1" class="flex justify-between w-3/4 xl:w-9/16 absolute">
               <svg xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +40,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </div>
-
             <img 
               class="max-h-96 xl:max-h-full"
               :src="auction.images[imageIndex]" 
@@ -67,6 +72,7 @@
             </svg>
             Wyślij wiadomość
           </router-link>
+
           <div class=" mt-3 text-center text-md 2xl:text-lg bg-green-600 rounded-md p-2 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -76,11 +82,15 @@
           <div
             class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-white duration-100"
           >
-            <span v-if="rate > 55" class="text-green-500">
+            <span v-if="rate < 55 && rate > 45">
+              <svg class="h-6 w-6 inline mb-1"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <line x1="9" y1="15" x2="15" y2="15" /></svg>
+              {{ rate }}
+            </span>
+            <span v-else-if="rate > 55" class="text-green-500">
               <svg class="h-6 w-6 inline mb-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <path d="M9.5 15a3.5 3.5 0 0 0 5 0" /></svg>
               {{ rate }}% <span class="text-gray-600">Opinia użytkowników</span>
             </span>
-            <span v-else-if="rate<45" class="text-red-500">
+            <span v-else-if="rate < 45" class="text-red-500">
               <svg class="h-6 w-6 inline mb-1 "  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0" /></svg>
               {{ rate }}% <span class="text-gray-600">Opinia użytkowników</span>
             </span>
@@ -89,8 +99,9 @@
               {{ rate }}
             </span>
           </div>
+
           <button 
-            @click="toggleShowReportLayer" 
+            @click="toggleReportLayer" 
             class=" mt-3 text-center text-md 2xl:text-lg bg-red-600 rounded-md p-2 text-white hover:opacity-80 duration-100"
             v-if="auction.user_id !== userCookie.id && jwt"
           >
@@ -99,40 +110,57 @@
             </svg>
             Zgłoś
           </button>
+          <div class="mt-4 text-lg font-light" v-if="!jwt">
+            Aby móc napisać wiadomość lub zgłosić musisz być <router-link to="/login" class="font-bold inline-block">zalogować</router-link>
+          </div>
+
           <div class=" mt-4 text-lg font-light">
             <h3>{{ auction.published_at }}</h3>
             <a 
               target="blank" 
               :href="`https://www.google.pl/maps/place/${auction.location}`"
             >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-1 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg> 
-            {{ auction.location }}
+            <div
+              class="pointer-events-none"
+              spellcheck="false" 
+              contenteditable="" 
+              disabled
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-1 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg> 
+              {{ auction.location }}
+            </div>
             </a>
           </div>
         </div>
       </div>
-      <div class="w-3/4 flex flex-col xl:flex-row gap-8">
+      <div class="w-11/12 xl:w-3/4 flex flex-col xl:flex-row gap-8">
         <div class="w-full xl:w-3/4 bg-white h-full p-4 shadow">
           <h2 class="text-3xl lg:text-4xl bold">Opis ogłoszenia</h2>
-          <div 
+          <div
             class="w-full min-h-56 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none pointer-events-none" 
             spellcheck="false" 
             contenteditable="" 
-            disabled
           >
-            {{auction.description}}
+            {{ auction.description }}
           </div>
         </div> 
-        <div class="w-full xl:w-1/4 p-4 text-xl xl:text-lg bg-white shadow text-center">
+        <div class="w-full xl:w-1/4 p-4 text-xl xl:text-base bg-white shadow text-center">
           <a 
             target="blank" 
             :href="`https://www.google.pl/maps/place/${auction.location}`"
           >
             Sprawdź lokalizacje 
-            <span class="font-bold">{{ auction.location }}</span>  
+            <div 
+              class="font-bold pointer-events-none" 
+              contenteditable="" 
+              spellcheck="false"  
+              disabled
+            >
+              {{ auction.location }}
+            </div>  
             na google maps
             <img class="mt-4" src="../images/google-maps.jpg" alt="">
           </a>
@@ -140,10 +168,11 @@
       </div>
       <div class="mt-4"></div>
     </main>
+
     <ReportLayer
       :id="id"
-      @toggle-show-report-layer="toggleShowReportLayer"
-      v-show="isReportLayerShow"
+      @toggle-report-layer="toggleReportLayer"
+      v-show="isReportLayer"
     />
   </div>
 </template>
@@ -177,7 +206,7 @@ export default {
       likeds: [],
       rate: 0,
 
-      isReportLayerShow: false,
+      isReportLayer: false,
       isLoading: false,
 
       imageIndex: 0
@@ -209,12 +238,8 @@ export default {
     this.isLoading = false
   },
   methods: {
-    toggleShowReportLayer(){
-      this.isReportLayerShow = !this.isReportLayerShow
-    },
-    async like(){
-    },
-    async unLike(){
+    toggleReportLayer(){
+      this.isReportLayer = !this.isReportLayer
     },
     increment(){
       if(this.imageIndex === this.auction.images.length - 1){

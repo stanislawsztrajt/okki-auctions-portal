@@ -124,3 +124,8 @@ body::-webkit-scrollbar-thumb:hover {
 .comment-emote{
   @apply h-12 w-12 mt-1 p-1 rounded-full inline-block
 }
+
+/* dashboard */
+.auction-comment-admin-button{
+  @apply text-white mt-1 rounded-full ml-4 text-xs lg:text-base p-3 button-animation-hover
+}

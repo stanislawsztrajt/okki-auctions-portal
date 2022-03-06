@@ -11,6 +11,18 @@ const formatError = error =>{
 }
 
 module.exports = {
+  async blockUser(ctx){
+    const { id } = ctx.params;
+
+    await strapi.services.comment.delete({ user_profile_id: id });
+    await strapi.services.comment.delete({ user_id: id });
+    await strapi.services.auction.delete({ user_id: id })
+    await strapi.services['auction-report'].delete({ user_id: id })
+    await strapi.services['comment-report'].delete({ user_id: id })
+    await strapi.services.liked.delete({ user_id: id })
+
+    return sanitizeEntity({ message: "successful, user blocked" }, { model: strapi.models.comment });
+  },
   async updateMe(ctx){
     const advancedConfigs = await strapi
       .store({

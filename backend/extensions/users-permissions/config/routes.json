@@ -1,12 +1,22 @@
 {
-  "routes": [{
-    "method": "PUT",
-    "path": "/users/me",
-    "handler": "User.updateMe",
-    "config": {
-      "policies": [],
-      "prefix": ""
+  "routes": [
+    {
+      "method": "PUT",
+      "path": "/users/me",
+      "handler": "User.updateMe",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/block-user/:id",
+      "handler": "User.blockUser",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
     }
-  }]
-
+  ]
 }

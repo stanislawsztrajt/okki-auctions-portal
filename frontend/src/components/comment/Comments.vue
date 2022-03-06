@@ -14,7 +14,8 @@
         v-for="comment in comments"
         :key="comment.id"
         :comment="comment"
-        @delete-comment="deleteComment"
+        @change-change-detector="changeChangeDetector"
+        @remove-comment="removeComment"
       />
     </div>
     <div class="p-10"></div>
@@ -24,7 +25,7 @@
 <script>
 import axios from 'axios'
 
-import { authorization, user } from '../../constants/const-variables'
+import { user } from '../../constants/const-variables'
 
 import API_URL from '../../../API_URL'
 import Comment from './Comment.vue'
@@ -64,12 +65,9 @@ export default {
       this.comments.push(comment);
       this.changeChangeDetector();
     },
-    async deleteComment(id){
+    async removeComment(id){
       const index = this.comments.findIndex(comment => comment.id === id);
-      
       this.comments.splice(index,1);
-      await axios.delete(`${API_URL}/comments/${id}`, authorization)
-      this.changeChangeDetector()
     }
   }
 }

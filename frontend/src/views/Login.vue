@@ -3,7 +3,7 @@
   <router-link to="/" class="text-white text-5xl mb-4 font-light">okki</router-link>
     <div class="flex flex-col items-center bg-white w-84 md:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Zaloguj się na konto</h2>
-      <div class="p-10 w-full">
+      <form @submit.prevent="login" class="p-10 w-full">
         <div class="login-register-input-box">
           <label for="">Nazwa użytkownika lub adres email</label>
           <div class="login-register-input-icon">
@@ -13,8 +13,8 @@
           </div>
           <input
             class="login-register-input"
-            placeholder="Adres email"
-            type="email"
+            placeholder="Nazwa użytkownika lub email"
+            type="text"
             v-model="emailValue">
         </div>
         <div class="login-register-input-box">
@@ -30,12 +30,12 @@
             type="password"
             v-model="passwordValue">
         </div>
-        <button
-          class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
-          @click="login">
-          Zaloguj
-        </button>
-      </div>
+        <input 
+          class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white cursor-pointer text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
+          type="submit" 
+          value="Zaloguj się"
+        >
+      </form>
       <router-link
         to='/register'
         class="w-full flex justify-center items-center pb-6 p-5 bg-gray-100 text-gray-600 text-lg border-t border-gray-300 rounded-b-lg">
@@ -81,10 +81,10 @@ export default {
           identifier: this.emailValue,
           password: this.passwordValue
         })
-        .then(async res=>{
+        .then(async res =>{
           await this.$cookies.set('jwt', res.data.jwt, '7d')
           await this.$cookies.set('user', res.data.user, '7d')
-          
+
           this.$router.go()
           return this.$router.push('/dashboard')
         })

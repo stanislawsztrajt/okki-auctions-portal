@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comment_reports",
+  "info": {
+    "name": "commentReport"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "string"
+    },
+    "user_ip": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text"
+    },
+    "comment_id": {
+      "type": "string"
+    }
+  }
+}

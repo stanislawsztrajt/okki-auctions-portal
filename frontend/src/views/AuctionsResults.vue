@@ -33,7 +33,7 @@
           @toggle-edit-auction-layer="() => {}"
           @toggle-delete-auction-layer="() => {}"
           v-for="auction in auctions"
-          :key="auction.code"
+          :key="auction.id"
           :auction="auction"
           :likeds="likeds"
         />

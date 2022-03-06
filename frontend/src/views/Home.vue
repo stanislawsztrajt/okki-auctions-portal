@@ -3,7 +3,7 @@
     <Menu/>
     <main class="flex flex-col mt-10 md:mt-14 lg:mt-16">
       <SearchInputs
-        class="w-10/12 mx-auto mb-10 md:mb-14 lg:mb-16"
+        class="w-11/12 xl:w-10/12 mx-auto mb-10 md:mb-14 lg:mb-16"
         @update-search-input-values="updateSearchInputValues"
         :searchInputItem="searchInputItem"
         :searchInputLocation="searchInputLocation"
@@ -17,21 +17,39 @@
           </div>
         </div>
       </div>
+      
+      <div v-if="isLoading" class="flex items-center justify-center mt-10">
+        <div class="w-80 h-80 border-t-4 border-b-4 border-green-500 rounded-full animate-spin"></div>
+      </div>
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto mt-10 gap-8 w-11/12 xl:w-10/12">
+        <TheHomeAuction
+          v-for="auction in auctions"
+          :key="auction.code"
+          :auction="auction"
+          :likeds="likeds"
+        />
+      </div>
     </main>
   </div>
 </template>
 
 <script>
-import Menu from '../components/Menu';
-import SearchInputs from '../components/SearchInputs';
-import categoriesJSON from '../jsons files/categories.json';
+import axios from 'axios';
 
+import categoriesJSON from '../jsons files/categories.json';
+import { jwt, user } from '../constants/const-variables';
+import API_URL from '../../API_URL';
+
+import Menu from '../components/Menu';
+import TheHomeAuction from '../components/TheHomeAuction.vue';
+import SearchInputs from '../components/SearchInputs';
 
 export default {
   name: 'Home',
   components: {
     Menu,
-    SearchInputs
+    SearchInputs,
+    TheHomeAuction
   },
   data(){
     return{
@@ -39,7 +57,22 @@ export default {
       searchInputLocation: '',
       categoryOption: '',
       categories: categoriesJSON,
+
+      auctions: [],
+      likeds: [],
+      isLoading: true,
     }
+  },
+  async created(){
+    if(jwt){
+      await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
+      .then(res => this.likeds = res.data)
+    }
+
+    await axios.get(`${API_URL}/auctions`)
+    .then(res => this.auctions = res.data)
+
+    this.isLoading = false;
   },
   methods: {
     // Funkcja która przenosi i przekazuje zmienne do AuctionsResults.vue

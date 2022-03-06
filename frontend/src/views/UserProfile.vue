@@ -3,12 +3,12 @@
     <Menu />
     <Loading v-if="isLoading" />
     <div v-else>
-      <div v-if="user.username" class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+      <div v-if="user !== null" class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <InfoElement 
           :value="`Witaj na koncie u ${user.username}`" 
           :icon="'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'"
         />
-        <TheRateElement :rate="rate"/>
+        <RateElement :rate="rate"/>
 
         <div v-if="auctions.length > 0">
           <InfoElement 
@@ -33,10 +33,11 @@
           :id="id"
           :changeDetector="changeDetector"
           @change-change-detector="changeChangeDetector"
+          @toggle-report-layer="toggleReportLayer"
         />
       </div>
-      <div v-else class="h-1/2 text-4xl flex justify-center items-center">
-        Nie znaleziono użytkownika
+      <div v-else class="text-4xl text-center mt-20">
+        Nie znaleziono użytkownika <span class="font-bold cursor-pointer" @click="() => $router.go(-1)">Wróc do poprzedniej strony</span>
       </div>
     </div>
   </div> 
@@ -50,7 +51,7 @@ import Auction from '../components/Auction.vue'
 import Comments from '../components/comment/Comments.vue'
 import Loading from '../components/Loading.vue'
 import InfoElement from '../components/InfoElement.vue'
-import TheRateElement from '../components/TheRateElement.vue'
+import RateElement from '../components/RateElement.vue'
 
 
 import API_URL from '../../API_URL'
@@ -63,7 +64,7 @@ export default {
     Comments,
     Loading,
     InfoElement,
-    TheRateElement
+    RateElement
   },
   props: {
     id: String,
@@ -74,12 +75,12 @@ export default {
       auctions: [],
       likeds: [],
       isLoading: true,
+      isReportLayer: false,
       rate: 50,
       changeDetector: 0,
     }
   },
   async created(){
-    if(this.id === user.id) this.$router.push('/dashboard');
     this.isLoading = true;
 
     if(jwt){
@@ -89,10 +90,7 @@ export default {
     }
 
     await axios.get(`${API_URL}/comments-in-users-profiles/${this.id}`)
-    .then(res => {
-      this.rate = res.data.accucuracyRate;
-      this.commentsLength = res.data.comments.length;
-    })
+    .then(res => this.rate = res.data.accucuracyRate)
     .catch(err => console.log(err))
 
     await axios.get(`${API_URL}/users/${this.id}`)
@@ -108,6 +106,9 @@ export default {
   methods: {
     changeChangeDetector(){
       this.changeDetector++;
+    },
+    toggleReportLayer(){
+
     }
   },
   watch: {

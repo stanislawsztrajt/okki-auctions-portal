@@ -26,7 +26,7 @@
       <input
         type="submit"
         value="Sprawdź"
-        class="new-auction-button cursor-pointer"
+        class="new-auction-button mt-8 cursor-pointer"
         @submit="checkPassword"
       >
     </form>

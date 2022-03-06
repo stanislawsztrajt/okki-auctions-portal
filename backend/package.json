@@ -9,8 +9,8 @@
     "build": "strapi build",
     "strapi": "strapi"
   },
-  "devDependencies": {},
   "dependencies": {
+    "ip": "^1.1.5",
     "sharp": "^0.28.1",
     "strapi": "3.6.3",
     "strapi-admin": "3.6.3",
