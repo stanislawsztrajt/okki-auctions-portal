@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-      
+
       <div v-if="isLoading" class="flex items-center justify-center mt-10">
         <div class="w-80 h-80 border-t-4 border-b-4 border-green-500 rounded-full animate-spin"></div>
       </div>

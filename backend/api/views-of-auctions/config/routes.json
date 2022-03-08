@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/views-of-auctions",
+      "handler": "views-of-auctions.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/views-of-auctions/count",
+      "handler": "views-of-auctions.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/views-of-auctions/:id",
+      "handler": "views-of-auctions.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/views-of-auctions",
+      "handler": "views-of-auctions.create",
+      "config": {
+        "policies": ["isViewExists"]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/views-of-auctions/:id",
+      "handler": "views-of-auctions.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/views-of-auctions/:id",
+      "handler": "views-of-auctions.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -30,24 +30,31 @@ module.exports = {
 
     const entity = await strapi.services.auction.delete({ user_id: id })
 
-    return sanitizeEntity(entity, { model: strapi.models.auction });
+    console.log(ctx);
+
+    const [auction] = await strapi.services.auction.find({
+      id: ctx.params.id,
+      'user_id': ctx.state.user.id,
+    });
+
+    ctx.send(auctions);
   },
   async findHiddenAuctions(ctx) {
     let result = await strapi.query('auction').model.find({ published_at: { $eq: null } });
-    
+
     let auctions = sanitizeEntity(result, {
       model: strapi.models['auction'],
     });
-    
+
     ctx.send(auctions);
   },
   async countHiddenAuctions(ctx) {
     let result = await strapi.query('auction').model.find({ published_at: { $eq: null } });
-    
+
     let auctions = sanitizeEntity(result, {
       model: strapi.models['auction'],
     });
-    
+
     ctx.send(auctions.length);
   },
   async publishAuction(ctx){
@@ -76,11 +83,11 @@ module.exports = {
         id: ctx.params.id,
         'user_id': ctx.state.user.id,
       });
-  
+
       if (!auction) {
         return ctx.unauthorized(`You can't update this entry`);
       }
-  
+
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
         entity = await strapi.services.auction.update({ id }, data, {

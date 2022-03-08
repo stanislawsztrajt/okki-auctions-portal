@@ -25,6 +25,8 @@ import Messages from '../views/Messages.vue'
 import Chat from '../views/Chat.vue'
 import Rodo from '../views/Rodo.vue'
 import Help from '../views/Help.vue'
+import PrivacyPolicy from '../views/PrivacyPolicy.vue'
+import TermsOfUse from '../views/TermsOfUse.vue'
 
 const routes = [
   {
@@ -135,7 +137,16 @@ const routes = [
     name: 'Rodo',
     component: Rodo
   },
-
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: PrivacyPolicy
+  },
+  {
+    path: '/terms-of-use',
+    name: 'TermsOfUse',
+    component: TermsOfUse
+  },
 ]
 
 const router = createRouter({

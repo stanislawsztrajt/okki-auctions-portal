@@ -30,9 +30,9 @@
             type="password"
             v-model="passwordValue">
         </div>
-        <input 
+        <input
           class="w-full h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white cursor-pointer text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
-          type="submit" 
+          type="submit"
           value="Zaloguj się"
         >
       </form>

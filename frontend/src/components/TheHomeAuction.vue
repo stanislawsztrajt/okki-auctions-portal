@@ -9,10 +9,10 @@
     ></div>
     <div class="px-3 py-2 sm:px-5 sm:py-4 w-full">
       <div class="flex flex-col justify-between h-40">
-        <h2 
+        <h2
           class="sm:text-xl pointer-events-none"
-          spellcheck="false" 
-          contenteditable="" 
+          spellcheck="false"
+          contenteditable=""
           disabled
         >
           {{ auction.title.length > 65 ? `${auction.title.substring(0,65)}...` : auction.title}}
@@ -26,7 +26,7 @@
               {{ auction.price }}zł
             </h3>
           </div>
-          
+
           <Liking
             v-if="auction.user_id !== user.id"
             :likeds="likeds"
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    
+
   </router-link>
 </template>
 

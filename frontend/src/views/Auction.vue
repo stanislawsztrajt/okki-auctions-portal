@@ -7,17 +7,17 @@
       class="flex flex-col items-center gap-8"
     >
       <div class="w-11/12 xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4 ">
-        <p 
+        <p
           class="text-xl lg:text-2xl pointer-events-none"
-          spellcheck="false" 
-          contenteditable="" 
+          spellcheck="false"
+          contenteditable=""
           disabled
         >
           {{auction.title}}
         </p>
         <p class="text-2xl lg:text-3xl text-green-600 font-bold">{{ auction.price }}zł</p>
       </div>
-      
+
       <div class="w-11/12 xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
         <div class="w-full xl:w-3/4 bg-white p-4 shadow">
           <div
@@ -40,9 +40,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </div>
-            <img 
+            <img
               class="max-h-96 xl:max-h-full"
-              :src="auction.images[imageIndex]" 
+              :src="auction.images[imageIndex]"
               alt=""
             >
           </div>
@@ -55,7 +55,7 @@
             <router-link :to="`/users/${user.id}`" class="inline ml-2">{{ user.username }}</router-link>
             <br>
           </h2>
-          
+
           <Liking
             v-if="auction.user_id !== userCookie.id && jwt"
             :likeds="likeds"
@@ -100,8 +100,8 @@
             </span>
           </div>
 
-          <button 
-            @click="toggleReportLayer" 
+          <button
+            @click="toggleReportLayer"
             class=" mt-3 text-center text-md 2xl:text-lg bg-red-600 rounded-md p-2 text-white hover:opacity-80 duration-100"
             v-if="auction.user_id !== userCookie.id && jwt"
           >
@@ -116,20 +116,20 @@
 
           <div class=" mt-4 text-lg font-light">
             <h3>{{ auction.published_at }}</h3>
-            <a 
-              target="blank" 
+            <a
+              target="blank"
               :href="`https://www.google.pl/maps/place/${auction.location}`"
             >
             <div
               class="pointer-events-none"
-              spellcheck="false" 
-              contenteditable="" 
+              spellcheck="false"
+              contenteditable=""
               disabled
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-1 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg> 
+              </svg>
               {{ auction.location }}
             </div>
             </a>
@@ -140,27 +140,27 @@
         <div class="w-full xl:w-3/4 bg-white h-full p-4 shadow">
           <h2 class="text-3xl lg:text-4xl bold">Opis ogłoszenia</h2>
           <div
-            class="w-full min-h-56 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none pointer-events-none" 
-            spellcheck="false" 
-            contenteditable="" 
+            class="w-full min-h-56 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none pointer-events-none"
+            spellcheck="false"
+            contenteditable=""
           >
             {{ auction.description }}
           </div>
-        </div> 
+        </div>
         <div class="w-full xl:w-1/4 p-4 text-xl xl:text-base bg-white shadow text-center">
-          <a 
-            target="blank" 
+          <a
+            target="blank"
             :href="`https://www.google.pl/maps/place/${auction.location}`"
           >
-            Sprawdź lokalizacje 
-            <div 
-              class="font-bold pointer-events-none" 
-              contenteditable="" 
-              spellcheck="false"  
+            Sprawdź lokalizacje
+            <div
+              class="font-bold pointer-events-none"
+              contenteditable=""
+              spellcheck="false"
               disabled
             >
               {{ auction.location }}
-            </div>  
+            </div>
             na google maps
             <img class="mt-4" src="../images/google-maps.jpg" alt="">
           </a>
@@ -180,7 +180,7 @@
 <script>
 import axios from 'axios'
 import API_URL from '../../API_URL'
-import { user, jwt} from '../constants/const-variables'
+import { user, jwt, authorization } from '../constants/const-variables'
 
 import Menu from '../components/Menu.vue'
 import ReportLayer from '../components/ReportLayer.vue'
@@ -234,6 +234,16 @@ export default {
       })
     })
     .catch(() => this.user = false)
+
+    if(jwt && this.auction.user_id !== user.id) {
+      let data = {
+        user_id: user.id,
+        auction_id: this.id
+      }
+
+      await axios.post(`${API_URL}/views-of-auctions`, data, authorization)
+      .catch(err => err)
+    }
 
     this.isLoading = false
   },

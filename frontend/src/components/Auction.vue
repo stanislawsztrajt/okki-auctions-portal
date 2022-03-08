@@ -45,29 +45,29 @@
           {{ auction.location }}
         </h3>
         <router-link to="" class="w-full flex flex-row mt-3 justify-end items-center" v-if="isDashboardRoute">
-          <div v-if="user.role.name === 'Admin'" class="flex flex-row flex-wrap justify-end items-center">
-            <button 
+          <div v-if="user && user.role.name === 'Admin'" class="flex flex-row flex-wrap justify-end items-center">
+            <button
               @click="toggleDeleteReportLayer(auction.id)"
               class="bg-green-500 auction-comment-admin-button"
               v-if="isReportRoute"
             >
               Usuń zgłoszenie
             </button>
-            <button 
+            <button
               v-else
               @click="togglePublishLayer(auction.id)"
               class="bg-green-500 auction-comment-admin-button"
             >
               Opublikuj ogłoszenie
             </button>
-            
-            <button 
+
+            <button
               @click="toggleDeleteAuctionLayer(auction.id)"
               class=" bg-red-500 auction-comment-admin-button ml-4"
             >
               Usuń ogłoszenie
             </button>
-            <button 
+            <button
               @click="toggleBlockUserLayer(auction.id)"
               class=" bg-red-500 auction-comment-admin-button ml-4"
             >
@@ -93,7 +93,7 @@
         </router-link>
 
         <Liking
-          v-if="auction.user_id !== user.id && user.role.name !== 'Admin'"
+          v-if="auction.user_id !== user.id && user && user.role.name !== 'Admin'"
           :likeds="likeds"
           :auction_id="auction.id"
         />
@@ -144,9 +144,9 @@ export default {
     }
   },
   created(){
-    if(this.reports){
-      this.auctionReports = this.reports.filter(report => report.auction_id.includes(this.auction.id));
-    }
+    if(this.reports) this.auctionReports = this.reports.filter(report => report.auction_id.includes(this.auction.id));
+    if(this.auction.user_id === user.id) this.getAuctionLikesNumber();
+    this.getAuctionViewsNumber();
   },
   methods: {
     removeAuction(id){
@@ -157,7 +157,7 @@ export default {
     },
     async deleteAuction(){
       this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
-      
+
       await axios.delete(`${API_URL}/auctions/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
     },
@@ -166,7 +166,7 @@ export default {
     },
     async deleteReport(){
       this.isDeleteReportLayer = !this.isDeleteReportLayer;
-      
+
       await axios.delete(`${API_URL}/reported-auctions/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
     },
@@ -187,9 +187,23 @@ export default {
       this.isPublishLayer = !this.isPublishLayer;
 
       await axios.get(`${API_URL}/publish-auction/${this.auction.id}`, authorization)
-      // get because put respone 403 forbidden, i don't why 
+      // get because put respone 403 forbidden, i don't why
       this.removeAuction(this.auction.id)
     },
-  }
+    async getAuctionLikesNumber () {
+      await axios.get(`${API_URL}/likeds/count`, { headers: { auction_id: this.auction.id, user_id: user.id, Authorization: `Bearer ${jwt}` }})
+      .then(res => {
+        console.log(this.auction.title, "- liczba polubien:", res.data)
+      })
+      .catch(err => err)
+    },
+    async getAuctionViewsNumber () {
+      await axios.get(`${API_URL}/views-of-auctions/count`, { headers: { auction_id: this.auction.id }})
+      .then(res => {
+        console.log(this.auction.title, "- liczba wyswietlen:", res.data)
+      })
+      .catch(err => err)
+    },
+  },
 }
 </script>

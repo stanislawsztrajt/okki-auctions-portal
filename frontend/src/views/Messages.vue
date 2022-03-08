@@ -3,9 +3,10 @@
     <Menu />
     <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <div class="flex flex-col justify-center md:justify-start mb-6">
-        <div class="dashboardElements mt-6 p-4 text-2xl">
-          Twoje prywatne konwersjacje
-        </div>
+        <InfoElement
+          :value="'Twoje konwersacje'"
+          :icon="'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'"
+        />
         <div class="mt-10 border-t border-gray-300">
         <router-link
           v-for="user in users"
@@ -26,6 +27,8 @@
 </template>
 <script>
 import Menu from "../components/Menu.vue"
+import InfoElement from '../components/InfoElement.vue'
+
 
 export default {
   data() {
@@ -36,6 +39,7 @@ export default {
   },
   components: {
     Menu,
+    InfoElement
   },
   created() {
     if(!this.ISjwt){

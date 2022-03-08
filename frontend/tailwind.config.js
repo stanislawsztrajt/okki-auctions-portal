@@ -17,7 +17,7 @@ module.exports = {
         '24': '6rem',
         '56': '14rem'
       },
-      
+
       colors: {
         'main': '#EEE'
       }

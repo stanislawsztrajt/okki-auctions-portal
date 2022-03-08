@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "views_of_auctions",
+  "info": {
+    "name": "ViewsOfAuctions",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "string"
+    },
+    "auction_id": {
+      "type": "string"
+    }
+  }
+}

@@ -2,13 +2,13 @@
   <div>
     <Menu />
     <Loading v-if="isLoading" />
-    <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
-      <InfoElement 
+    <div v-else class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+      <InfoElement
         :value="'Twoje polubione ogłoszenia'"
         :icon="'M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z'"
         v-if="likeds.length > 0"
       />
-      <InfoElement 
+      <InfoElement
         :value="'Nie masz polubionych ogłoszeń'"
         :icon="'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'"
         v-else
@@ -22,12 +22,17 @@
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
         />
-        <SearchFilters
-          ref="filteringComponent"
-          @search-auctions="searchAuctions"
-          @update-auctions="updateAuctions"
-          :categoryOption="categoryOption"
-        />
+        <div class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
+          <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
+          <SearchFilters
+            ref="filteringComponent"
+            @select-change="updateAppliedFilters"
+            @update-auctions="updateAuctions"
+            :appliedFiltersCookies="{}"
+            :selectDefaultOption="'Wszystko'"
+            :isRequired="false"
+          />
+        </div>
         <SearchSorting
           ref="sortingComponent"
           @search-auctions="searchAuctions"
@@ -104,7 +109,7 @@ export default {
     await axios.get(`${API_URL}/user-liked-auctions/${user.id}`, authorization)
     .then(res => this.auctions = res.data)
     .catch(err => console.log(err))
-    
+
     if(this.auctions.length === this.likeds){
       this.searchAuctions()
     }
@@ -130,6 +135,10 @@ export default {
     },
     updateAuctions(auctions) {
       this.auctions = auctions;
+    },
+    updateAppliedFilters(filters) {
+      this.appliedFilters = filters
+      this.searchAuctions()
     },
   },
 }

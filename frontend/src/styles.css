@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  ul {
+    @apply list-disc ml-5;
+  }
+  ol {
+    @apply list-decimal ml-5;
+  }
+}
+
+.rodo-div > h2 {
+  @apply text-xl font-semibold mt-5;
+}
+
+.rodo-link {
+  @apply text-green-500;
+}
+
 /* other */
 
 body {

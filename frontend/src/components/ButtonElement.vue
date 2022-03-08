@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-row justify-start">
     <button @click="action" class="w-full xl:w-10/12 font-semibold text-gray-600 bg-white shadow button-animation-hover mt-4 p-4 text-xl text-left">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 -mt-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="icon" />
       </svg>
-      {{value}}
+      {{ value }}
     </button>
   </div>
 </template>

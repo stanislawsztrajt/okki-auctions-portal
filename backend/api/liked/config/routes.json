@@ -21,7 +21,7 @@
       "path": "/likeds/count",
       "handler": "liked.count",
       "config": {
-        "policies": []
+        "policies": ["isOwner"]
       }
     },
     {

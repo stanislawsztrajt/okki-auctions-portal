@@ -1,7 +1,7 @@
 <template>
   <div id="AuctionsResults">
     <Menu/>
-    <div class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <div class="border-b pb-6 border-gray-300">
         <SearchInputs
           class="sm:w-3/4"
