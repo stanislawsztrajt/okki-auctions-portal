@@ -17,11 +17,14 @@
           </div>
         </div>
       </div>
-
-      <div v-if="isLoading" class="flex items-center justify-center mt-10">
-        <div class="w-80 h-80 border-t-4 border-b-4 border-green-500 rounded-full animate-spin"></div>
-      </div>
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto mt-10 gap-8 w-11/12 xl:w-10/12">
+      <div id="map"></div>
+      <InfoElement 
+        class=" mx-auto w-11/12 xl:w-10/12 mt-4"
+        :value="'Proponowane ogłoszenia:'"
+        :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
+      />
+      <Loading :isCenter="false" v-if="isLoading"/>
+      <div v-else class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto mt-4 gap-8 w-11/12 xl:w-10/12">
         <TheHomeAuction
           v-for="auction in auctions"
           :key="auction.code"
@@ -41,15 +44,19 @@ import { jwt, user } from '../constants/const-variables';
 import API_URL from '../../API_URL';
 
 import Menu from '../components/Menu';
+import InfoElement from '../components/InfoElement.vue';
 import TheHomeAuction from '../components/TheHomeAuction.vue';
 import SearchInputs from '../components/SearchInputs';
+import Loading from '../components/Loading.vue';
 
 export default {
   name: 'Home',
   components: {
     Menu,
     SearchInputs,
-    TheHomeAuction
+    InfoElement,
+    TheHomeAuction,
+    Loading
   },
   data(){
     return{
@@ -64,6 +71,7 @@ export default {
     }
   },
   async created(){
+    console.log('zlota' == 'zlOTA')
     if(jwt){
       await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
       .then(res => this.likeds = res.data)

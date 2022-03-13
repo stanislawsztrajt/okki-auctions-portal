@@ -1,7 +1,7 @@
 <template>
     <div>
       <Menu />
-      <Loading v-show="this.isLoading" />
+      <Loading :isCenter="true" v-show="isLoading" />
       <div v-if="isEditAuctionLayer"></div>
       <ApproveLayer
         v-else-if="isDeleteAuctionLayer"
@@ -9,7 +9,7 @@
         @action="deleteAuction"
         @toggle-layer="toggleDeleteAuctionLayer"
       />
-      <div v-else class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+      <div v-else v-show="!isLoading" class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <InfoElement
           :value="`Witaj ${user.username}!`"
           :icon="'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'"
@@ -26,7 +26,7 @@
         />
 
         <InfoElement
-          :value="'Twoje ogłoszenia'"
+          :value="'Twoje ogłoszenia:'"
           :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
           v-if="auctions.length > 0"
         />
@@ -68,6 +68,7 @@ import Loading from '../components/Loading.vue'
 import InfoElement from '../components/InfoElement.vue'
 import ButtonElement from '../components/ButtonElement.vue'
 import RateElement from '../components/RateElement.vue'
+import Comment from '../components/comment/Comment.vue'
 
 export default {
   name: 'Dashboard',
@@ -78,16 +79,17 @@ export default {
     Loading,
     InfoElement,
     ButtonElement,
-    RateElement
+    RateElement,
+    Comment
   },
   data(){
     return {
       user: user,
       auctions: [],
+      comments: [],
       activeAuction_id: '',
       isLoading: false,
-      rate: 'Brak opini użytkowników',
-      comments: [],
+      rate: null,
 
       isEditAuctionLayer: false,
       isDeleteAuctionLayer: false
@@ -107,10 +109,12 @@ export default {
       await axios.get(`${API_URL}/user-auctions/${user.id}`)
       .then(res => this.auctions = res.data)
 
-      await axios.get(`${API_URL}/comments-in-users-profiles/${this.id}`)
+      await axios.get(`${API_URL}/comments-in-users-profiles/${user.id}`)
       .then(res => {
+        console.log(res)
         this.comments = res.data.comments;
-        this.rate = res.data.accucuracyRate
+        console.log(this.comments)
+        this.rate = res.data.accucuracyRate;
       })
     }
 

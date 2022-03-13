@@ -1,7 +1,7 @@
 <template>
   <div>
     <Menu />
-    <Loading v-if="isLoading" />
+    <Loading :isCenter="true" v-if="isLoading" />
     <div v-else class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <InfoElement
         :value="'Twoje polubione ogłoszenia'"

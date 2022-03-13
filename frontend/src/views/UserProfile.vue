@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen">
     <Menu />
-    <Loading v-if="isLoading" />
+    <Loading :isCenter="true" v-if="isLoading" />
     <div v-else>
       <div v-if="user !== null" class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
         <InfoElement 

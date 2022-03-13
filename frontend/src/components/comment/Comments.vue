@@ -9,15 +9,13 @@
       :id="id"
       @push-comment="pushComment"
     />
-    <div>
-      <Comment
-        v-for="comment in comments"
-        :key="comment.id"
-        :comment="comment"
-        @change-change-detector="changeChangeDetector"
-        @remove-comment="removeComment"
-      />
-    </div>
+    <Comment
+      v-for="comment in comments"
+      :key="comment.id"
+      :comment="comment"
+      @change-change-detector="changeChangeDetector"
+      @remove-comment="removeComment"
+    />
     <div class="p-10"></div>
   </div>
 </template>
@@ -55,7 +53,6 @@ export default {
       this.comments = res.data.comments;
       this.rate = res.data.accucuracyRate
     })
-    .catch(err => console.log(err))
   },
   methods: {
     changeChangeDetector(){

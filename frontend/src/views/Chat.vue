@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen">
     <Menu />
-    <Loading v-show="loading" />
+    <Loading :isCenter="true" v-if="isLoading" />
     <div class="w-screen h-5/6 flex flex-col items-center justify-center">
       <div class="w-3/4 lg:w-1/2 h-4/5 bg-white text-gray-700 flex flex-col shadow border border-gray-300 rounded-md overflow-x-hidden">
         <div class="flex flex-row justify-center items-center px-20 h-20 bg-white">
@@ -63,7 +63,7 @@ export default {
       secondUser: {},
       message: '',
       messages: [],
-      loading: false,
+      isLoading: false,
       dbCollectionCode: [],
     }
   },
@@ -77,7 +77,7 @@ export default {
     Loading
   },
   async created() {
-    this.loading = true
+    this.isLoading = true
 
     if(!jwt){
       this.$router.push('/login')
@@ -125,7 +125,7 @@ export default {
 
         setTimeout(() => {
           this.scrollToBottom()
-          this.loading = false
+          this.isLoading = false
         }, 700);
       })
     },

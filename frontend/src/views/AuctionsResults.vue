@@ -27,8 +27,12 @@
           @search-auctions="searchAuctions"
         />
       </div>
-      <Loading v-show="isLoading" />
-      <div v-show="!isLoading">
+      <InfoElement 
+        :value="'Wyniki wyszukiwań:'"
+        :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
+      />
+      <Loading v-if="isLoading" />
+      <div v-else>
         <Auction
           @toggle-edit-auction-layer="() => {}"
           @toggle-delete-auction-layer="() => {}"
@@ -55,6 +59,7 @@ import SearchInputs from '../components/SearchInputs'
 import SearchFilters from '../components/SearchFilters'
 import SearchSorting from '../components/SearchSorting'
 import NoAuctionsFound from '../components/NoAuctionsFound'
+import InfoElement from '../components/InfoElement'
 import Auction from '../components/Auction'
 
 import API_URL from '../../API_URL'
@@ -68,6 +73,7 @@ export default {
     SearchInputs,
     SearchFilters,
     SearchSorting,
+    InfoElement,
     NoAuctionsFound,
     Auction
   },

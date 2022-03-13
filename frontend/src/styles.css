@@ -146,3 +146,7 @@ body::-webkit-scrollbar-thumb:hover {
 .auction-comment-admin-button{
   @apply text-white mt-1 rounded-full ml-4 text-xs lg:text-base p-3 button-animation-hover
 }
+
+.like-button-scale:hover{
+  transform: scale(1.2);
+}

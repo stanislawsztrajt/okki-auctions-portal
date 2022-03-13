@@ -40,7 +40,14 @@
         "policies": []
       }
     },
-
+    {
+      "method": "GET",
+      "path": "/renew-auctions/:id",
+      "handler": "auction.renewAuctions",
+      "config": {
+        "policies": []
+      }
+    },
 
 
     

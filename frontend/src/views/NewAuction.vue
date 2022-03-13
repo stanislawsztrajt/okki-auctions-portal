@@ -1,7 +1,7 @@
 <template>
   <div id="NewAuction">
     <Menu />
-    <Loading v-if="isLoading"/>
+    <Loading :isCenter="true" v-if="isLoading"/>
     <form
       v-else
       @submit.prevent="createAuction"
@@ -101,7 +101,7 @@
           <label>Lokalizacja</label>
           <input
             type="text"
-            placeholder="Np. Ul. Złota 5"
+            placeholder="Np. Złota, Stawiszyńska"
             required
             class="new-auction-input"
             v-model="locationValue"
@@ -143,6 +143,8 @@ import SearchFilters from '../components/SearchFilters'
 import axios from 'axios'
 import convert from 'image-file-resize';
 import categoriesJSON from '../jsons files/categories.json'
+import streets from '../jsons files/streets.json'
+import streetsWithoutPLchars from '../jsons files/streetsWithoutPLchars.json'
 
 import API_URL from '../../API_URL'
 import { authorization, jwt, user } from '../constants/const-variables'
@@ -261,6 +263,20 @@ export default {
           this.validationError = false
         },this.setTimeoutTime)
         this.validationText = 'Podana kwota jest za długa (maksymalnie 15 znaków)'
+        return this.validationError = true
+      }
+
+      const isStreetExist = streets
+        .findIndex(street => street == this.locationValue.toLowerCase())
+      
+      const isStreetWithoutPLcharsExist = streetsWithoutPLchars
+        .findIndex(street => street == this.locationValue.toLowerCase())
+
+      if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Podana ulica nie istnieje w Kaliszu( upewnij się, że napisałeś/aś bez błędów interpunkcyjnych )'
         return this.validationError = true
       }
 

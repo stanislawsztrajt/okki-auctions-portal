@@ -1,7 +1,7 @@
 <template>
   <div class=" h-screen">
     <Menu />
-    <Loading v-if="isLoading"/>
+    <Loading :isCenter="true" v-if="isLoading"/>
     <form
       class="h-2/3 flex flex-col items-center xl:items-start justify-center xl:ml-96 xl:mt-14"
       @submit.prevent="checkPassword"

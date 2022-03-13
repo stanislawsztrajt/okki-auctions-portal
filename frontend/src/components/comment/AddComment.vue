@@ -11,7 +11,7 @@
       <div>
         Jak oceniasz użytkownika?
         <span v-if="isValidate" class="text-red-500">
-          Musisz wybrać ocene!
+          {{ validateText }}
         </span>
       </div>
       
@@ -50,6 +50,7 @@ export default {
       body: '',
       rate: null,
       isValidate: false,
+      validateText: '',
 
       user: user,
       jwt: jwt
@@ -67,7 +68,8 @@ export default {
         setTimeout(() =>{
           this.isValidate = false
         }, 4000)
-        return this.isValidate = true;
+        this.validateText = 'Musisz wybrać ocene!'
+        this.isValidate = true;
       }
       
       const comment = {
@@ -84,7 +86,13 @@ export default {
         this.body = '';
         this.rate = null;
       })
-      .catch(err => console.log(err))
+      .catch(() => {
+        setTimeout(() =>{
+          this.isValidate = false
+        }, 4000)
+        this.validateText = 'Już posiadasz komentarz na tym koncie!'
+        this.isValidate = true;
+      })
     }
   }
 }

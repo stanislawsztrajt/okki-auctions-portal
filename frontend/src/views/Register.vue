@@ -60,6 +60,11 @@
             type="password"
             v-model="repeatPasswordValue">
         </div>
+        <div class="text-xs pb-4">
+          Klikając przycisk rejestracji, potwierdzasz przeczytanie i przyjmujesz do wiadomości wytyczne przedstawione w 
+          <router-link class="rodo-link button-animation-hover" to="/terms-of-use">warunkach korzystania z usług</router-link> oraz w 
+          <router-link class="rodo-link button-animation-hover" to="/privacy-policy">informacji o polityce prywatności.</router-link>
+        </div>
         <input
           class="w-full cursor-pointer h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
           type="submit"
