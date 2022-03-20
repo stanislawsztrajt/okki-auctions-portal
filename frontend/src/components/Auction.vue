@@ -85,17 +85,17 @@
             </div>
             <div v-else class="flex flex-col 2xl:flex-row items-end">
               <div
-                class="text-sm xl:text-base" 
+                class="text-sm xl:text-base"
                 v-if="Date.parse(published_at) <= (Date.parse(published_at) + (Date.parse(new Date()) - Date.parse(published_at))) - 864000000"
               >
-                Ogłoszenie wygasa 
-                {{ new Date(Date.parse(published_at) + additionalTimeToDelete).toISOString().substring(0,10) }} 
+                Ogłoszenie wygasa
+                {{ new Date(Date.parse(published_at) + additionalTimeToDelete).toISOString().substring(0,10) }}
                 <span class="font-bold border p-2 rounded-full button-animation-hover" @click="renewAuction">
                   Przedłuż do {{ date.substring(0,10) }}
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
-                </span> 
+                </span>
               </div>
               <div class="flex flex-row mt-2">
                 <svg
@@ -164,7 +164,7 @@ export default {
       published_at: this.auction.published_at
     }
   },
-  created(){ 
+  created(){
     if(this.reports) this.auctionReports = this.reports.filter(report => report.auction_id.includes(this.auction.id));
     if(this.auction.user_id === user.id) this.getAuctionLikesNumber();
     this.getAuctionViewsNumber();

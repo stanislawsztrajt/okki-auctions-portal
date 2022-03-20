@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "chat_conversations",
+  "info": {
+    "name": "chatConversations",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "conversationCode": {
+      "type": "uid"
+    },
+    "conversationMessages": {
+      "type": "json"
+    }
+  }
+}

@@ -18,6 +18,7 @@ import axios from 'axios';
 
 import API_URL from '../API_URL';
 import { authorization, jwt, userAcceptedCookie } from './constants/const-variables';
+import { socket } from '../config/web-sockets';
 
 import BlockedUser from './components/BlockedUser.vue'
 
@@ -29,7 +30,8 @@ export default {
   data(){
     return{
       isBlocked: false,
-      cookieModalShow: false
+      cookieModalShow: false,
+      userRooms: []
     }
   },
   async created(){
@@ -40,12 +42,30 @@ export default {
     if(jwt){
       await axios.get(`${API_URL}/users/me`, authorization)
       .catch(() => this.isBlocked = true)
+
+      this.fetchUserConversations()
     }
   },
   methods: {
     async acceptUserCookie() {
-      await this.$cookies.set('user-accepted-cookies', true)
+      const tenYearsInMiliseconds = 315360000000
+      await this.$cookies.set('user-accepted-cookies', true, { expires: new Date(Date.now()+tenYearsInMiliseconds) })
       this.cookieModalShow = false
+    },
+    async fetchUserConversations() {
+      axios.get(`${API_URL}/user-conversations`, authorization)
+      .then((res) => {
+        const conversations = res.data
+
+        conversations.forEach(conversation => {
+          this.userRooms.push(conversation.conversationCode)
+        })
+        this.joinUserToSocketRooms()
+      })
+    },
+    async joinUserToSocketRooms() {
+      let rooms = this.userRooms
+      socket.emit('join', { rooms });
     }
   },
 }

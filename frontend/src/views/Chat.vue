@@ -16,10 +16,10 @@
             </span>
           </router-link>
         </div>
-        <div ref="chatHistory" class="flex flex-col pb-2 px-10 2xl:px-40 h-full bg-gray-100 border border-gray-200 overflow-y-scroll">
-          <span class="text-gray-400 my-2 text-center block">Początek konwersacji z {{ secondUser.username }}</span>
+        <div ref="chatWindow" class="flex flex-col pb-2 px-4 md:px-10 2xl:px-40 h-full bg-gray-100 border border-gray-200 overflow-y-scroll">
+          <span class="text-gray-400 my-2 mb-4 text-center block">Początek konwersacji z {{ secondUser.username }}</span>
           <div v-for="message in messages" :key="message">
-            <div style="max-width: 18rem" class="bg-green-300 px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl" :class="{userMessage: message.id === this.user.id}">
+            <div style="max-width: 18rem" class="bg-green-300 px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl" :class="{userMessage: message.sender_id === this.user.id}">
               {{ message.message }}
             </div>
           </div>
@@ -31,10 +31,10 @@
               placeholder="Wyślij wiadomość"
               class="px-4 w-full h-full bg-gray-100 focus:outline-none focus:shadow-inner"
               v-model.trim="message"
-              @keyup.enter="saveMessage"
+              @keyup.enter="sendMessage"
             >
             <button
-              @click="saveMessage"
+              @click="sendMessage"
               class="px-3 h-full focus:outline-none hover:bg-gray-200 transition duration-75 border-l border-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-90 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
@@ -52,19 +52,20 @@ import axios from 'axios'
 import Menu from '../components/Menu.vue'
 import Loading from '../components/Loading.vue'
 import API_URL from '../../API_URL'
+import { socket } from '../../config/web-sockets';
 
-import { db } from '@/main'
-import { jwt, user } from '../constants/const-variables'
+import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   data() {
     return {
       user: user,
       secondUser: {},
-      message: '',
+      conversation: {},
       messages: [],
-      isLoading: false,
-      dbCollectionCode: [],
+      message: '',
+      usersIds: '',
+      isLoading: false
     }
   },
   props: {
@@ -83,54 +84,78 @@ export default {
       this.$router.push('/login')
     }
 
-    if(this.id === this.user.id){
-      this.$router.push('/messages')
+    if(this.id !== this.user.id){
+      await axios.get(`${API_URL}/users/${this.id}`)
+      .then(res => {
+        this.secondUser = res.data
+        this.usersIds = [this.user.id, this.secondUser.id].sort().join('+')
+        this.fetchMessages()
+      })
+      .catch(() => this.$router.push('/conversations'))
+    } else {
+      this.$router.push('/conversations')
     }
-
-    await axios.get(`${API_URL}/users/${this.id}`)
-    .then(res =>{
-      this.secondUser = res.data
-    })
-    .catch(() =>{
-      this.secondUser = undefined
-    })
-
-    this.dbCollectionCode = [this.user.id, this.secondUser.id].sort().join('')
-
-    this.fetchMessages()
   },
   methods: {
-    saveMessage() {
+    async fetchMessages() {
+      socket.on('message', async (data) => {
+        await this.messages.push(data.message)
+        this.scrollToBottom()
+      });
+
+      await axios.get(`${API_URL}/chat-conversations`, {
+        headers: {
+          users_ids: this.usersIds,
+          Authorization: `Bearer ${jwt}`
+        }
+      })
+      .then(res => {
+        if(res.data.length > 0) {
+          this.conversation = res.data[0];
+          this.messages = res.data[0].conversationMessages;
+        } else {
+          this.createConversation()
+        }
+        this.isLoading = false;
+      })
+      .then(() => this.scrollToBottom())
+      .catch(() => this.$router.push('/conversations'))
+    },
+    async sendMessage() {
       if(this.message === '') return
 
-      db.collection(this.dbCollectionCode).add({
-        message: this.message,
-        username: this.user.username,
-        id: this.user.id,
+      let message = {
+        message: this.message.replace(/\s+/g, ' ').trim(),
+        sender_id: this.user.id,
         createdAt: new Date()
-      }).then(() => {
-        this.scrollToBottom()
-      })
+      }
+      let room = this.usersIds.split('+').join('')
 
+      socket.emit('sendMessage', { message,  room });
+
+      const newMessages = this.messages.map(message => ({...message}))
+      newMessages.push(message)
       this.message = ''
-    },
-    fetchMessages() {
-      db.collection(this.dbCollectionCode).orderBy('createdAt').onSnapshot((querySpanshot) => {
-        let allMessages = []
-        querySpanshot.forEach(doc => {
-          allMessages.push(doc.data())
-        });
 
-        this.messages = allMessages
-
-        setTimeout(() => {
-          this.scrollToBottom()
-          this.isLoading = false
-        }, 700);
+      await axios.put(`${API_URL}/chat-conversations/${this.conversation.id}`, { conversationMessages: newMessages }, {
+        headers: {
+          users_ids: this.usersIds,
+          Authorization: `Bearer ${jwt}`
+        }
       })
+      .catch(err => err)
+    },
+    async createConversation() {
+      let data = {
+        users_ids: this.usersIds,
+        conversationMessages: []
+      }
+
+      await axios.post(`${API_URL}/chat-conversations`, data, authorization)
+      .catch(() => this.$router.push('/conversations'))
     },
     scrollToBottom() {
-      this.$refs.chatHistory.scrollTop = this.$refs.chatHistory.scrollHeight
+      this.$refs.chatWindow.scrollTop = this.$refs.chatWindow.scrollHeight
     },
   },
 }

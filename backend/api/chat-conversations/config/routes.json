@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/chat-conversations",
+      "handler": "chat-conversations.find",
+      "config": {
+        "policies": ["isUsersIdsDifferent", "isUserInConversation"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-conversations",
+      "handler": "chat-conversations.findUserConversations",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/chat-conversations/count",
+      "handler": "chat-conversations.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/chat-conversations/:id",
+      "handler": "chat-conversations.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/chat-conversations",
+      "handler": "chat-conversations.create",
+      "config": {
+        "policies": ["isUsersIdsDifferent", "isUserInConversation"]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/chat-conversations/:id",
+      "handler": "chat-conversations.update",
+      "config": {
+        "policies": ["isUserInConversation", "checkMsgSenderId"]
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/chat-conversations/:id",
+      "handler": "chat-conversations.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

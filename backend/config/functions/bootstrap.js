@@ -10,4 +10,26 @@
  * See more details here: https://strapi.io/documentation/developer-docs/latest/setup-deployment-guides/configurations.html#bootstrap
  */
 
-module.exports = () => {};
+module.exports = () => {
+var io = require('socket.io')(strapi.server, {
+  cors: {
+    origin: "http://localhost:8080",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+});
+
+  io.on('connection', function(socket) {
+    socket.on('join', ({ rooms }) => {
+      rooms.forEach(room => socket.join(room))
+
+      socket.on('sendMessage', ({ message, room }) => {
+        // emit to other users in room
+        socket.broadcast.to(room).emit('message', { message, room })
+        // emit to myself
+        socket.emit('message', { message, room })
+      })
+    })
+  });
+};

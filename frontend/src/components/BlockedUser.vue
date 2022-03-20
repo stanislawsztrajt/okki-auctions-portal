@@ -1,9 +1,9 @@
 <template>
   <div class="w-screen h-screen flex flex-row justify-center items-center">
-    <div class=" text-2xl p-8 py-16 text-center">
-      Twoje konto zostało zablokowane z powodu niestosownego ogłoszenie lub komentarza 
+    <div class=" text-2xl p-8 py-16 text-center text-red-500">
+      Twoje konto zostało zablokowane z powodu niestosownego ogłoszenia lub komentarza
       <br>
-      <span class="font-bold cursor-pointer" @click="logout">Wróć na stronę główną</span>
+      <button @click="logout" class="font-bold cursor-pointer text-gray-700">Wróć na stronę główną</button>
     </div>
   </div>
 </template>

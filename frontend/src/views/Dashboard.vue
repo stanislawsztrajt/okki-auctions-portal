@@ -111,9 +111,7 @@ export default {
 
       await axios.get(`${API_URL}/comments-in-users-profiles/${user.id}`)
       .then(res => {
-        console.log(res)
         this.comments = res.data.comments;
-        console.log(this.comments)
         this.rate = res.data.accucuracyRate;
       })
     }

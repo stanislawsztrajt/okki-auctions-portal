@@ -21,7 +21,7 @@ import HiddenAuctions from '../views/HiddenAuctions.vue'
 import ReportedComments from '../views/ReportedComments.vue'
 import HiddenComments from '../views/HiddenComments.vue'
 
-import Messages from '../views/Messages.vue'
+import Conversations from '../views/Conversations.vue'
 import Chat from '../views/Chat.vue'
 import Rodo from '../views/Rodo.vue'
 import Help from '../views/Help.vue'
@@ -122,9 +122,9 @@ const routes = [
     component: HiddenComments,
   },
   {
-    path: '/messages',
-    name: 'Messages',
-    component: Messages,
+    path: '/conversations',
+    name: 'Conversations',
+    component: Conversations,
   },
   {
     path: '/chat/:id',
