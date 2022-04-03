@@ -1,6 +1,5 @@
 <template>
-  <div class=" h-screen">
-    <Menu />
+  <div class="w-full h-screen -mt-20 pt-28">
     <Loading :isCenter="true" v-if="isLoading"/>
     <form
       class="h-2/3 flex flex-col items-center xl:items-start justify-center xl:ml-96 xl:mt-14"
@@ -156,13 +155,11 @@ import axios from 'axios'
 import API_URL from '../../API_URL'
 import Cookies from 'js-cookie';
 
-import Menu from '../components/Menu'
 import Loading from '../components/Loading'
 import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   components: {
-    Menu,
     Loading
   },
 

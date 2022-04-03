@@ -1,18 +1,17 @@
 <template>
   <div class="h-screen">
-    <Menu />
     <Loading :isCenter="true" v-if="isLoading" />
     <div v-else>
       <div v-if="user !== null" class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
-        <InfoElement 
-          :value="`Witaj na koncie u ${user.username}`" 
+        <InfoElement
+          :value="`Witaj na koncie u ${user.username}`"
           :icon="'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'"
         />
         <RateElement :rate="rate"/>
 
         <div v-if="auctions.length > 0">
-          <InfoElement 
-            :value="'Ogłoszenia użytkownika'" 
+          <InfoElement
+            :value="'Ogłoszenia użytkownika'"
             :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
           />
           <Auction
@@ -23,13 +22,13 @@
           />
         </div>
 
-        <InfoElement 
-          :value="'Nie znaleziono ogłoszeń użytkownika'" 
+        <InfoElement
+          :value="'Nie znaleziono ogłoszeń użytkownika'"
           :icon="'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z' "
           v-else
         />
 
-        <Comments 
+        <Comments
           :id="id"
           :changeDetector="changeDetector"
           @change-change-detector="changeChangeDetector"
@@ -40,13 +39,12 @@
         Nie znaleziono użytkownika <span class="font-bold cursor-pointer" @click="() => $router.go(-1)">Wróc do poprzedniej strony</span>
       </div>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
 
-import Menu from '../components/Menu.vue'
 import Auction from '../components/Auction.vue'
 import Comments from '../components/comment/Comments.vue'
 import Loading from '../components/Loading.vue'
@@ -59,7 +57,6 @@ import { jwt, user } from '../constants/const-variables'
 
 export default {
   components: {
-    Menu,
     Auction,
     Comments,
     Loading,

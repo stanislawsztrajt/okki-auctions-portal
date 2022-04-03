@@ -45,7 +45,7 @@ body::-webkit-scrollbar-thumb:hover {
 /* Menu styles */
 
 .menu-element {
-  @apply flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl hover:shadow-inner hover:bg-gray-100 transition duration-100;
+  @apply relative flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl hover:shadow-inner hover:bg-gray-100 transition duration-100;
 }
 
 .menu-element-new-auction {
@@ -55,7 +55,7 @@ body::-webkit-scrollbar-thumb:hover {
 /* Home, SearchInputs, Help styles */
 
 .search-input {
-  @apply h-8 lg:h-12 text-gray-700 font-light text-lg sm:text-xl lg:text-3xl focus:outline-none focus:bg-gray-100;
+  @apply h-8 lg:h-12 text-gray-700 font-light text-lg sm:text-xl lg:text-3xl focus:outline-none focus:bg-gray-100 px-1;
 }
 
 .banner-background {
@@ -110,17 +110,16 @@ body::-webkit-scrollbar-thumb:hover {
   @apply h-12 bg-white text-gray-700 px-4 py-2 shadow-sm;
 }
 
-
 /* buttons animation */
 
 .button-animation-hover{
-  @apply hover:opacity-80 duration-150;
+  @apply hover:opacity-80 duration-100;
 }
 
 /* Chat styles */
 
 .userMessage {
-  @apply bg-gray-300 float-right rounded rounded-tr-none rounded-bl-xl
+  @apply bg-gray-300 float-right rounded rounded-tr-none rounded-bl-xl mr-0;
 }
 
 /* change user info styles */
@@ -143,10 +142,34 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 /* dashboard */
-.auction-comment-admin-button{
-  @apply text-white mt-1 rounded-full ml-4 text-xs lg:text-base p-3 button-animation-hover
+.auction-comment-admin-button {
+  @apply w-full xs:w-64 text-sm lg:text-base flex flex-row items-center justify-center text-white py-2 px-3 mt-2 shadow-md button-animation-hover;
 }
 
 .like-button-scale:hover{
   transform: scale(1.2);
+}
+
+.new-message-icon::after {
+  content: "" !important;
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  width: .8rem;
+  height: .8rem;
+  background: rgba(239, 68, 68);
+  border-radius: 100%;
+  box-shadow: .5px 1px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.dont-break-out {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }

@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/last-seen-messages",
+      "handler": "last-seen-messages.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/last-seen-messages/count",
+      "handler": "last-seen-messages.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/last-seen-messages/:id",
+      "handler": "last-seen-messages.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/last-seen-messages",
+      "handler": "last-seen-messages.create",
+      "config": {
+        "policies": ["usersInConversation", "checkIfSameExists"]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/last-seen-messages/:id",
+      "handler": "last-seen-messages.update",
+      "config": {
+        "policies": ["isOwner"]
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/last-seen-messages/:id",
+      "handler": "last-seen-messages.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Menu />
     <ApproveLayer
       v-if="isDeleteReportLayer"
       @action="deleteReport"
@@ -20,14 +19,14 @@
       :question="'Czy na pewno chcesz zablokować użytkownika?'"
     />
     <div v-else class="m-10 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
-      <InfoElement 
-        :value="'Zgłoszone komentarze:'" 
-        :icon="'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'" 
+      <InfoElement
+        :value="'Zgłoszone komentarze'"
+        :icon="'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'"
         v-if="comments.length > 0"
       />
       <InfoElement
-        :value="'Nie ma żadnych zgłoszonych komentarzy'" 
-        :icon="'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'" 
+        :value="'Nie ma żadnych zgłoszonych komentarzy'"
+        :icon="'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'"
         v-else
       />
       <Comment
@@ -44,7 +43,6 @@
 <script>
 import axios from 'axios'
 
-import Menu from '../components/Menu.vue'
 import InfoElement from '../components/InfoElement.vue'
 import Comment from '../components/comment/Comment.vue'
 import ApproveLayer from '../components/ApproveLayer.vue'
@@ -55,7 +53,6 @@ import { authorization, jwt, user } from '../constants/const-variables'
 export default {
   name: 'AdminDashboard',
   components: {
-    Menu,
     InfoElement,
     Comment,
     ApproveLayer
@@ -66,7 +63,7 @@ export default {
       comments: [],
       reports: [],
     }
-  }, 
+  },
   async created(){
     if(!jwt){
       this.$router.push('/login')

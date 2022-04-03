@@ -1,59 +1,55 @@
 <template>
-  <div id="AuctionsResults">
-    <Menu/>
-    <div class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
-      <div class="border-b pb-6 border-gray-300">
-        <SearchInputs
-          class="sm:w-3/4"
-          ref="inputsComponent"
-          @update-search-input-values="updateSearchInputValues"
-          @update-auctions="updateAuctions"
-          :searchInputItem="searchInputItem"
-          :searchInputLocation="searchInputLocation"
-        />
-        <div class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
-          <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
-          <SearchFilters
-            ref="filteringComponent"
-            @select-change="updateAppliedFilters"
-            @update-auctions="updateAuctions"
-            :appliedFiltersCookies="appliedFilters"
-            :selectDefaultOption="'Wszystko'"
-            :isRequired="false"
-          />
-        </div>
-        <SearchSorting
-          ref="sortingComponent"
-          @search-auctions="searchAuctions"
-        />
-      </div>
-      <InfoElement 
-        :value="'Wyniki wyszukiwań:'"
-        :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
+  <div class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div class="border-b pb-6 border-gray-300">
+      <SearchInputs
+        class="sm:w-3/4"
+        ref="inputsComponent"
+        @update-search-input-values="updateSearchInputValues"
+        @update-auctions="updateAuctions"
+        :searchInputItem="searchInputItem"
+        :searchInputLocation="searchInputLocation"
       />
-      <Loading v-if="isLoading" />
-      <div v-else>
-        <Auction
-          @toggle-edit-auction-layer="() => {}"
-          @toggle-delete-auction-layer="() => {}"
-          v-for="auction in auctions"
-          :key="auction.id"
-          :auction="auction"
-          :likeds="likeds"
-        />
-        <NoAuctionsFound
-          v-show="auctions.length === 0"
-          :searchInputItem="searchInputItem"
-          :searchInputLocation="searchInputLocation"
+      <div class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
+        <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
+        <SearchFilters
+          ref="filteringComponent"
+          @select-change="updateAppliedFilters"
+          @update-auctions="updateAuctions"
+          :appliedFiltersCookies="appliedFilters"
+          :selectDefaultOption="'Wszystko'"
+          :isRequired="false"
         />
       </div>
+      <SearchSorting
+        ref="sortingComponent"
+        @search-auctions="searchAuctions"
+      />
+    </div>
+    <InfoElement
+      :value="'Wyniki wyszukiwań:'"
+      :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
+    />
+    <Loading v-if="isLoading" />
+    <div v-else>
+      <Auction
+        @toggle-edit-auction-layer="() => {}"
+        @toggle-delete-auction-layer="() => {}"
+        v-for="auction in auctions"
+        :key="auction.id"
+        :auction="auction"
+        :likeds="likeds"
+      />
+      <NoAuctionsFound
+        v-show="auctions.length === 0"
+        :searchInputItem="searchInputItem"
+        :searchInputLocation="searchInputLocation"
+      />
     </div>
   </div>
 </template>
 <script>
 import axios from 'axios'
 
-import Menu from '../components/Menu'
 import Loading from '../components/Loading'
 import SearchInputs from '../components/SearchInputs'
 import SearchFilters from '../components/SearchFilters'
@@ -68,7 +64,6 @@ import { jwt, user } from '../constants/const-variables'
 export default {
   name: 'AuctionsResults',
   components: {
-    Menu,
     Loading,
     SearchInputs,
     SearchFilters,
@@ -116,10 +111,10 @@ export default {
 
     await axios.get(`${API_URL}/auctions`)
     .then(res => {
-      this.auctions = res.data
-      this.auctionsCopy = res.data
+      this.auctions = res.data;
+      this.auctionsCopy = res.data;
       this.isLoading = false;
-      this.searchAuctions()
+      this.searchAuctions();
     })
   },
   methods: {

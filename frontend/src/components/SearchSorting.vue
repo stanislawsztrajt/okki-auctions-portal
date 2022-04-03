@@ -34,6 +34,7 @@ export default {
   methods: {
     sortAuctions(auctionsCopy) {
       this.auctions = auctionsCopy
+
       switch(this.sorting) {
         case 'najnowsze': {
           this.auctions.sort((auctionA,auctionB) => new Date(auctionB.createdAt) - new Date(auctionA.createdAt) ? -1 : 1);

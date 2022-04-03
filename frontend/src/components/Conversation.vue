@@ -7,12 +7,12 @@
     <span class="text-green-600 mr-5 font-bold text-2xl">{{ conversationUser.username }}</span>
     <div class="text-xl text-gray-700">
       <span>{{ lastMessage.sender_id === conversationUserID ? '' : 'Ty: ' }}</span>
-      <span>{{ lastMessage.message.length > 80 ? lastMessage.message.substring(0, 80) + '...' :  lastMessage.message}}</span>
+      <span :class="showNotification ? 'font-semibold' : ''">{{ lastMessage.message.length > 80 ? lastMessage.message.substring(0, 80) + '...' :  lastMessage.message}}</span>
     </div>
   </router-link>
 </template>
 <script>
-import { authorization, user } from '../constants/const-variables'
+import { authorization, user, notReadConversations } from '../constants/const-variables'
 import axios from 'axios'
 import API_URL from '../../API_URL'
 import { socket } from '../../config/web-sockets';
@@ -22,7 +22,8 @@ export default {
     return {
       user: user,
       conversationUser: Object,
-      lastMessage: Object
+      lastMessage: Object,
+      showNotification: false,
     }
   },
   props: {
@@ -30,12 +31,23 @@ export default {
     conversationUserID: String
   },
   created() {
-    this.fetchConversationUser()
-    this.lastMessage = this.conversation.conversationMessages[this.conversation.conversationMessages.length-1]
+    if(notReadConversations.includes(this.conversation.code)) this.showNotification = true;
+    socket.on('message', ({ message, room }) => {
+      if(message.sender_id !== user.id && !this.$route.path.includes(message.sender_id) && this.conversation.code === room) this.showNotification = true;
+    });
+    socket.on('displayNotifications', () => {
+      if(notReadConversations.includes(this.conversation.code)) this.showNotification = true;
+    })
+    socket.on('hideNotifications', () => {
+      if(!notReadConversations.includes(this.conversation.code)) this.showNotification = false;
+    })
 
-    socket.on('message', (data) => {
-      if(this.conversation.conversationCode === data.room) {
-        this.lastMessage = data.message
+    this.fetchConversationUser()
+    this.lastMessage = this.conversation.messages[this.conversation.messages.length-1]
+
+    socket.on('message', ({ message, room }) => {
+      if(this.conversation.code === room) {
+        this.lastMessage = message
       }
     });
   },

@@ -21,14 +21,39 @@ var io = require('socket.io')(strapi.server, {
 });
 
   io.on('connection', function(socket) {
-    socket.on('join', ({ rooms }) => {
-      rooms.forEach(room => socket.join(room))
+    socket.on('join', ({ rooms, user_id }) => {
+      socket.strapi_id = user_id
+
+      rooms.forEach(room => {
+        if(!socket.rooms.hasOwnProperty(room)) socket.join(room)
+      })
+
+      socket.on('joinToNewRoom', ({ room }) => {
+        socket.join(room)
+      })
 
       socket.on('sendMessage', ({ message, room }) => {
-        // emit to other users in room
+        // emit to second user in room
         socket.broadcast.to(room).emit('message', { message, room })
         // emit to myself
         socket.emit('message', { message, room })
+      })
+
+      socket.on('newConversation', async ({ seconUser_id, conversation }) => {
+        let sockets = await io.fetchSockets();
+        sockets = sockets.filter(socket => socket.strapi_id === seconUser_id)
+        // emit to second user in room
+        io.to(sockets[0].id).emit('newConversaion', { conversation })
+        // emit to myself
+        socket.emit('createdNewConversaion', { conversation })
+      })
+
+      socket.on('displayNotifications', () => {
+        socket.emit('displayNotifications')
+      })
+
+      socket.on('hideNotifications', () => {
+        socket.emit('hideNotifications')
       })
     })
   });

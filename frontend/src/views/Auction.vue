@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Menu />
     <Loading :isCenter="true" v-if="isLoading"/>
     <main
       v-else
@@ -116,7 +115,7 @@
             </div>
           </div>
           <div class="mt-4 text-lg font-light text-center xl:text-left">
-            <h3>{{ auction.createdAt.substring(0,10) }}</h3>
+            <h3>{{ auction.createdAt.substring(0,10).split('-').reverse().join('.') }}</h3>
             <a
               target="blank"
               :href="`https://www.google.pl/maps/place/${auction.location},+62-800+Kalisz`"
@@ -183,14 +182,12 @@ import axios from 'axios'
 import API_URL from '../../API_URL'
 import { user, jwt, authorization } from '../constants/const-variables'
 
-import Menu from '../components/Menu.vue'
 import ReportLayer from '../components/ReportLayer.vue'
 import Loading from '../components/Loading.vue'
 import Liking from '../components/Liking.vue'
 
 export default {
   components: {
-    Menu,
     ReportLayer,
     Loading,
     Liking,
@@ -236,15 +233,7 @@ export default {
     })
     .catch(() => this.user = false)
 
-    if(jwt && this.auction.user_id !== user.id) {
-      let data = {
-        user_id: user.id,
-        auction_id: this.id
-      }
-
-      await axios.post(`${API_URL}/views-of-auctions`, data, authorization)
-      .catch(err => err)
-    }
+    this.addView()
 
     this.isLoading = false
   },
@@ -263,6 +252,17 @@ export default {
         return this.imageIndex = this.auction.images.length - 1;
       }
       this.imageIndex--;
+    },
+    async addView() {
+      if(jwt && this.auction.user_id !== user.id) {
+        let data = {
+          user_id: user.id,
+          auction_id: this.id
+        }
+
+        await axios.post(`${API_URL}/views-of-auctions`, data, authorization)
+        .catch(err => err)
+      }
     }
   }
 }

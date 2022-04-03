@@ -25,10 +25,10 @@
         name="Podkategorie"
         class="filtering-input"
         v-model="this.categoryFilterVariables['subcategory']"
-        @change="updateAppliedFilters"
+        @change="clearSubcategoryFilters"
         :required="isRequired ? true : false"
       >
-        <option value="" selected>{{ this.selectDefaultOption }}</option>
+        <option :value="this.categoryFilterVariables['subcategory'] ? '' : this.categoryFilterVariables['subcategory']" selected>{{ this.selectDefaultOption }}</option>
         <option
           v-for="subcategory in subcategories[this.categoryFilterVariables['category']]"
           :key="subcategory.value"
@@ -82,7 +82,6 @@ export default {
         subcategory: '',
       },
       appliedFilters: [],
-      test: ''
     }
   },
   props: {
@@ -113,12 +112,22 @@ export default {
       this.$emit('update-auctions', this.auctions)
     },
     clearSubcategory() {
-      this.categoryFilterVariables['subcategory'] = ''
+      Object.keys(this.categoryFilterVariables).forEach(key => {
+        if(key !== 'category') {
+          this.categoryFilterVariables[key] = ''
+        }
+      })
+      this.updateAppliedFilters()
+    },
+    clearSubcategoryFilters() {
+      Object.keys(this.categoryFilterVariables).forEach(key => {
+        if(key !== 'category' && key !== 'subcategory') {
+          this.categoryFilterVariables[key] = ''
+        }
+      })
       this.updateAppliedFilters()
     },
     updateAppliedFilters() {
-      this.appliedFilters = Object.values(this.categoryFilterVariables)
-      this.appliedFilters = this.appliedFilters.filter((a) => a)
       this.$emit('select-change', this.categoryFilterVariables)
     }
   }

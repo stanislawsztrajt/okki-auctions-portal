@@ -21,7 +21,8 @@
     {"name": "Myszki", "value": "myszki"},
     {"name": "Słuchawki", "value": "sluchawki"},
     {"name": "Sprzęt audio", "value": "sprzet-audio"},
-    {"name": "Akcesoria", "value": "elektronika-akcesoria"}
+    {"name": "Akcesoria", "value": "elektronika-akcesoria"},
+    {"name": "Pozostałe", "value": "pozostale"}
   ],
   "odziez": [
     {"name": "Koszulki", "value": "koszulki"},
@@ -61,7 +62,7 @@
     {"name": "Sporty wodne", "value": "sporty-wodne"},
     {"name": "Turystyka", "value": "turystyka"},
     {"name": "Wędkarstwo", "value": "wedkarstwo"},
-    {"name": "Instrumenty", "value": "instrumenty"},
+    {"name": "Instrumenty muzyczne", "value": "instrumenty-muzyczne"},
     {"name": "Inne", "value": "inne"}
   ],
   "edukacja-i-rozrywka": [

@@ -564,30 +564,427 @@
         {"name": "Amplitunery i wzmacniacze", "value": "amplitunery-i-wzmacniacze"},
         {"name": "Soundbary", "value": "soundbary"},
         {"name": "Wieże", "value": "wieze"},
-        {"name": "Radia", "value": "radia"}
+        {"name": "Radia", "value": "radia"},
+        {"name": "Mikrofony", "value": "mikrofony"}
       ]
     }
   ],
   "elektronika-akcesoria": [
-
+    {
+      "label": "Typ",
+      "vmodel": "electronicAccesoriesType",
+      "options": [
+        {"name": "Podkładki pod mysz", "value": "podkladki-pod-mysz"},
+        {"name": "Podkładki pod nadgarstki", "value": "podkladki-pod-nadgarstki"},
+        {"name": "Mouse bungee", "value": "mouse-bungee"},
+        {"name": "Stojak na słuchawki", "value": "stojak-sluchawki"},
+        {"name": "Statyw mikrofonowy", "value": "statyw-mikrofonowy"},
+        {"name": "Uchwyt na monitor", "value": "uchwyt-monitor"},
+        {"name": "Paski led", "value": "paski-led"},
+        {"name": "Pady do konsoli", "value": "pady-konsole"},
+        {"name": "Kierownice do gier", "value": "kierownice-gry"}
+      ]
+    },
+    {
+      "label": "Stan",
+      "vmodel": "speakersCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
+  ],
+  "pozostale": [
+    {
+      "label": "Stan",
+      "vmodel": "speakersCondition",
+      "options": [
+        {"name": "Używane", "value": "uzywane"},
+        {"name": "Nowe", "value": "nowe"},
+        {"name": "Uszkodzone", "value": "uszkodzone"}
+      ]
+    }
   ],
   "koszulki": [
-
-  ],
-  "spodnie": [
-
+    {
+      "label": "Płeć",
+      "vmodel": "shirtGender",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"},
+        {"name": "Dla obu płci", "value": "obie-plcie"}
+      ]
+    },
+    {
+      "label": "Rozmiar",
+      "vmodel": "shirtSize",
+      "options": [
+        {"name": "XS", "value": "xs"},
+        {"name": "S", "value": "s"},
+        {"name": "M", "value": "m"},
+        {"name": "L", "value": "l"},
+        {"name": "XL", "value": "xl"},
+        {"name": "2XL", "value": "2xl"},
+        {"name": "3XL", "value": "3xl"},
+        {"name": "4XL", "value": "4xl"}
+      ]
+    },
+    {
+      "label": "Rękaw",
+      "vmodel": "shirtSleeve",
+      "options": [
+        {"name": "Krótki", "value": "krotki"},
+        {"name": "Długi", "value": "dlugi"},
+        {"name": "Inny", "value": "inny"}
+      ]
+    },
+    {
+      "label": "Nadruk",
+      "vmodel": "shirtOverprint",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Kolor",
+      "vmodel": "shirtColor",
+      "options": [
+        {"name": "Biały", "value": "bialy"},
+        {"name": "Czarny", "value": "czarny"},
+        {"name": "Beżowy", "value": "bezowy"},
+        {"name": "Niebieski", "value": "niebieski"},
+        {"name": "Zielony", "value": "niebieski"},
+        {"name": "Czerwony", "value": "niebieski"},
+        {"name": "Żółty", "value": "niebieski"},
+        {"name": "Pomarańczowy", "value": "niebieski"},
+        {"name": "Fioletowy", "value": "niebieski"},
+        {"name": "Różowy", "value": "rozowy"},
+        {"name": "Szary", "value": "szary"}
+      ]
+    }
   ],
   "bluzy": [
-
+    {
+      "label": "Płeć",
+      "vmodel": "sweatshirtGender",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"},
+        {"name": "Dla obu płci", "value": "obie-plcie"}
+      ]
+    },
+    {
+      "label": "Rozmiar",
+      "vmodel": "sweatshirtSize",
+      "options": [
+        {"name": "XS", "value": "xs"},
+        {"name": "S", "value": "s"},
+        {"name": "M", "value": "m"},
+        {"name": "L", "value": "l"},
+        {"name": "XL", "value": "xl"},
+        {"name": "2XL", "value": "2xl"},
+        {"name": "3XL", "value": "3xl"},
+        {"name": "4XL", "value": "4xl"}
+      ]
+    },
+    {
+      "label": "Kaptur",
+      "vmodel": "sweatshirtHood",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Rękaw",
+      "vmodel": "sweatshirtSleeve",
+      "options": [
+        {"name": "Krótki", "value": "krotki"},
+        {"name": "Długi", "value": "dlugi"},
+        {"name": "Inny", "value": "inny"}
+      ]
+    },
+    {
+      "label": "Rozpinana",
+      "vmodel": "sweatshirtZipped",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Nadruk",
+      "vmodel": "sweatshirtOverprint",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Kolor",
+      "vmodel": "sweatshirtColor",
+      "options": [
+        {"name": "Biały", "value": "bialy"},
+        {"name": "Czarny", "value": "czarny"},
+        {"name": "Beżowy", "value": "bezowy"},
+        {"name": "Niebieski", "value": "niebieski"},
+        {"name": "Zielony", "value": "niebieski"},
+        {"name": "Czerwony", "value": "niebieski"},
+        {"name": "Żółty", "value": "niebieski"},
+        {"name": "Pomarańczowy", "value": "niebieski"},
+        {"name": "Fioletowy", "value": "niebieski"},
+        {"name": "Różowy", "value": "rozowy"},
+        {"name": "Szary", "value": "szary"}
+      ]
+    }
+  ],
+  "spodnie": [
+    {
+      "label": "Płeć",
+      "vmodel": "trousersGender",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"},
+        {"name": "Dla obu płci", "value": "obie-plcie"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "trousersType",
+      "options": [
+        {"name": "Jeansy", "value": "jeansy"},
+        {"name": "Dresy", "value": "dresy"},
+        {"name": "Chinosy", "value": "chinosy"},
+        {"name": "Eleganckie", "value": "eleganckie"},
+        {"name": "Bojówki", "value": "bojowki"}
+      ]
+    },
+    {
+      "label": "Rozmiar",
+      "vmodel": "trousersSize",
+      "options": [
+        {"name": "XS", "value": "xs"},
+        {"name": "S", "value": "s"},
+        {"name": "M", "value": "m"},
+        {"name": "L", "value": "l"},
+        {"name": "XL", "value": "xl"},
+        {"name": "2XL", "value": "2xl"},
+        {"name": "3XL", "value": "3xl"},
+        {"name": "4XL", "value": "4xl"}
+      ]
+    },
+    {
+      "label": "Kolor",
+      "vmodel": "trousersColor",
+      "options": [
+        {"name": "Biały", "value": "bialy"},
+        {"name": "Czarny", "value": "czarny"},
+        {"name": "Beżowy", "value": "bezowy"},
+        {"name": "Niebieski", "value": "niebieski"},
+        {"name": "Zielony", "value": "niebieski"},
+        {"name": "Czerwony", "value": "niebieski"},
+        {"name": "Żółty", "value": "niebieski"},
+        {"name": "Pomarańczowy", "value": "niebieski"},
+        {"name": "Fioletowy", "value": "niebieski"},
+        {"name": "Różowy", "value": "rozowy"},
+        {"name": "Szary", "value": "szary"}
+      ]
+    }
   ],
   "kurtki": [
-
+    {
+      "label": "Płeć",
+      "vmodel": "jacketGender",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"},
+        {"name": "Dla obu płci", "value": "obie-plcie"}
+      ]
+    },
+    {
+      "label": "Rozmiar",
+      "vmodel": "jacketSize",
+      "options": [
+        {"name": "XS", "value": "xs"},
+        {"name": "S", "value": "s"},
+        {"name": "M", "value": "m"},
+        {"name": "L", "value": "l"},
+        {"name": "XL", "value": "xl"},
+        {"name": "2XL", "value": "2xl"},
+        {"name": "3XL", "value": "3xl"},
+        {"name": "4XL", "value": "4xl"}
+      ]
+    },
+    {
+      "label": "Długość",
+      "vmodel": "jacketLength",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"}
+      ]
+    },
+    {
+      "label": "Kaptur",
+      "vmodel": "jacketHood",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Nadruk",
+      "vmodel": "jacketOverprint",
+      "options": [
+        {"name": "Tak", "value": "tak"},
+        {"name": "Nie", "value": "nie"}
+      ]
+    },
+    {
+      "label": "Kolor",
+      "vmodel": "jacketColor",
+      "options": [
+        {"name": "Biały", "value": "bialy"},
+        {"name": "Czarny", "value": "czarny"},
+        {"name": "Beżowy", "value": "bezowy"},
+        {"name": "Niebieski", "value": "niebieski"},
+        {"name": "Zielony", "value": "niebieski"},
+        {"name": "Czerwony", "value": "niebieski"},
+        {"name": "Żółty", "value": "niebieski"},
+        {"name": "Pomarańczowy", "value": "niebieski"},
+        {"name": "Fioletowy", "value": "niebieski"},
+        {"name": "Różowy", "value": "rozowy"},
+        {"name": "Szary", "value": "szary"}
+      ]
+    }
   ],
   "obuwie": [
+    {
+      "label": "Płeć",
+      "vmodel": "shoeGender",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"},
+        {"name": "Dla obu płci", "value": "obie-plcie"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "shoeType",
+      "options": [
+        {"name": "Sneakersy", "value": "sneakersy"},
+        {"name": "Trampki", "value": "trampki"},
+        {"name": "Sportowe", "value": "Sportowe"},
+        {"name": "Letnie", "value": "letnie"},
+        {"name": "Kapcie", "value": "kapcie"},
+        {"name": "Eleganckie", "value": "eleganckie"},
+        {"name": "Półbuty", "value": "polbuty"},
+        {"name": "Outdorowe", "value": "outdorowe"}
+      ]
+    },
+    {
+      "label": "Wysokość",
+      "vmodel": "shoeHeight",
+      "options": [
+        {"name": "Niskie", "value": "niskie"},
+        {"name": "Wysokie", "value": "wysokie"}
+      ]
+    },
+    {
+      "label": "Rozmiar",
+      "vmodel": "shoeSize",
+      "options": [
+        {"name": "31", "value": "31"},
+        {"name": "32", "value": "32"},
+        {"name": "33", "value": "33"},
+        {"name": "34", "value": "34"},
+        {"name": "35", "value": "35"},
+        {"name": "36", "value": "36"},
+        {"name": "37", "value": "37"},
+        {"name": "38", "value": "38"},
+        {"name": "39", "value": "39"},
+        {"name": "40", "value": "40"},
+        {"name": "41", "value": "41"},
+        {"name": "42", "value": "42"},
+        {"name": "43", "value": "43"},
+        {"name": "44", "value": "44"},
+        {"name": "45", "value": "45"},
+        {"name": "46", "value": "46"},
+        {"name": "47", "value": "47"},
+        {"name": "48", "value": "48"},
+        {"name": "49", "value": "49"},
+        {"name": "50", "value": "50"},
+        {"name": "51", "value": "51"},
+        {"name": "52", "value": "52"},
+        {"name": "53", "value": "53"},
+        {"name": "54", "value": "54"},
+        {"name": "55", "value": "55"}
 
+      ]
+    },
+    {
+      "label": "Kolor",
+      "vmodel": "shoeColor",
+      "options": [
+        {"name": "Biały", "value": "bialy"},
+        {"name": "Czarny", "value": "czarny"},
+        {"name": "Beżowy", "value": "bezowy"},
+        {"name": "Niebieski", "value": "niebieski"},
+        {"name": "Zielony", "value": "niebieski"},
+        {"name": "Czerwony", "value": "niebieski"},
+        {"name": "Żółty", "value": "niebieski"},
+        {"name": "Pomarańczowy", "value": "niebieski"},
+        {"name": "Fioletowy", "value": "niebieski"},
+        {"name": "Różowy", "value": "rozowy"},
+        {"name": "Szary", "value": "szary"}
+      ]
+    }
   ],
   "odziez-akcesoria": [
-
+    {
+      "label": "Płeć",
+      "vmodel": "accesoriesGender",
+      "options": [
+        {"name": "Kobieta", "value": "kobieta"},
+        {"name": "Mężczyzna", "value": "mezczyzna"},
+        {"name": "Dla obu płci", "value": "obie-plcie"}
+      ]
+    },
+    {
+      "label": "Rodzaj",
+      "vmodel": "accesoriesType",
+      "options": [
+        {"name": "Czapki", "value": "czapki"},
+        {"name": "Szaliki", "value": "szaliki"},
+        {"name": "Rękawiczki", "value": "rekawiczki"},
+        {"name": "Okulary", "value": "okulary"},
+        {"name": "Kominy", "value": "kominy"},
+        {"name": "Paski", "value": "paski"},
+        {"name": "Saszetki/Nerki", "value": "saszetki-nerki"},
+        {"name": "Plecaki", "value": "plecaki"},
+        {"name": "Torby", "value": "torby"},
+        {"name": "Torebki", "value": "torebki"},
+        {"name": "Zegarki", "value": "zegarki"}
+      ]
+    },
+    {
+      "label": "Kolor",
+      "vmodel": "accesoriesColor",
+      "options": [
+        {"name": "Biały", "value": "bialy"},
+        {"name": "Czarny", "value": "czarny"},
+        {"name": "Beżowy", "value": "bezowy"},
+        {"name": "Niebieski", "value": "niebieski"},
+        {"name": "Zielony", "value": "niebieski"},
+        {"name": "Czerwony", "value": "niebieski"},
+        {"name": "Żółty", "value": "niebieski"},
+        {"name": "Pomarańczowy", "value": "niebieski"},
+        {"name": "Fioletowy", "value": "niebieski"},
+        {"name": "Różowy", "value": "rozowy"},
+        {"name": "Szary", "value": "szary"}
+      ]
+    }
   ],
   "ciagniki": [
 

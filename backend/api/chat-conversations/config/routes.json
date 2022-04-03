@@ -49,6 +49,14 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/chat-conversations-lastmessages/:id",
+      "handler": "chat-conversations.update",
+      "config": {
+        "policies": ["isUserInConversation"]
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/chat-conversations/:id",
       "handler": "chat-conversations.delete",

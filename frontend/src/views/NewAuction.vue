@@ -1,6 +1,5 @@
 <template>
   <div id="NewAuction">
-    <Menu />
     <Loading :isCenter="true" v-if="isLoading"/>
     <form
       v-else
@@ -136,7 +135,6 @@
 </template>
 
 <script>
-import Menu from '../components/Menu'
 import Loading from '../components/Loading'
 import SearchFilters from '../components/SearchFilters'
 
@@ -159,7 +157,6 @@ import {
 export default {
   name: 'NewAdvert',
   components: {
-    Menu,
     Loading,
     SearchFilters
   },
@@ -185,9 +182,16 @@ export default {
       setTimeout: Function,
       setTimeoutTime: 4000,
       used: false,
+      userOtherAuctions: []
     }
   },
   async created(){
+
+    await axios.get(`${API_URL}/user-auctions/${user.id}`)
+    .then(res => {
+      this.userOtherAuctions = res.data
+    })
+
     this.categories.sort((categoryA, categoryB) => (categoryA.name > categoryB.name) ? 1 : -1);
 
     if(!jwt){
@@ -208,6 +212,95 @@ export default {
       this.urls.splice(index,1)
     },
     async createAuction(){
+      this.checkIfAuctionIsNotDuplicate()
+      this.validateAuction()
+
+      if(!this.validationError) {
+        const isStreetExist = streets
+          .findIndex(street => street == this.locationValue.toLowerCase())
+
+        const isStreetWithoutPLcharsExist = streetsWithoutPLchars
+          .findIndex(street => street == this.locationValue.toLowerCase())
+
+        if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
+          this.setTimeout = setTimeout(()=>{
+            this.validationError = false
+          },this.setTimeoutTime)
+          this.validationText = 'Podana ulica nie istnieje w Kaliszu (upewnij się, że tekst nie zawiera błędów)'
+          return this.validationError = true
+        }
+
+        this.used = true;
+        this.isLoading = true;
+
+        if(this.images.length === 0){
+          const data = {
+            title: this.titleValue,
+            price: parseFloat(this.priceValue),
+            description: this.descriptionValue,
+            location: this.locationValue,
+            phoneNumber: this.phoneNumberValue,
+            user_id: user.id,
+            images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
+            filters: this.auctionFilters
+          }
+
+          await axios.post(`${API_URL}/auctions`, data, authorization)
+          .then(() => this.$router.push('/dashboard'))
+          .catch(err=>{console.log(err)})
+        } else{
+          await this.images.forEach(async image =>{
+            let isPostedImages = false;
+
+            convert({
+              file: image,
+              width: 800,
+              height: 450,
+              type: 'jpeg'
+            })
+            .then(async file => {
+              const data = new FormData()
+              data.append('file', file)
+              data.append("api_key", CLOUDINARY_API_KEY);
+              data.append("api_secret", CLOUDINARY_API_SECRET);
+              data.append("cloud_name", CLOUDINARY_CLOUD_NAME);
+              data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+              await axios.post(
+                `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
+                data
+              )
+              .then(async res => {
+                await this.imageUrls.push(res.data.url);
+                if(this.imageUrls.length === this.images.length) isPostedImages = true;
+              })
+              .catch(err => console.log(err))
+
+
+              if(isPostedImages && this.used){
+                const data = {
+                  title: this.titleValue,
+                  price: parseFloat(this.priceValue),
+                  description: this.descriptionValue,
+                  location: this.locationValue,
+                  phoneNumber: this.phoneNumberValue,
+                  user_id: user.id,
+                  images: this.imageUrls,
+                  filters: this.auctionFilters
+                }
+
+                await axios.post(`${API_URL}/auctions`, data, authorization)
+                .then(() => this.$router.push('/dashboard'))
+                .catch(err=>{console.log(err)})
+              }
+            })
+          })
+        }
+
+      }
+
+    },
+    validateAuction() {
       clearTimeout(this.setTimeout)
 
       if(!this.titleValue || !this.priceValue || !this.auctionFilters || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
@@ -223,6 +316,14 @@ export default {
           this.validationError = false
         },this.setTimeoutTime)
         this.validationText = 'Tytuł ogłoszenia jest za krótki (co najmniej 8 znaków)'
+        return this.validationError = true
+      }
+
+      if(this.priceValue.length > 15) {
+        this.setTimeout = setTimeout(()=>{
+          this.validationError = false
+        },this.setTimeoutTime)
+        this.validationText = 'Podana kwota jest za długa (maksymalnie 15 znaków)'
         return this.validationError = true
       }
 
@@ -258,97 +359,62 @@ export default {
         return this.validationError = true
       }
 
-      if(this.priceValue.length > 15) {
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Podana kwota jest za długa (maksymalnie 15 znaków)'
-        return this.validationError = true
-      }
-
-      const isStreetExist = streets
-        .findIndex(street => street == this.locationValue.toLowerCase())
-      
-      const isStreetWithoutPLcharsExist = streetsWithoutPLchars
-        .findIndex(street => street == this.locationValue.toLowerCase())
-
-      if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Podana ulica nie istnieje w Kaliszu( upewnij się, że napisałeś/aś bez błędów interpunkcyjnych )'
-        return this.validationError = true
-      }
-
-      this.used = true;
-      this.isLoading = true;
-
-      if(this.images.length === 0){
-        const data = {
-          title: this.titleValue,
-          price: parseFloat(this.priceValue),
-          description: this.descriptionValue,
-          location: this.locationValue,
-          phoneNumber: this.phoneNumberValue,
-          user_id: user.id,
-          images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
-          filters: this.auctionFilters
-        }
-
-        console.log(data)
-
-        await axios.post(`${API_URL}/auctions`, data, authorization)
-        .then(() => this.$router.push('/dashboard'))
-        .catch(err=>{console.log(err)})
-      } else{
-        await this.images.forEach(async image =>{
-          let isPostedImages = false;
-
-          convert({
-            file: image,
-            width: 800,
-            height: 450,
-            type: 'jpeg'
-          })
-          .then(async file => {
-            const data = new FormData()
-            data.append('file', file)
-            data.append("api_key", CLOUDINARY_API_KEY);
-            data.append("api_secret", CLOUDINARY_API_SECRET);
-            data.append("cloud_name", CLOUDINARY_CLOUD_NAME);
-            data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-            await axios.post(
-              `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
-              data
-            )
-            .then(async res => {
-              await this.imageUrls.push(res.data.url);
-              if(this.imageUrls.length === this.images.length) isPostedImages = true;
-            })
-            .catch(err => console.log(err))
-
-
-            if(isPostedImages && this.used){
-              const data = {
-                title: this.titleValue,
-                price: parseFloat(this.priceValue),
-                description: this.descriptionValue,
-                location: this.locationValue,
-                phoneNumber: this.phoneNumberValue,
-                user_id: user.id,
-                images: this.imageUrls,
-                filters: this.auctionFilters
-              }
-
-              await axios.post(`${API_URL}/auctions`, data, authorization)
-              .then(() => this.$router.push('/dashboard'))
-              .catch(err=>{console.log(err)})
-            }
-          })
-        })
-      }
     },
+    checkIfAuctionIsNotDuplicate() {
+      this.userOtherAuctions.forEach(auction => {
+        const otherAuctionTexts = `${auction.title} ${auction.description}`
+        const thisAuctionTexts = `${this.titleValue} ${this.descriptionValue}`
+
+        const similarityInPercentage = this.similarity(otherAuctionTexts, thisAuctionTexts) * 100
+
+        if(similarityInPercentage >= 70) {
+          this.setTimeout = setTimeout(()=>{
+            this.validationError = false
+          },this.setTimeoutTime)
+          this.validationText = 'Ogłoszenie jest zbyt podobne do Twojego innego ogłoszenia'
+          return this.validationError = true
+        }
+      })
+    },
+    similarity(s1, s2) {
+      var longer = s1;
+      var shorter = s2;
+      if (s1.length < s2.length) {
+        longer = s2;
+        shorter = s1;
+      }
+      var longerLength = longer.length;
+      if (longerLength == 0) {
+        return 1.0;
+      }
+      return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength);
+    },
+    editDistance(s1, s2) {
+      s1 = s1.toLowerCase();
+      s2 = s2.toLowerCase();
+
+      var costs = new Array();
+      for (var i = 0; i <= s1.length; i++) {
+        var lastValue = i;
+        for (var j = 0; j <= s2.length; j++) {
+          if (i == 0)
+            costs[j] = j;
+          else {
+            if (j > 0) {
+              var newValue = costs[j - 1];
+              if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                newValue = Math.min(Math.min(newValue, lastValue),
+                  costs[j]) + 1;
+              costs[j - 1] = lastValue;
+              lastValue = newValue;
+            }
+          }
+        }
+        if (i > 0)
+          costs[s2.length] = lastValue;
+      }
+      return costs[s2.length];
+    }
   }
 }
 

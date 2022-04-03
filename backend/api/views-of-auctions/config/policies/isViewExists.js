@@ -4,7 +4,7 @@ module.exports = async (ctx, next) => {
   const isViewExists = views.findIndex(view => view.auction_id === ctx.request.body.auction_id && view.user_id === ctx.request.body.user_id)
 
   if(isViewExists > -1){
-    ctx.badRequest(`You already have a view in this auction`);
+    ctx.forbidden(`You already have a view in this auction`);
   } else {
     return await next();
   }

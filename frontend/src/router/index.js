@@ -24,7 +24,8 @@ import HiddenComments from '../views/HiddenComments.vue'
 import Conversations from '../views/Conversations.vue'
 import Chat from '../views/Chat.vue'
 import Rodo from '../views/Rodo.vue'
-import Help from '../views/Help.vue'
+import Info from '../views/Info.vue'
+import FAQ from '../views/FAQ.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import TermsOfUse from '../views/TermsOfUse.vue'
 
@@ -77,9 +78,14 @@ const routes = [
     props: true,
   },
   {
-    path: '/help',
-    name: 'Help',
-    component: Help,
+    path: '/info',
+    name: 'Info',
+    component: Info,
+  },
+  {
+    path: '/faq',
+    name: 'FAQ',
+    component: FAQ,
   },
   {
     path: '/dashboard/change-user-info',

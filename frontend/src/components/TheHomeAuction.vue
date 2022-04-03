@@ -9,7 +9,7 @@
         :style="{ backgroundImage: 'url(' + auction.images[0] + ')' }"
       ></div>
       <h2
-        class="sm:text-xl pointer-events-none self-start px-3 py-2 sm:px-5"
+        class="sm:text-xl pointer-events-none self-start px-1 py-2 sm:px-3"
         spellcheck="false"
         contenteditable=""
         disabled
@@ -17,7 +17,7 @@
         {{ auction.title }}
       </h2>
     </div>
-    <div class="flex flex-row items-end justify-between px-3 py-2 sm:px-5">
+    <div class="flex flex-row items-end justify-between px-1 py-2 sm:px-3">
       <div class="flex flex-col">
         <h3 class="text-xs sm:text-base">
           {{ auction.location }}

@@ -1,6 +1,5 @@
 <template>
   <div id="FAQ">
-    <Menu />
     <div class="bg-white py-8 shadow mt-10">
       <div class="h-48 w-full md:h-52 2xl:h-60 flex flex-col items-center justify-center shadow-md banner-background p-8 sm:py-10 md:py-12 lg:py-16 sm:px-20 md:px-32 xl:px-44 2xl:px-60">
         <h1 class="text-3xl sm:text-4xl font-semibold text-white mb-5">Masz jakieś pytanie?</h1>
@@ -30,9 +29,9 @@
         <h2>Sprawdź poprawność wyszukiwanej frazy, lub użyj bardziej ogólnego zapytania.</h2>
         <h2>Jeżeli żaden z powyższych sposobów nie działa, spróbuj ręcznie znaleźć odpowiednie pytanie.</h2>
       </div>
-      <div 
-        v-for="questionAndAnswer in questionsAndAnswers" 
-        :key="questionAndAnswer.question" 
+      <div
+        v-for="questionAndAnswer in questionsAndAnswers"
+        :key="questionAndAnswer.question"
         class="w-4/5 xl:w-4/6 my-3 mx-auto shadow"
       >
         <Disclosure v-slot="{ open }">
@@ -53,7 +52,6 @@
   </div>
 </template>
 <script>
-import Menu from '../components/Menu.vue'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import questionsAndAnswers from '../jsons files/questionsAndAnswers'
 
@@ -66,9 +64,8 @@ export default {
     }
   },
   components: {
-    Menu,
-    Disclosure, 
-    DisclosureButton, 
+    Disclosure,
+    DisclosureButton,
     DisclosurePanel,
   },
   methods: {
@@ -82,7 +79,7 @@ export default {
         this.questionsAndAnswers = this.questionsAndAnswers.filter((question) => {
           let searchingQuery = this.searchingQuery.toLowerCase().split(" ")
           let questionTitle = question.question.slice(0, -1).toLowerCase()
-          
+
           return searchingQuery.every(searchingWord => questionTitle.includes(searchingWord));
         })
       }

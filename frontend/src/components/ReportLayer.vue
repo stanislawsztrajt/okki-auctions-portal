@@ -88,7 +88,7 @@ export default {
       .then(x => x.json())
       .then(async ({ ip }) => {
         let data = {};
-        
+
         if(this.isAuctionRoute){
           data = {
             auction_id: this.id,
@@ -117,7 +117,7 @@ export default {
         .catch(() => {
           this.isValidation = true
           this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
-          return this.validationText = this.isAuctionRoute ? "Już posiadasz zgłoszenie na to ogłoszenie." : "Już posiadasz zgłoszenie na ten komentarz";
+          return this.validationText = this.isAuctionRoute ? "Już zgłosiłeś to ogłoszenie" : "Już zgłosiłeś ten komentarz";
         })
       })
       .catch(() =>{

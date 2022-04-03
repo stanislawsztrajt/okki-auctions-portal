@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Menu />
     <Loading :isCenter="true" v-if="isLoading" />
     <div v-else class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <InfoElement
@@ -17,7 +16,7 @@
         <SearchInputs
           class="sm:w-3/4"
           ref="inputsComponent"
-          @search-auctions="searchAuctions"
+          @update-search-input-values="updateSearchInputValues"
           @update-auctions="updateAuctions"
           :searchInputItem="searchInputItem"
           :searchInputLocation="searchInputLocation"
@@ -60,7 +59,6 @@
 <script>
 import axios from 'axios'
 
-import Menu from '../components/Menu'
 import Loading from '../components/Loading.vue'
 import SearchInputs from '../components/SearchInputs'
 import SearchFilters from '../components/SearchFilters'
@@ -74,7 +72,6 @@ import { authorization, jwt, user } from '../constants/const-variables'
 
 export default {
   components: {
-    Menu,
     Loading,
     SearchInputs,
     SearchFilters,
@@ -90,7 +87,7 @@ export default {
       auctionsCopy: [],
       likeds: [],
       isLoading: false,
-
+      appliedFilters: {},
       searchInputItem: '',
       searchInputLocation: '',
       categoryOption: '',
@@ -107,7 +104,10 @@ export default {
     .then(res => this.likeds = res.data )
 
     await axios.get(`${API_URL}/user-liked-auctions/${user.id}`, authorization)
-    .then(res => this.auctions = res.data)
+    .then(res => {
+      this.auctions = res.data
+      this.auctionsCopy = res.data
+    })
     .catch(err => console.log(err))
 
     if(this.auctions.length === this.likeds){
@@ -128,13 +128,18 @@ export default {
       this.$refs.inputsComponent.filterByInputLocation(this.auctions);
 
       // Sortowanie tablicy auctions
-      this.$refs.sortingComponent.sortByOption(this.auctions);
+      this.$refs.sortingComponent.sortAuctions(this.auctions);
 
       // Filtrowanie tablicy auctions po kategoriach
-      this.$refs.filteringComponent.filterByCategory(this.auctions);
+      this.$refs.filteringComponent.filterAdverts(this.auctions, this.appliedFilters);
     },
     updateAuctions(auctions) {
       this.auctions = auctions;
+    },
+    updateSearchInputValues(searchInputItem, searchInputLocation) {
+      this.searchInputItem = searchInputItem;
+      this.searchInputLocation = searchInputLocation;
+      this.searchAuctions()
     },
     updateAppliedFilters(filters) {
       this.appliedFilters = filters

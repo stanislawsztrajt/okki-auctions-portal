@@ -8,16 +8,17 @@ const { sanitizeEntity } = require('strapi-utils');
 
 module.exports = {
   async find(ctx) {
-    const conversationCode = ctx.request.header.users_ids.split('+').join('');
+    const code = ctx.request.header.users_ids.split('+').join('');
 
-    let entity = await strapi.query('chat-conversations').find({ conversationCode: { $eq: conversationCode } });
+    let entity = await strapi.query('chat-conversations').find({ code: { $eq: code } });
 
     return entity;
   },
   async create(ctx) {
     let data = {
-      conversationCode: ctx.request.body.users_ids.split('+').join(''),
-      conversationMessages: []
+      code: ctx.request.body.users_ids.split('+').join(''),
+      messages: ctx.request.body.messages,
+      lastSeenMessages: ctx.request.body.lastSeenMessages
     }
 
     let entity = await strapi.services['chat-conversations'].create(data);
@@ -25,7 +26,7 @@ module.exports = {
     return sanitizeEntity(entity, { model: strapi.models['chat-conversations'] });
   },
   async findUserConversations(ctx) {
-    let entity = await strapi.query('chat-conversations').find({ conversationCode: { $regex: ctx.state.user.id }});
+    let entity = await strapi.query('chat-conversations').find({ code: { $regex: ctx.state.user.id }});
 
     return entity;
   }

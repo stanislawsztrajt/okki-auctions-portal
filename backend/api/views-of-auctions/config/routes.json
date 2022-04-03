@@ -29,7 +29,7 @@
       "path": "/views-of-auctions",
       "handler": "views-of-auctions.create",
       "config": {
-        "policies": ["isViewExists"]
+        "policies": ["isOwner", "isViewExists"]
       }
     },
     {

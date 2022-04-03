@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "chat_conversations",
+  "collectionName": "last_seen_messages",
   "info": {
-    "name": "chatConversations",
+    "name": "lastSeenMessages",
     "description": ""
   },
   "options": {
@@ -12,11 +12,14 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "code": {
-      "type": "uid"
+    "user_id": {
+      "type": "string"
     },
-    "messages": {
-      "type": "json"
+    "conversation_id": {
+      "type": "string"
+    },
+    "lastSeenMessage_id": {
+      "type": "string"
     }
   }
 }

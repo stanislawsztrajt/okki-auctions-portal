@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <Menu />
     <div class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <InfoElement
         :value="'Polityka prywatności'"
-        :icon="'M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 4h3a3 3 0 006 0h3a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm2.5 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm2.45 4a2.5 2.5 0 10-4.9 0h4.9zM12 9a1 1 0 100 2h3a1 1 0 100-2h-3zm-1 4a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z'"
+        :icon="'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'"
       />
       <div class="rodo-div mt-8 bg-white p-5 shadow-md text-gray-600">
         <h1 class="text-xl font-bold">Poniższa Polityka Prywatności określa <strong>zasady zapisywania i uzyskiwania dostępu do danych na Urządzeniach Użytkowników</strong> korzystających z Serwisu do celów świadczenia usług drogą elektroniczną przez Administratora oraz <strong>zasady gromadzenia i przetwarzania danych osobowych Użytkowników</strong>, które zostały podane przez nich osobiście i dobrowolnie za pośrednictwem narzędzi dostępnych w Serwisie.</h1><h1 class="font-semibold text-lg">Poniższa Polityka Prywatności jest integralną częścią <router-link to="/terms-of-use" class="rodo-link">Regulaminu Serwisu</router-link>, który określa zasady, prawa i obowiązki Użytkowników korzystających z Serwisu.</h1>
@@ -27,15 +25,12 @@
         <h2>§17 Zmiany w Polityce Prywatności</h2><ul><li><p>Administrator zastrzega sobie prawo do dowolnej zmiany niniejszej Polityki Prywatności bez konieczności informowania o tym Użytkowników w zakresie stosowania i wykorzystywania danych anonimowych lub stosowania plików Cookie.</p></li><li><p>Administrator zastrzega sobie prawo do dowolnej zmiany niniejszej Polityki Prywatności w zakresie przetwarzania Danych Osobowych. Dalsze korzystanie z usług oznacza zapoznanie się i akceptację wprowadzonych zmian Polityki Prywatności. W przypadku w którym Użytkownik nie będzie się zgadzał z wprowadzonymi zmianami, ma obowiązek usunąć swoje konto z Serwisu.</p></li> <li><p>Wprowadzone zmiany w Polityce Prywatności będą publikowane na tej podstronie Serwisu.</p></li> <li><p>Wprowadzone zmiany wchodzą w życie z chwilą ich publikacji.</p></li></ul>
       </div>
     </div>
-  </div>
 </template>
 <script>
-import Menu from "../components/Menu.vue"
 import InfoElement from '../components/InfoElement.vue'
 
 export default {
   components: {
-    Menu,
     InfoElement
   }
 }

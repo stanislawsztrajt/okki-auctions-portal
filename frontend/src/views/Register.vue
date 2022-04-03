@@ -1,7 +1,7 @@
 <template>
-  <div class="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
+  <div class="w-full min-h-screen py-10 2xl:p-0 flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
     <router-link to="/" class="text-white text-5xl focus:outline-none mb-3 font-light">okki</router-link>
-    <div class="flex flex-col items-center bg-white w-84 md:w-108 h-auto rounded-lg">
+    <div class="flex flex-col items-center bg-white w-84 xs:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Utwórz swoje konto</h2>
       <form
         class="p-10 w-full"
@@ -61,8 +61,8 @@
             v-model="repeatPasswordValue">
         </div>
         <div class="text-xs pb-4">
-          Klikając przycisk rejestracji, potwierdzasz przeczytanie i przyjmujesz do wiadomości wytyczne przedstawione w 
-          <router-link class="rodo-link button-animation-hover" to="/terms-of-use">warunkach korzystania z usług</router-link> oraz w 
+          Klikając przycisk rejestracji, potwierdzasz przeczytanie i przyjmujesz do wiadomości wytyczne przedstawione w
+          <router-link class="rodo-link button-animation-hover" to="/terms-of-use">warunkach korzystania z usług</router-link> oraz w
           <router-link class="rodo-link button-animation-hover" to="/privacy-policy">informacji o polityce prywatności.</router-link>
         </div>
         <input

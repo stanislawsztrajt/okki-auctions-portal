@@ -1,7 +1,7 @@
 <template>
-  <div class="w-screen h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
+  <div class="w-full min-h-screen py-10 2xl:p-0 flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
   <router-link to="/" class="text-white text-5xl mb-4 font-light">okki</router-link>
-    <div class="flex flex-col items-center bg-white w-84 md:w-108 h-auto rounded-lg">
+    <div class="flex flex-col items-center bg-white w-84 xs:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Zaloguj się na konto</h2>
       <form @submit.prevent="login" class="p-10 w-full">
         <div class="login-register-input-box">
@@ -85,7 +85,7 @@ export default {
           await this.$cookies.set('jwt', res.data.jwt, '7d')
           await this.$cookies.set('user', res.data.user, '7d')
 
-          this.$router.go()
+          this.$router.go(0)
           return this.$router.push('/dashboard')
         })
         .catch(() =>{

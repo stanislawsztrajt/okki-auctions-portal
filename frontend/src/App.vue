@@ -1,5 +1,9 @@
 <template >
   <div id="app">
+    <Navbar
+      v-if="showNavbar && !isBlocked"
+      :conversations="conversations"
+    />
     <BlockedUser v-if="isBlocked"/>
     <router-view v-else />
     <div v-if="cookieModalShow" class="w-screen h-screen fixed top-0 left-0 flex flex-col justify-center items-center">
@@ -17,21 +21,24 @@
 import axios from 'axios';
 
 import API_URL from '../API_URL';
-import { authorization, jwt, userAcceptedCookie } from './constants/const-variables';
+import { authorization, user, jwt, userAcceptedCookie, fetchLastSeenMessages } from './constants/const-variables';
 import { socket } from '../config/web-sockets';
 
 import BlockedUser from './components/BlockedUser.vue'
+import Navbar from "./components/Navbar.vue"
 
 export default {
   name: 'App',
   components: {
-    BlockedUser
+    BlockedUser,
+    Navbar
   },
   data(){
     return{
       isBlocked: false,
       cookieModalShow: false,
-      userRooms: []
+      showNavbar: true,
+      conversations: []
     }
   },
   async created(){
@@ -44,6 +51,17 @@ export default {
       .catch(() => this.isBlocked = true)
 
       this.fetchUserConversations()
+
+      socket.on('newConversaion', async ({ conversation }) => {
+        fetchLastSeenMessages(conversation)
+
+        const room = conversation.code
+        socket.emit('joinToNewRoom', { room })
+      })
+      socket.on('createdNewConversaion', async ({ conversation }) => {
+        const room = conversation.code
+        socket.emit('joinToNewRoom', { room })
+      })
     }
   },
   methods: {
@@ -55,17 +73,24 @@ export default {
     async fetchUserConversations() {
       axios.get(`${API_URL}/user-conversations`, authorization)
       .then((res) => {
-        const conversations = res.data
+        this.conversations = res.data
+        const userRooms = []
 
-        conversations.forEach(conversation => {
-          this.userRooms.push(conversation.conversationCode)
+        this.conversations.forEach(conversation => {
+          userRooms.push(conversation.code)
         })
-        this.joinUserToSocketRooms()
+        this.joinUserToSocketRooms(userRooms)
       })
     },
-    async joinUserToSocketRooms() {
-      let rooms = this.userRooms
-      socket.emit('join', { rooms });
+    async joinUserToSocketRooms(roomsToJoin) {
+      let rooms = roomsToJoin
+      let user_id = user.id
+      socket.emit('join', { rooms, user_id });
+    }
+  },
+  watch: {
+    $route(route) {
+      this.showNavbar = route.path !== '/login' && route.path !== '/register'
     }
   },
 }
