@@ -1,30 +1,58 @@
 <template>
-  <div class="w-full h-screen -mt-20 pt-20 2xl:pb-20">
+  <div class="w-screen h-screen">
+    <VideoChat 
+      v-if="conversation !== {}"
+      :idToCall="idToCall"
+      :conversation="conversation"
+      :isCallingShow="isCallingShow"
+      @send-message-with-id="sendMessageWithId"
+      @toggle-is-calling="toggleIsCalling"
+      ref="VideoChat"
+    />
     <Loading :isCenter="true" v-if="isLoading" />
-    <div v-else class="w-full h-full flex flex-col items-center justify-center">
+    
+    <!-- <div v-show="!isCallingShow" class="w-screen h-5/6 flex flex-col items-center justify-center"> -->
+    <div v-else v-show="!isCallingShow" class="w-screen h-5/6 flex flex-col items-center justify-center">
       <div class="w-11/12 xs:w-3/4 md:w-3/5 xl:w-1/2 h-4/5 bg-white text-gray-700 flex flex-col shadow border border-gray-300 rounded-md overflow-x-hidden">
-        <div class="w-full h-20 flex flex-row justify-between items-center px-5 bg-white">
-          <router-link to="/conversations" class="text-2xl flex flex-row items-center">
+        <div class="w-full h-20 flex flex-row justify-between items-center px-5 ">
+          <router-link to="/conversations" class="text-2xl  flex flex-row items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
             </svg>
           </router-link>
           <router-link
             :to="`/users/${secondUser.id}`"
-            class="text-2xl flex flex-row items-center">
+            class="text-2xl ml-4 w-full flex flex-row items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span class="ml-2">
+            <span class="ml-2 text-center">
               {{ secondUser.username }}
             </span>
           </router-link>
-          <span class="w-6"></span>
+          <div v-if="conversation !== {}" class="flex flex-row items-center">
+            <button @click="call({video: false, audio: true})">
+              <!-- Zadzwoń z samym głosem -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-4 button-animation-hover cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </button>
+            <button @click="call({video: true, audio: true})">
+              <!-- Zadzwoń z kamerą -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 button-animation-hover cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
         </div>
         <div ref="chatWindow" class="flex flex-col pb-2 px-4 md:px-10 2xl:px-24 h-full bg-gray-100 border border-gray-200 overflow-y-scroll">
           <span class="text-gray-400 my-2 mb-4 text-center block">Początek konwersacji z {{ secondUser.username }}</span>
           <div v-for="message in messages" :key="message">
-            <div class="dont-break-out bg-green-300 max-w px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl max-w-xs mr-3" :class="{userMessage: message.sender_id === this.user.id}">
+            <div 
+              v-if="!message.isIdMessage" 
+              class="dont-break-out bg-green-300 max-w px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl max-w-xs mr-3" 
+              :class="{userMessage: message.sender_id === this.user.id}"
+            >
               {{ message.message }}
             </div>
           </div>
@@ -56,6 +84,8 @@
 import axios from 'axios'
 
 import Loading from '../components/Loading.vue'
+import VideoChat from '../components/VideoChat.vue'
+
 import API_URL from '../../API_URL'
 import { socket } from '../../config/web-sockets';
 import { uuid } from 'vue-uuid';
@@ -72,8 +102,11 @@ export default {
       message: '',
       usersIds: '',
       lastSeenMessageObj: {},
-      isLoading: false,
-      conversationExists: true
+      conversationExists: true,
+      isLoading: true,
+      isCallingShow: false,
+
+      idToCall: ''
     }
   },
   props: {
@@ -82,11 +115,10 @@ export default {
     },
   },
   components: {
-    Loading
+    Loading,
+    VideoChat
   },
   async created() {
-    this.isLoading = true
-
     if(!jwt){
       this.$router.push('/login')
     }
@@ -103,8 +135,8 @@ export default {
       this.$router.push('/conversations')
     }
 
-    socket.on('message', async ({ message, room }) => {
-      if(this.$route.path.includes('/chat') && this.conversation.code === room) {
+    socket.on('message', async ({message,room}) => {
+      if(this.$route.path.includes('/chat') && this.conversation.code === room){
         await this.messages.push(message)
         this.scrollToBottom()
 
@@ -112,7 +144,19 @@ export default {
           compareLastSeenMessageWithLatest(this.conversation, message)
         }
       }
-    });
+    })
+  },
+  watch: {
+    messages: {
+      handler(newMessages){
+        const indexIdToCall = newMessages.findLastIndex(message => message.isIdMessage && message.message !== this.$refs.VideoChat.me)
+
+        if(indexIdToCall > -1){
+          console.log(newMessages[indexIdToCall].message)
+          this.idToCall = newMessages[indexIdToCall].message
+        }
+      }, deep: true
+    }
   },
   methods: {
     async sendMessage(emitNewConversation) {
@@ -148,6 +192,30 @@ export default {
         }
       })
       .catch(err => err)
+    },
+    async sendMessageWithId(socket_id) {
+      const room = this.usersIds.split('+').join('');
+
+      const message = {
+        message: socket_id,
+        sender_id: this.user.id,
+        isIdMessage: true,
+        createdAt: new Date(),
+        id: uuid.v1()
+      }
+
+      socket.emit('sendMessage', { message, room });
+
+      const newMessages = this.messages.map(message => ({...message}))
+      newMessages.push(message)
+      this.message = ''
+
+      await axios.put(`${API_URL}/chat-conversations/${this.conversation.id}`, { messages: newMessages }, {
+        headers: {
+          users_ids: this.usersIds,
+          Authorization: `Bearer ${jwt}`
+        }
+      })
     },
     async fetchConversation() {
       await axios.get(`${API_URL}/chat-conversations`, {
@@ -198,6 +266,13 @@ export default {
     },
     scrollToBottom() {
       if(this.$refs.chatWindow) this.$refs.chatWindow.scrollTop = this.$refs.chatWindow.scrollHeight
+    },
+    toggleIsCalling(){
+      this.isCallingShow = !this.isCallingShow;
+    },
+    call(userMediaOptions){
+      if(this.idToCall === '') return
+      this.$refs.VideoChat.callUser(userMediaOptions)
     },
   },
 }

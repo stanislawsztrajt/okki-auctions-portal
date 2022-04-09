@@ -100,13 +100,17 @@
           <label>Lokalizacja</label>
           <input
             type="text"
-            placeholder="Np. Złota, Stawiszyńska"
+            placeholder="Np. Złota, Stawiszyńska (Kalisz 62-820)"
             required
             class="new-auction-input"
+            list="streets"
             v-model="locationValue"
-            maxlength="30"
+            maxlength="100"
           >
         </div>
+        <datalist id="streets">
+          <option v-for="street in streetsCapitalize" :key="street" :value="street"></option>
+        </datalist>
         <div class="new-auction-data-box">
           <label>Numer Telefonu</label>
           <input
@@ -143,6 +147,7 @@ import convert from 'image-file-resize';
 import categoriesJSON from '../jsons files/categories.json'
 import streets from '../jsons files/streets.json'
 import streetsWithoutPLchars from '../jsons files/streetsWithoutPLchars.json'
+import streetsCapitalize from '../jsons files/streetsCapitalize.json'
 
 import API_URL from '../../API_URL'
 import { authorization, jwt, user } from '../constants/const-variables'
@@ -174,6 +179,7 @@ export default {
 
       urls: [],
       images: [],
+      imagesPublic_id: [],
       imageUrls: [],
 
       categories: categoriesJSON,
@@ -182,7 +188,8 @@ export default {
       setTimeout: Function,
       setTimeoutTime: 4000,
       used: false,
-      userOtherAuctions: []
+      userOtherAuctions: [],
+      streetsCapitalize
     }
   },
   async created(){

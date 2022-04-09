@@ -1,12 +1,31 @@
 'use strict';
 const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
+
 const { additionalTimeToDelete } = require("../../../constants.js");
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = require("../../../constants.js");
 const streets = require('../../../json_files/streets.json')
 const streetsWithoutPLchars = require('../../../json_files/streetsWithoutPLchars.json')
+
+const cloudinary = require('cloudinary').v2;
+
+// Change cloud name, API Key, and API Secret below
+
+cloudinary.config({ 
+  cloud_name: CLOUDINARY_CLOUD_NAME, 
+  api_key: CLOUDINARY_API_KEY, 
+  api_secret: CLOUDINARY_API_SECRET 
+});
+
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
+
+const deleteAuctionImages = async (imagesPublic_id) =>{
+  await imagesPublic_id.forEach(async public_id =>{
+    await cloudinary.uploader.destroy(public_id, function(result) { console.log(result) });
+  })
+}
 
 module.exports = {
   async find() {
@@ -15,6 +34,7 @@ module.exports = {
     auctions.map(async auction =>{
       // deleting auction after additionalTimeToDelete
       if(Date.parse(auction.published_at) + additionalTimeToDelete <= Date.parse(auction.published_at) + (Date.parse(new Date()) - Date.parse(auction.published_at))){
+        deleteAuctionImages(auction.imagesPublic_id);
         await strapi.services.auction.delete({ id: auction.id });
       }
     })
@@ -39,6 +59,10 @@ module.exports = {
     const { id } = ctx.params;
 
     const entity = await strapi.services.auction.delete({ user_id: id })
+
+    entity.forEach(auction =>{
+      deleteAuctionImages(auction.imagesPublic_id);
+    })
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },
@@ -118,6 +142,15 @@ module.exports = {
 
     let entity;
 
+    const [auction] = await strapi.services.auction.find({
+      id: ctx.params.id,
+      'user_id': ctx.state.user.id,
+    });
+
+    if (!auction) {
+      return ctx.unauthorized(`You can't delete this entry`);
+    }
+
     if(ctx.state.user.role.name === 'Admin'){
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
@@ -128,15 +161,6 @@ module.exports = {
         entity = await strapi.services.auction.delete({ id }, ctx.request.body);
       }
     } else{
-      const [auction] = await strapi.services.auction.find({
-        id: ctx.params.id,
-        'user_id': ctx.state.user.id,
-      });
-
-      if (!auction) {
-        return ctx.unauthorized(`You can't delete this entry`);
-      }
-
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
         entity = await strapi.services.auction.delete({ id }, data, {
@@ -146,6 +170,8 @@ module.exports = {
         entity = await strapi.services.auction.delete({ id }, ctx.request.body);
       }
     }
+
+    deleteAuctionImages(entity.imagesPublic_id);
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },

@@ -35,14 +35,15 @@
         v-else
       />
 
-      <Auction
-        @toggle-edit-auction-layer="toggleEditAuctionLayer"
-        @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
-        v-for="auction in auctions"
-        :key="auction.id"
-        :auction="auction"
-        :likeds="[]"
-      />
+        <Auction
+          @toggle-edit-auction-layer="toggleEditAuctionLayer"
+          @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
+          @remove-auction="removeAuction"
+          v-for="auction in auctions"
+          :key="auction.id"
+          :auction="auction"
+          :likeds="[]"
+        />
 
       <RateElement :rate="rate"/>
       <Comment
@@ -58,10 +59,9 @@
 import axios from 'axios'
 
 import API_URL from '../../API_URL'
-import { authorization, jwt, user } from '../constants/const-variables'
+import { jwt, user } from '../constants/const-variables'
 
 import Auction from '../components/Auction.vue'
-import ApproveLayer from '../components/ApproveLayer.vue'
 import Loading from '../components/Loading.vue'
 import InfoElement from '../components/InfoElement.vue'
 import ButtonElement from '../components/ButtonElement.vue'
@@ -72,7 +72,6 @@ export default {
   name: 'Dashboard',
   components: {
     Auction,
-    ApproveLayer,
     Loading,
     InfoElement,
     ButtonElement,
@@ -84,12 +83,10 @@ export default {
       user: user,
       auctions: [],
       comments: [],
-      activeAuction_id: '',
       isLoading: false,
       rate: null,
 
       isEditAuctionLayer: false,
-      isDeleteAuctionLayer: false
     }
   },
   async created() {
@@ -115,12 +112,9 @@ export default {
     this.isLoading = false
   },
   methods: {
-    async deleteAuction(){
-      const index = this.auctions.findIndex(auction => auction.id === this.activeAuction_id);
+    async removeAuction(id){
+      const index = this.auctions.findIndex(auction => auction.id === id);
       this.auctions.splice(index, 1);
-      this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
-
-      await axios.delete(`${API_URL}/auctions/${this.activeAuction_id}`, authorization)
     },
     toggleEditAuctionLayer(id){
       this.activeAuction_id = id;

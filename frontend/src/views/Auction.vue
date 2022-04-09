@@ -162,7 +162,9 @@
               {{ auction.location }}
             </div>
             na google maps
-            <img class="mt-4" src="../images/google-maps.jpg" alt="">
+            <div class="flex justify-center">
+              <img class="mt-4 w-72" src="../images/google-maps.jpg" alt="">
+            </div>
           </a>
         </div>
       </div>
