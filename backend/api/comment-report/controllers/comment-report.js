@@ -42,15 +42,15 @@ module.exports = {
   async create(ctx) {
     let entity;
     const reports = await strapi.services['comment-report'].find();
-    
+
     // ctx.request.body.user_id = ctx.state.user.id
     const isReportExist = reports.findIndex(
       report =>
         report.comment_id === ctx.request.body.comment_id &&
-        ( 
+        (
           report.user_id === ctx.request.body.user_id
         ||
-          report.user_ip === ctx.request.body.user_ip 
+          report.user_ip === ctx.request.body.user_ip
         )
     )
 
@@ -62,7 +62,7 @@ module.exports = {
         entity = await strapi.services['comment-report'].create(data, { files });
       } else {
         entity = await strapi.services['comment-report'].create(ctx.request.body);
-        
+
         let counts = {};
 
         // coutning how many reports at comment exists
@@ -73,16 +73,14 @@ module.exports = {
         const keys = Object.keys(counts);
 
         Object.values(counts).forEach(async (value, index) =>{
-          // equal 4 because if "value" is greater than 4 then every time 
-          // the request is sent and this is not needed 
-          // 4 is the number of minimum number of reports to hide comment
-          if(value === 4){
+          // 2 is the number of minimum number of reports to hide comment
+          if(value >= 2){
             await strapi.services.comment.update({ id: keys[index]}, { published_at: null } );
           }
         })
       }
     }
-    
+
     return sanitizeEntity(entity, { model: strapi.models['comment-report'] });
   },
 };

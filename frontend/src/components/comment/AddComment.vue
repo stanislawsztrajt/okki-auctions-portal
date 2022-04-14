@@ -1,34 +1,29 @@
 <template>
-  <div v-if="jwt" class="flex flex-col justify-center mt-4">
-    <textarea 
-      role="textbox" 
-      placeholder="Tutaj możesz wpisać komentarz" 
-      maxlength="450" 
-      v-model="body" 
-      class="w-full xl:w-1/2 h-48 bg-white shadow p-4 resize-none focus:outline-none">
-    </textarea>
-    <div class="mt-4">
-      <div>
-        Jak oceniasz użytkownika?
-        <span v-if="isValidate" class="text-red-500">
-          {{ validateText }}
-        </span>
-      </div>
-      
-      <svg @click="selectRate(true)" xmlns="http://www.w3.org/2000/svg" :class="`comment-emote button-animation-hover cursor-pointer ${rate && rate !== null ? 'bg-green-500' : 'bg-green-700'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <div v-if="jwt" class="flex flex-col justify-center my-4 border-b border-gray-300 pb-7 mb-7">
+    <div class="mb-4">
+      <p class="text-gray-800 text-xl font-semibold">Jak oceniasz użytkownika?</p>
+
+      <svg @click="selectRate(true)" xmlns="http://www.w3.org/2000/svg" :class="`comment-emote cursor-pointer transition-all duration-100 ${rate && rate !== null ? 'bg-green-500' : 'bg-gray-400 hover:bg-green-500'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <svg @click="selectRate(false)" xmlns="http://www.w3.org/2000/svg" :class="`comment-emote button-animation-hover cursor-pointer ml-4 ${!rate && rate !== null ? 'bg-red-500' : 'bg-red-700'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg @click="selectRate(false)" xmlns="http://www.w3.org/2000/svg" :class="`comment-emote cursor-pointer transition-all duration-100 ml-4 ${!rate && rate !== null ? 'bg-red-500' : 'bg-gray-400 hover:bg-red-500'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     </div>
-    <button @click="addComment" class="w-full xl:w-1/6 p-4 mt-4 rounded focus:outline-none bg-green-600 text-white button-animation-hover">
+    <textarea
+      role="textbox"
+      placeholder="Tutaj możesz wpisać komentarz"
+      maxlength="450"
+      v-model="body"
+      class="w-full xl:w-1/2 h-48 bg-white shadow p-4 resize-none focus:outline-none mb-2">
+    </textarea>
+    <span v-if="isValidate" class="text-red-500">{{ validateText }}</span>
+    <button @click="addComment" class="w-full xl:w-1/6 p-4 mt-2 rounded focus:outline-none bg-green-600 text-white button-animation-hover">
       Dodaj komentarz
     </button>
   </div>
-  <div v-else class="text-2xl mt-10">
-    Nie jestes zalogowany, nie mozesz dodac komentarza
-    <router-link to="/login" class="font-extrabold">
+  <div v-else class="text-xl mt-5">
+    <router-link to="/login" class="font-bold text-green-600">
       Zaloguj się
     </router-link>
     aby dodać komentarz
@@ -68,10 +63,11 @@ export default {
         setTimeout(() =>{
           this.isValidate = false
         }, 4000)
-        this.validateText = 'Musisz wybrać ocene!'
+        this.validateText = 'Wybierz ocenę.'
         this.isValidate = true;
+        return
       }
-      
+
       const comment = {
         body: this.body,
         user_id: user.id,
@@ -90,7 +86,7 @@ export default {
         setTimeout(() =>{
           this.isValidate = false
         }, 4000)
-        this.validateText = 'Już posiadasz komentarz na tym koncie!'
+        this.validateText = 'Już posiadasz komentarz na tym koncie.'
         this.isValidate = true;
       })
     }

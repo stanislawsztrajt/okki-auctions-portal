@@ -27,7 +27,7 @@
 
 <script>
 import { jwt, user, fetchLastSeenMessages, notReadConversations } from '../constants/const-variables'
-import { socket } from '../../config/web-sockets'
+import { socket } from '../../config/web-sockets.js'
 import links from '../jsons files/links'
 
 export default {

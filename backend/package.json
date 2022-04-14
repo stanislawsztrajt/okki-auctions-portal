@@ -10,6 +10,7 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "express": "^4.17.3",
     "ip": "^1.1.5",
     "sharp": "^0.28.1",
     "socket.io": "^4.4.1",

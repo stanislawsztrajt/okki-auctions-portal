@@ -1,14 +1,7 @@
 <template>
   <div>
     <Loading :isCenter="true" v-show="isLoading" />
-    <div v-if="isEditAuctionLayer"></div>
-    <ApproveLayer
-      v-else-if="isDeleteAuctionLayer"
-      :question="'Czy jesteś pewny/na, że chcesz usunąć to ogłoszenie?'"
-      @action="deleteAuction"
-      @toggle-layer="toggleDeleteAuctionLayer"
-    />
-    <div v-else v-show="!isLoading" class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div v-show="!isLoading" class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <InfoElement
         :value="`Witaj ${user.username}!`"
         :icon="'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'"
@@ -35,15 +28,14 @@
         v-else
       />
 
-        <Auction
-          @toggle-edit-auction-layer="toggleEditAuctionLayer"
-          @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
-          @remove-auction="removeAuction"
-          v-for="auction in auctions"
-          :key="auction.id"
-          :auction="auction"
-          :likeds="[]"
-        />
+      <Auction
+        @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
+        @remove-auction="removeAuction"
+        v-for="auction in auctions"
+        :key="auction.id"
+        :auction="auction"
+        :likeds="[]"
+      />
 
       <RateElement :rate="rate"/>
       <Comment
@@ -86,7 +78,7 @@ export default {
       isLoading: false,
       rate: null,
 
-      isEditAuctionLayer: false,
+      isDeleteAuctionLayer: false,
     }
   },
   async created() {
@@ -115,10 +107,6 @@ export default {
     async removeAuction(id){
       const index = this.auctions.findIndex(auction => auction.id === id);
       this.auctions.splice(index, 1);
-    },
-    toggleEditAuctionLayer(id){
-      this.activeAuction_id = id;
-      this.isEditAuctionLayer = !this.isEditAuctionLayer;
     },
     toggleDeleteAuctionLayer(id){
       this.activeAuction_id = id;

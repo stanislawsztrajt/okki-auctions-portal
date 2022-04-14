@@ -10,10 +10,10 @@ const cloudinary = require('cloudinary').v2;
 
 // Change cloud name, API Key, and API Secret below
 
-cloudinary.config({ 
-  cloud_name: CLOUDINARY_CLOUD_NAME, 
-  api_key: CLOUDINARY_API_KEY, 
-  api_secret: CLOUDINARY_API_SECRET 
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET
 });
 
 /**
@@ -97,16 +97,16 @@ module.exports = {
     let entity;
 
     const isStreetExist = streets
-      .findIndex(street => street == this.locationValue.toLowerCase())
-      
+      .findIndex(street => street == ctx.request.body.location.toLowerCase())
+
     const isStreetWithoutPLcharsExist = streetsWithoutPLchars
-      .findIndex(street => street == this.locationValue.toLowerCase())
+      .findIndex(street => street == ctx.request.body.location.toLowerCase())
 
     if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
       throw strapi.errors.badRequest('this street does not exist in kalisz');
     }
 
-    if(ctx.state.user.role.name === 'Admin'){
+    if(ctx.state.user.role.name === 'Admin') {
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
         entity = await strapi.services.auction.update({ id }, data, {
@@ -115,7 +115,7 @@ module.exports = {
       } else {
         entity = await strapi.services.auction.update({ id }, ctx.request.body);
       }
-    } else{
+    } else {
       const [auction] = await strapi.services.auction.find({
         id: ctx.params.id,
         'user_id': ctx.state.user.id,
@@ -178,7 +178,7 @@ module.exports = {
   async create(ctx) {
     const isStreetExist = streets
       .findIndex(street => street == ctx.request.body.location.toLowerCase())
-      
+
     const isStreetWithoutPLcharsExist = streetsWithoutPLchars
       .findIndex(street => street == ctx.request.body.location.toLowerCase())
 

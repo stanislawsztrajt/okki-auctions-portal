@@ -9,7 +9,7 @@
   },
   {
     "question": "Czy okki odpowiada za ewentualne oszustwa?",
-    "answer": "Okki nie odpowiada za ewentualne oszustwa sprzedających. Zalecamy płatność podczas odbioru osobistego."
+    "answer": "Okki nie odpowiada za ewentualne oszustwa sprzedających. Z tego powodu zalecamy płatność podczas odbioru osobistego."
   },
   {
     "question": "Czy ilość ogłoszeń na jednym koncie jest ograniczona?",
@@ -17,10 +17,18 @@
   },
   {
     "question": "Czy czas trwania jednego ogłoszenia jest ograniczony?",
-    "answer": "Jedno ogłoszenie może trwać maksymalnie 14 dni, po tym czasie zostanie automatycznie usunięte."
+    "answer": "Jedno ogłoszenie standardowo będzie trwało 30 dni, po tym czasie zostanie usunięte. Jednak aby zapobiec usunięciu, kilka dni przed terminem usunięcia w panelu użytkownika pod danym ogłoszeniem pojawi się przycisk z możliwością przedłużenia ogłoszenia."
   },
   {
     "question": "Czy mogę dodać jedno ogłoszenie kilka razy?",
-    "answer": "Duplikowanie ogłoszeń jest zabronione. Jednak jeżeli dane ogłoszenie zostało automatycznie usunięte po 14 dniach, można je dodać ponownie."
+    "answer": "Duplikowanie ogłoszeń jest zabronione. Jednak jeżeli dane ogłoszenie zostało automatycznie usunięte po 30 dniach, można je dodać ponownie."
+  },
+  {
+    "question": "Moje ogłoszenie nagle znikło, co się stało?",
+    "answer": "Ogłoszenie może zostać ukryte jeżeli było wielokrotnie zgłaszane przez innych użytkowników serwisu. Jeżeli ogłoszenie nie narusza regulaminu administrator może je przywrócić, lub gdy narusza regulamin - może je usunąć."
+  },
+  {
+    "question": "Czy moje konto może zostać zablokowane?",
+    "answer": "Tak, konto może zostać zablokowane jeżeli publikacje użytkownika na stronie (ogłoszenia lub komentarze) naruszają regulamin serwisu."
   }
 ]

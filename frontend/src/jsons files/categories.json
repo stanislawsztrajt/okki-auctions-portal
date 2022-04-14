@@ -1,33 +1,8 @@
 [
   {
-    "name": "Motoryzacja",
-    "value": "motoryzacja",
-    "icon": "car-side"
-  },
-  {
     "name": "Dom i ogród",
     "value": "dom-i-ogrod",
     "icon": "home"
-  },
-  {
-    "name": "Elektronika",
-    "value": "elektronika",
-    "icon": "desktop"
-  },
-  {
-    "name": "Odzież",
-    "value": "odziez",
-    "icon": "tshirt"
-  },
-  {
-    "name": "Rolnictwo",
-    "value": "rolnictwo",
-    "icon": "tractor"
-  },
-  {
-    "name": "Zwierzęta",
-    "value": "zwierzeta",
-    "icon": "dog"
   },
   {
     "name": "Dziecięce",
@@ -35,14 +10,24 @@
     "icon": "baby-carriage"
   },
   {
-    "name": "Sport i hobby",
-    "value": "sport-i-hobby",
-    "icon": "futbol"
-  },
-  {
     "name": "Edukacja i rozrywka",
     "value": "edukacja",
     "icon": "book-open"
+  },
+  {
+    "name": "Elektronika",
+    "value": "elektronika",
+    "icon": "desktop"
+  },
+  {
+    "name": "Korepetycje",
+    "value": "korepetycje",
+    "icon": "chalkboard-teacher"
+  },
+  {
+    "name": "Motoryzacja",
+    "value": "motoryzacja",
+    "icon": "car-side"
   },
   {
     "name": "Noclegi",
@@ -50,13 +35,28 @@
     "icon": "bed"
   },
   {
+    "name": "Odzież",
+    "value": "odziez",
+    "icon": "tshirt"
+  },
+  {
     "name": "Praca",
     "value": "praca",
     "icon": "briefcase"
   },
   {
-    "name": "Korepetycje",
-    "value": "korepetycje",
-    "icon": "chalkboard-teacher"
+    "name": "Rolnictwo",
+    "value": "rolnictwo",
+    "icon": "tractor"
+  },
+  {
+    "name": "Sport i hobby",
+    "value": "sport-i-hobby",
+    "icon": "futbol"
+  },
+  {
+    "name": "Zwierzęta",
+    "value": "zwierzeta",
+    "icon": "dog"
   }
 ]

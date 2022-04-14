@@ -1,108 +1,354 @@
 {
-  "motoryzacja": [
-    {"name": "Samochody osobowe", "value": "samochody-osobowe"},
-    {"name": "Motocykle i skutery", "value": "motocykle-skutery"}
+  "motoryzacja":[
+    {
+      "name":"Motocykle i skutery",
+      "value":"motocykle-skutery"
+    },
+    {
+      "name":"Samochody osobowe",
+      "value":"samochody-osobowe"
+    }
   ],
-  "dom-i-ogrod": [
-    {"name": "Meble do domu", "value": "meble-do-domu"},
-    {"name": "Meble do ogrodu", "value": "meble-do-ogrodu"},
-    {"name": "Narzędzia", "value": "narzedzia"},
-    {"name": "Rośliny/sadzonki", "value": "rosliny-sadzonki"},
-    {"name": "Wyposażenie", "value": "wyposazenie"}
+  "dom-i-ogrod":[
+    {
+      "name":"Meble do domu",
+      "value":"meble-do-domu"
+    },
+    {
+      "name":"Meble do ogrodu",
+      "value":"meble-do-ogrodu"
+    },
+    {
+      "name":"Narzędzia",
+      "value":"narzedzia"
+    },
+    {
+      "name":"Rośliny/sadzonki",
+      "value":"rosliny-sadzonki"
+    },
+    {
+      "name":"Wyposażenie",
+      "value":"wyposazenie"
+    }
   ],
-  "elektronika": [
-    {"name": "Telefony", "value": "telefony"},
-    {"name": "Komputery stacjonarne", "value": "komputery"},
-    {"name": "Laptopy", "value": "laptopy"},
-    {"name": "Konsole", "value": "konsole"},
-    {"name": "Smartwatche", "value": "smartwatche"},
-    {"name": "Monitory", "value": "monitory"},
-    {"name": "Klawiatury", "value": "klawiatury"},
-    {"name": "Myszki", "value": "myszki"},
-    {"name": "Słuchawki", "value": "sluchawki"},
-    {"name": "Sprzęt audio", "value": "sprzet-audio"},
-    {"name": "Akcesoria", "value": "elektronika-akcesoria"},
-    {"name": "Pozostałe", "value": "pozostale"}
+  "elektronika":[
+    {
+      "name":"Akcesoria",
+      "value":"elektronika-akcesoria"
+    },
+    {
+      "name":"Klawiatury",
+      "value":"klawiatury"
+    },
+    {
+      "name":"Komputery stacjonarne",
+      "value":"komputery"
+    },
+    {
+      "name":"Konsole",
+      "value":"konsole"
+    },
+    {
+      "name":"Laptopy",
+      "value":"laptopy"
+    },
+    {
+      "name":"Monitory",
+      "value":"monitory"
+    },
+    {
+      "name":"Myszki",
+      "value":"myszki"
+    },
+    {
+      "name":"Pozostałe",
+      "value":"pozostale"
+    },
+    {
+      "name":"Smartwatche",
+      "value":"smartwatche"
+    },
+    {
+      "name":"Sprzęt audio",
+      "value":"sprzet-audio"
+    },
+    {
+      "name":"Słuchawki",
+      "value":"sluchawki"
+    },
+    {
+      "name":"Telefony",
+      "value":"telefony"
+    }
   ],
-  "odziez": [
-    {"name": "Koszulki", "value": "koszulki"},
-    {"name": "Spodnie", "value": "spodnie"},
-    {"name": "Bluzy", "value": "bluzy"},
-    {"name": "Kurtki", "value": "kurtki"},
-    {"name": "Obuwie", "value": "obuwie"},
-    {"name": "Akcesoria", "value": "odziez-akcesoria"}
+  "odziez":[
+    {
+      "name":"Akcesoria",
+      "value":"odziez-akcesoria"
+    },
+    {
+      "name":"Bluzy",
+      "value":"bluzy"
+    },
+    {
+      "name":"Koszulki",
+      "value":"koszulki"
+    },
+    {
+      "name":"Kurtki",
+      "value":"kurtki"
+    },
+    {
+      "name":"Obuwie",
+      "value":"obuwie"
+    },
+    {
+      "name":"Spodnie",
+      "value":"spodnie"
+    }
   ],
-  "rolnictwo": [
-    {"name": "Ciągniki", "value": "ciagniki"},
-    {"name": "Kombajny", "value": "kombajny"},
-    {"name": "Przyczepy", "value": "przyczepy"},
-    {"name": "Produkty rolne", "value": "produkty-rolne"},
-    {"name": "Zwierzęta", "value": "zwierzeta"}
+  "rolnictwo":[
+    {
+      "name":"Ciągniki",
+      "value":"ciagniki"
+    },
+    {
+      "name":"Kombajny",
+      "value":"kombajny"
+    },
+    {
+      "name":"Produkty rolne",
+      "value":"produkty-rolne"
+    },
+    {
+      "name":"Przyczepy",
+      "value":"przyczepy"
+    },
+    {
+      "name":"Zwierzęta",
+      "value":"zwierzeta"
+    }
   ],
-  "zwierzeta": [
-    {"name": "Psy", "value": "psy"},
-    {"name": "Koty", "value": "koty"},
-    {"name": "Chomiki", "value": "chomiki"},
-    {"name": "Króliki", "value": "kroliki"},
-    {"name": "Papugi", "value": "papugi"},
-    {"name": "Inne", "value": "inne"}
+  "zwierzeta":[
+    {
+      "name":"Chomiki",
+      "value":"chomiki"
+    },
+    {
+      "name":"Inne",
+      "value":"inne"
+    },
+    {
+      "name":"Koty",
+      "value":"koty"
+    },
+    {
+      "name":"Króliki",
+      "value":"kroliki"
+    },
+    {
+      "name":"Papugi",
+      "value":"papugi"
+    },
+    {
+      "name":"Psy",
+      "value":"psy"
+    }
   ],
-  "dzieciece": [
-    {"name": "Zabawki", "value": "zabawki"},
-    {"name": "Wózki dziecięce", "value": "wozki-dzieciece"},
-    {"name": "Meble dla dzieci", "value": "meble-dla-dzieci"},
-    {"name": "Foteliki", "value": "foteliki"},
-    {"name": "Ubranka", "value": "ubranka"},
-    {"name": "Akcesoria", "value": "Akcesoria"}
+  "dzieciece":[
+    {
+      "name":"Akcesoria",
+      "value":"Akcesoria"
+    },
+    {
+      "name":"Foteliki",
+      "value":"foteliki"
+    },
+    {
+      "name":"Meble dla dzieci",
+      "value":"meble-dla-dzieci"
+    },
+    {
+      "name":"Ubranka",
+      "value":"ubranka"
+    },
+    {
+      "name":"Wózki dziecięce",
+      "value":"wozki-dzieciece"
+    },
+    {
+      "name":"Zabawki",
+      "value":"zabawki"
+    }
   ],
-  "sport-i-hobby": [
-    {"name": "Rowery", "value": "rowery"},
-    {"name": "Odzież sportowa", "value": "odziez-sportowa"},
-    {"name": "Sporty zimowe", "value": "sporty-zimowe"},
-    {"name": "Sporty wodne", "value": "sporty-wodne"},
-    {"name": "Turystyka", "value": "turystyka"},
-    {"name": "Wędkarstwo", "value": "wedkarstwo"},
-    {"name": "Instrumenty muzyczne", "value": "instrumenty-muzyczne"},
-    {"name": "Inne", "value": "inne"}
+  "sport-i-hobby":[
+    {
+      "name":"Inne",
+      "value":"inne"
+    },
+    {
+      "name":"Instrumenty muzyczne",
+      "value":"instrumenty-muzyczne"
+    },
+    {
+      "name":"Odzież sportowa",
+      "value":"odziez-sportowa"
+    },
+    {
+      "name":"Rowery",
+      "value":"rowery"
+    },
+    {
+      "name":"Sporty wodne",
+      "value":"sporty-wodne"
+    },
+    {
+      "name":"Sporty zimowe",
+      "value":"sporty-zimowe"
+    },
+    {
+      "name":"Turystyka",
+      "value":"turystyka"
+    },
+    {
+      "name":"Wędkarstwo",
+      "value":"wedkarstwo"
+    }
   ],
-  "edukacja-i-rozrywka": [
-    {"name": "Książki", "value": "ksiazki"},
-    {"name": "Filmy", "value": "filmy"},
-    {"name": "Komiksy", "value": "komiksy"},
-    {"name": "Kursy i warsztaty", "value": "kursy-i-warsztaty"}
+  "edukacja-i-rozrywka":[
+    {
+      "name":"Filmy",
+      "value":"filmy"
+    },
+    {
+      "name":"Komiksy",
+      "value":"komiksy"
+    },
+    {
+      "name":"Książki",
+      "value":"ksiazki"
+    },
+    {
+      "name":"Kursy i warsztaty",
+      "value":"kursy-i-warsztaty"
+    }
   ],
   "noclegi": [
-    {"name": "Pokój", "value": "pokoj"},
-    {"name": "Mieszkanie", "value": "mieszkanie"},
-    {"name": "Agroturystyka", "value": "agroturystyka"},
-    {"name": "Dom", "value": "dom"},
-    {"name": "Hostel", "value": "hostel"},
-    {"name": "Kemping", "value": "kemping"}
+    {
+      "name":"Agroturystyka",
+      "value":"agroturystyka"
+    },
+    {
+      "name":"Dom",
+      "value":"dom"
+    },
+    {
+      "name":"Hostel",
+      "value":"hostel"
+    },
+    {
+      "name":"Kemping",
+      "value":"kemping"
+    },
+    {
+      "name":"Mieszkanie",
+      "value":"mieszkanie"
+    },
+    {
+      "name":"Pokój",
+      "value":"pokoj"
+    }
   ],
-  "praca": [
-    {"name": "Budownictwo", "value": "budownictwo"},
-    {"name": "Kierowca", "value": "kierowca"},
-    {"name": "Prawo", "value": "prawo"},
-    {"name": "Produkcja", "value": "produkcja"},
-    {"name": "IT", "value": "it"},
-    {"name": "Sprzedaż", "value": "sprzedaz"},
-    {"name": "Obsługa klienta", "value": "obsluga-klienta"},
-    {"name": "Gastronomia / Hotelarstwo / Turystyka", "value": "gas-hot-tur"},
-    {"name": "Praca fizyczna", "value": "praca-fizyczna"},
-    {"name": "Praca dorywcza", "value": "praca-dorywcza"},
-    {"name": "Inne", "value": "inne"}
+  "praca":[
+    {
+      "name":"Budownictwo",
+      "value":"budownictwo"
+    },
+    {
+      "name":"Gastronomia / Hotelarstwo / Turystyka",
+      "value":"gas-hot-tur"
+    },
+    {
+      "name":"IT",
+      "value":"it"
+    },
+    {
+      "name":"Inne",
+      "value":"inne"
+    },
+    {
+      "name":"Kierowca",
+      "value":"kierowca"
+    },
+    {
+      "name":"Obsługa klienta",
+      "value":"obsluga-klienta"
+    },
+    {
+      "name":"Praca dorywcza",
+      "value":"praca-dorywcza"
+    },
+    {
+      "name":"Praca fizyczna",
+      "value":"praca-fizyczna"
+    },
+    {
+      "name":"Prawo",
+      "value":"prawo"
+    },
+    {
+      "name":"Produkcja",
+      "value":"produkcja"
+    },
+    {
+      "name":"Sprzedaż",
+      "value":"sprzedaz"
+    }
   ],
-  "korepetycje": [
-    {"name": "Matematyka", "value": "matematyka"},
-    {"name": "Język polski", "value": "jezyk-polski"},
-    {"name": "Język angielski", "value": "jezyk-angielski"},
-    {"name": "Język niemiecki", "value": "jezyk-niemiecki"},
-    {"name": "Język hiszpański", "value": "jezyk-hiszpanski"},
-    {"name": "Inne języki", "value": "inne-jezyki"},
-    {"name": "Fizyka", "value": "fizyka"},
-    {"name": "Chemia", "value": "chemia"},
-    {"name": "Biologia", "value": "biologia"},
-    {"name": "Informatyka", "value": "informatyka"},
-    {"name": "Inne", "value": "inne"}
+  "korepetycje":[
+    {
+      "name":"Biologia",
+      "value":"biologia"
+    },
+    {
+      "name":"Chemia",
+      "value":"chemia"
+    },
+    {
+      "name":"Fizyka",
+      "value":"fizyka"
+    },
+    {
+      "name":"Informatyka",
+      "value":"informatyka"
+    },
+    {
+      "name":"Inne",
+      "value":"inne"
+    },
+    {
+      "name":"Inne języki",
+      "value":"inne-jezyki"
+    },
+    {
+      "name":"Język angielski",
+      "value":"jezyk-angielski"
+    },
+    {
+      "name":"Język hiszpański",
+      "value":"jezyk-hiszpanski"
+    },
+    {
+      "name":"Język niemiecki",
+      "value":"jezyk-niemiecki"
+    },
+    {
+      "name":"Język polski",
+      "value":"jezyk-polski"
+    },
+    {
+      "name":"Matematyka",
+      "value":"matematyka"
+    }
   ]
 }

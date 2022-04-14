@@ -15,7 +15,7 @@
 import { authorization, user, notReadConversations } from '../constants/const-variables'
 import axios from 'axios'
 import API_URL from '../../API_URL'
-import { socket } from '../../config/web-sockets';
+import { socket } from '../../config/web-sockets.js';
 
 export default {
   data() {
@@ -43,11 +43,12 @@ export default {
     })
 
     this.fetchConversationUser()
-    this.lastMessage = this.conversation.messages[this.conversation.messages.length-1]
+    const filteredMessages = this.conversation.messages.filter(message => !message.isIdMessage);
+    this.lastMessage = filteredMessages[filteredMessages.length-1]
 
     socket.on('message', ({ message, room }) => {
       if(this.conversation.code === room) {
-        this.lastMessage = message
+        if(!message.isIdMessage) this.lastMessage = message
       }
     });
   },

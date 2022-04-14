@@ -1,9 +1,9 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
-
 import Home from '../views/Home.vue'
 
 import NewAuction from '../views/NewAuction.vue'
+import EditAuction from '../views/EditAuction.vue'
 import AuctionsResults from '../views/AuctionsResults.vue'
 import Auction from '../views/Auction.vue'
 import Likeds from '../views/Likeds.vue'
@@ -39,6 +39,12 @@ const routes = [
     path: '/new-auction',
     name: 'NewAuction',
     component: NewAuction
+  },
+  {
+    path: '/edit-auction/:id',
+    name: 'EditAuction',
+    component: EditAuction,
+    props: true,
   },
   {
     path: '/auctions-results',

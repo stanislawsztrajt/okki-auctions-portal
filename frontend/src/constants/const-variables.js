@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import API_URL from '../../API_URL'
 import axios from 'axios'
-import { socket } from '../../config/web-sockets';
+import { socket } from '../../config/web-sockets.js';
 
 export const jwt = Cookies.get('jwt') ? Cookies.get('jwt') : false;
 export const user = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : false;
@@ -30,7 +30,7 @@ export const fetchLastSeenMessages = async (conversation) => {
 }
 
 export const compareLastSeenMessageWithLatest = (conversation, lastSeenMessageObj) => {
-  const secondUserMessages = conversation.messages.filter(message => message.sender_id !== user.id);
+  const secondUserMessages = conversation.messages.filter(message => message.sender_id !== user.id && !message.isIdMessage);
 
   if(secondUserMessages.length > 0 && secondUserMessages.length !== undefined) {
     const secondUserLastSendMessageObj = secondUserMessages[secondUserMessages.length-1]

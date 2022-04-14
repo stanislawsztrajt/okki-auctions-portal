@@ -20,7 +20,7 @@
 </template>
 <script>
 import { authorization, user } from '../constants/const-variables'
-import { socket } from '../../config/web-sockets';
+import { socket } from '../../config/web-sockets.js';
 import axios from 'axios'
 import API_URL from '../../API_URL'
 import InfoElement from '../components/InfoElement.vue'

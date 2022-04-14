@@ -38,7 +38,7 @@
 <script>
 import axios from 'axios';
 
-import categoriesJSON from '../jsons files/categories.json';
+import categories from '../jsons files/categories.json';
 import { jwt, user } from '../constants/const-variables';
 import API_URL from '../../API_URL';
 
@@ -57,10 +57,11 @@ export default {
   },
   data(){
     return{
+      categories,
+
       searchInputItem: '',
       searchInputLocation: '',
       categoryOption: '',
-      categories: categoriesJSON,
 
       auctions: [],
       likeds: [],

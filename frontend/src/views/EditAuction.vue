@@ -16,7 +16,7 @@
         }"
         validation-visibility="blur"
       >
-        <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
+        <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Edytowanie ogłoszenia</h1>
         <div class="new-auction-main-box">
           <h1 class="new-auction-title">Informacje podstawowe</h1>
           <div class="new-auction-data-box">
@@ -115,6 +115,7 @@
             @select-change="updateFilters"
             @display-filters-validation-error="displayFiltersValidationError"
             @hide-filters-validation-error="hideFiltersValidationError"
+            :appliedFiltersEditing="filtersValue"
             :selectDefaultOption="'Wybierz'"
             :isRequired="true"
           />
@@ -166,7 +167,7 @@
         <p v-if="validationErr" class="text-xl mb-3 font-semibold text-red-500">{{ validationMsg }}</p>
         <input
           type="submit"
-          value="Stwórz ogłoszenie"
+          value="Zapisz zmiany"
           class="new-auction-button cursor-pointer"
           @click="checkFiltersValidation"
         >
@@ -211,7 +212,6 @@ export default {
 
       urls: [],
       images: [],
-      imagesPublic_id: [],
       imageUrls: [],
       userOtherAuctions: [],
 
@@ -222,14 +222,39 @@ export default {
       used: false,
       hidePhoneNumber: false,
 
-      streetsCapitalize,
-      formKitStreetRule
+      formKitStreetRule,
+      streetsCapitalize
     }
   },
+  props: {
+    id: String
+  },
   async created(){
+    await axios.get(`${API_URL}/auctions/${this.id}`)
+    .then(res => {
+      const auction = res.data
+      if(auction.user_id !== user.id) this.$router.push(`/`)
+
+      this.titleValue = auction.title
+      this.priceValue = auction.price.toString()
+      this.priceTypeValue =  auction.priceType
+      this.descriptionValue = auction.description
+      this.locationValue = auction.location
+      if(auction.phoneNumber.trim() === '') this.hidePhoneNumber = true
+      else this.phoneNumberValue = auction.phoneNumber
+      this.filtersValue = auction.filters
+      if(auction.images[0] !== 'https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg') {
+        auction.images.forEach(image => {
+          this.urls.push(image)
+          this.images.push(image)
+        })
+      }
+    })
+    .catch(() => this.$router.push(`/`))
+
     await axios.get(`${API_URL}/user-auctions/${user.id}`)
     .then(res => {
-      this.userOtherAuctions = res.data
+      this.userOtherAuctions = res.data.filter(auction => auction.id !== this.id)
     })
 
     if(!jwt) this.$router.push('/login')
@@ -273,56 +298,56 @@ export default {
             filters: this.filtersValue
           }
 
-          await axios.post(`${API_URL}/auctions`, data, authorization)
-          .then(() => this.$router.push('/dashboard'))
+          await axios.put(`${API_URL}/auctions/${this.id}`, data, authorization)
+          .then(() => this.$router.push(`/auction/${this.id}`))
           .catch(err=>{console.log(err)})
         } else {
           await this.images.forEach(async image =>{
             let isPostedImages = false;
 
-            convert({
-              file: image,
-              width: 800,
-              height: 450,
-              type: 'jpeg'
-            })
-            .then(async file => {
-              const data = new FormData()
-              data.append('file', file)
-              data.append("api_key", CLOUDINARY_API_KEY);
-              data.append("api_secret", CLOUDINARY_API_SECRET);
-              data.append("cloud_name", CLOUDINARY_CLOUD_NAME);
-              data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-              await axios.post(
-                `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
-                data
-              )
-              .then(async res => {
-                await this.imageUrls.push(res.data.url);
-                if(this.imageUrls.length === this.images.length) isPostedImages = true;
+            if(typeof(image) === 'string') {
+              this.imageUrls.push(image)
+            } else {
+              await convert({
+                file: image,
+                width: 800,
+                height: 450,
+                type: 'jpeg'
               })
-              .catch(err => console.log(err))
+              .then(async file => {
+                const data = new FormData()
+                data.append('file', file)
+                data.append("api_key", CLOUDINARY_API_KEY);
+                data.append("api_secret", CLOUDINARY_API_SECRET);
+                data.append("cloud_name", CLOUDINARY_CLOUD_NAME);
+                data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
+                await axios.post(`https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`, data)
+                .then(res => {
+                  this.imageUrls.push(res.data.url);
+                })
+              })
+            }
 
-              if(isPostedImages && this.used){
-                const data = {
-                  title: this.titleValue,
-                  price: parseFloat(this.priceValue),
-                  priceType: this.priceTypeValue,
-                  description: this.descriptionValue,
-                  location: this.locationValue,
-                  phoneNumber: this.phoneNumberValue,
-                  user_id: user.id,
-                  images: this.imageUrls,
-                  filters: this.filtersValue
-                }
+            if(this.imageUrls.length === this.images.length) isPostedImages = true;
 
-                await axios.post(`${API_URL}/auctions`, data, authorization)
-                .then(() => this.$router.push('/dashboard'))
-                .catch(err=>{console.log(err)})
+            if(isPostedImages && this.used){
+              const data = {
+                title: this.titleValue,
+                price: parseFloat(this.priceValue),
+                priceType: this.priceTypeValue,
+                description: this.descriptionValue,
+                location: this.locationValue,
+                phoneNumber: this.phoneNumberValue,
+                user_id: user.id,
+                images: this.imageUrls,
+                filters: this.filtersValue
               }
-            })
+
+              await axios.put(`${API_URL}/auctions/${this.id}`, data, authorization)
+              .then(() => this.$router.push(`/auction/${this.id}`))
+              .catch(err=> console.log(err))
+            }
           })
         }
       }

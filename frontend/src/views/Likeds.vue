@@ -131,7 +131,9 @@ export default {
       this.$refs.sortingComponent.sortAuctions(this.auctions);
 
       // Filtrowanie tablicy auctions po kategoriach
-      this.$refs.filteringComponent.filterAdverts(this.auctions, this.appliedFilters);
+      if(this.appliedFilters.category !== '') {
+        this.$refs.filteringComponent.filterAuctions(this.auctions, this.appliedFilters);
+      }
     },
     updateAuctions(auctions) {
       this.auctions = auctions;

@@ -24,10 +24,9 @@
       @toggle-layer="toggleBlockUserLayer"
       :question="'Czy na pewno chcesz zablokować użytkownika?'"
     />
-    <!-- :target=" isDashboardRoute ? '_blank' : '_self'" -->
     <router-link
       :to="`/auction/${auction.id}`"
-      class="flex flex-col lg:flex-row w-full xl:w-10/12 border-gray-300 mt-4 text-gray-600 bg-white border"
+      class="flex flex-col lg:flex-row w-full xl:w-10/12 border border-gray-300 mt-4 text-gray-600 bg-white"
     >
       <div
         class="h-36 sm:h-48 w-full lg:w-96 xl:w-108 bg-gray-300 bg-cover bg-no-repeat bg-center border-gray-200 border-b-2 sm:border-r-2 sm:border-b-0"
@@ -37,7 +36,7 @@
         <div class="flex flex-row justify-between">
           <div>
             <h2 class="xs:text-xl">{{ auction.title }}</h2>
-            <h3 class=" font-bold xs:text-3xl">{{ auction.price }}zł</h3>
+            <h3 class=" font-bold xs:text-3xl">{{ auction.price }}zł<span class="text-lg">{{ auction.priceType === 'na-godzine' ? '/godz.' : auction.priceType === 'na-miesiac' ? '/mies.' : '' }}</span></h3>
           </div>
           <Liking
             v-if="auction.user_id !== user.id && user && user.role.name !== 'Admin'"
@@ -66,7 +65,7 @@
           <div
             v-for="(report, index) in auctionReports"
             :key="report.id"
-            class="text-base md:text-lg"
+            class="text-base md:text-lg dont-break-out"
           >
             {{ index + 1 }}. {{ report.message }}
           </div>
@@ -85,7 +84,7 @@
           <button
             v-else
             @click="togglePublishLayer(auction.id)"
-            class="bg-green-500 auction-comment-admin-button"
+            class="bg-green-600 auction-comment-admin-button"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -185,7 +184,8 @@ export default {
     }
   },
   created(){
-    if(this.reports) this.auctionReports = this.reports.filter(report => report.auction_id.includes(this.auction.id));
+    if(this.reports) this.auctionReports = this.reports.filter(report => report.auction_id === this.auction.id);
+
     if(this.auction.user_id === user.id) this.getAuctionLikesNumber();
     this.getAuctionViewsNumber();
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="w-screen h-screen">
-    <VideoChat 
+  <div class="w-full h-screen -mt-20 pt-1">
+    <VideoChat
       v-if="conversation !== {}"
       :idToCall="idToCall"
       :conversation="conversation"
@@ -10,9 +10,8 @@
       ref="VideoChat"
     />
     <Loading :isCenter="true" v-if="isLoading" />
-    
-    <!-- <div v-show="!isCallingShow" class="w-screen h-5/6 flex flex-col items-center justify-center"> -->
-    <div v-else v-show="!isCallingShow" class="w-screen h-5/6 flex flex-col items-center justify-center">
+
+    <div v-else v-show="!isCallingShow" class="mt-20 w-full h-5/6 flex flex-col items-center justify-center">
       <div class="w-11/12 xs:w-3/4 md:w-3/5 xl:w-1/2 h-4/5 bg-white text-gray-700 flex flex-col shadow border border-gray-300 rounded-md overflow-x-hidden">
         <div class="w-full h-20 flex flex-row justify-between items-center px-5 ">
           <router-link to="/conversations" class="text-2xl  flex flex-row items-center">
@@ -48,9 +47,9 @@
         <div ref="chatWindow" class="flex flex-col pb-2 px-4 md:px-10 2xl:px-24 h-full bg-gray-100 border border-gray-200 overflow-y-scroll">
           <span class="text-gray-400 my-2 mb-4 text-center block">Początek konwersacji z {{ secondUser.username }}</span>
           <div v-for="message in messages" :key="message">
-            <div 
-              v-if="!message.isIdMessage" 
-              class="dont-break-out bg-green-300 max-w px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl max-w-xs mr-3" 
+            <div
+              v-if="!message.isIdMessage"
+              class="dont-break-out bg-green-300 max-w px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl max-w-xs mr-3"
               :class="{userMessage: message.sender_id === this.user.id}"
             >
               {{ message.message }}
@@ -87,7 +86,7 @@ import Loading from '../components/Loading.vue'
 import VideoChat from '../components/VideoChat.vue'
 
 import API_URL from '../../API_URL'
-import { socket } from '../../config/web-sockets';
+import { socket } from '../../config/web-sockets.js';
 import { uuid } from 'vue-uuid';
 
 import { authorization, jwt, user, fetchLastSeenMessages, compareLastSeenMessageWithLatest } from '../constants/const-variables'
@@ -152,7 +151,6 @@ export default {
         const indexIdToCall = newMessages.findLastIndex(message => message.isIdMessage && message.message !== this.$refs.VideoChat.me)
 
         if(indexIdToCall > -1){
-          console.log(newMessages[indexIdToCall].message)
           this.idToCall = newMessages[indexIdToCall].message
         }
       }, deep: true
@@ -183,6 +181,7 @@ export default {
         }
       })
       .then((res) => {
+        console.log(res)
         this.conversation = res.data
         if(emitNewConversation) {
           const seconUser_id = this.secondUser.id
@@ -208,7 +207,6 @@ export default {
 
       const newMessages = this.messages.map(message => ({...message}))
       newMessages.push(message)
-      this.message = ''
 
       await axios.put(`${API_URL}/chat-conversations/${this.conversation.id}`, { messages: newMessages }, {
         headers: {
