@@ -1,7 +1,0 @@
-module.exports = {
-  CLOUDINARY_API_KEY: '453499119442835',
-  CLOUDINARY_API_SECRET: 'gos0bzFpuPtkvIIn7W3cpo6rf9c',
-  CLOUDINARY_CLOUD_NAME: 'dh35iucxu',
-  CLOUDINARY_UPLOAD_PRESET: 'qpfb0fma'
-}
-
