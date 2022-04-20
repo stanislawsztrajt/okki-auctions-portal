@@ -9,6 +9,7 @@ export const authorization = { headers: { Authorization: `Bearer ${jwt}` } };
 export const userAcceptedCookie = Cookies.get('user-accepted-cookies') ? Cookies.get('user-accepted-cookies') : false;
 // 2592000000 = 1 month
 export const additionalTimeToDelete = 2592000000;
+export const auctionsAtPage = 10
 
 // Functions
 
@@ -34,6 +35,9 @@ export const compareLastSeenMessageWithLatest = (conversation, lastSeenMessageOb
 
   if(secondUserMessages.length > 0 && secondUserMessages.length !== undefined) {
     const secondUserLastSendMessageObj = secondUserMessages[secondUserMessages.length-1]
+    console.log(secondUserLastSendMessageObj)
+    console.log(lastSeenMessageObj)
+    console.log(notReadConversations.length)
     if(secondUserLastSendMessageObj.id !== lastSeenMessageObj.lastSeenMessage_id || notReadConversations.length > 0) {
       if(window.location.pathname.includes(secondUserLastSendMessageObj.sender_id)) {
         updateLastSeenMessage(secondUserLastSendMessageObj.id)
@@ -49,7 +53,11 @@ export const compareLastSeenMessageWithLatest = (conversation, lastSeenMessageOb
 }
 
 const updateLastSeenMessage = async (secondUserLastSendMessage_id) => {
+  console.log(lastSeenMessageObj.id)
   await axios.put(`${API_URL}/last-seen-messages/${lastSeenMessageObj.id}`, { lastSeenMessage_id: secondUserLastSendMessage_id }, authorization)
+  .then(res => {
+    console.log(res.data)
+  })
   .catch(err => err)
 }
 

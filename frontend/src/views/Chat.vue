@@ -5,7 +5,6 @@
       :idToCall="idToCall"
       :conversation="conversation"
       :isCallingShow="isCallingShow"
-      @send-message-with-id="sendMessageWithId"
       @toggle-is-calling="toggleIsCalling"
       ref="VideoChat"
     />
@@ -134,7 +133,7 @@ export default {
       this.$router.push('/conversations')
     }
 
-    socket.on('message', async ({message,room}) => {
+    socket.on('message', async ({ message, room }) => {
       if(this.$route.path.includes('/chat') && this.conversation.code === room){
         await this.messages.push(message)
         this.scrollToBottom()
@@ -181,7 +180,6 @@ export default {
         }
       })
       .then((res) => {
-        console.log(res)
         this.conversation = res.data
         if(emitNewConversation) {
           const seconUser_id = this.secondUser.id
@@ -191,29 +189,6 @@ export default {
         }
       })
       .catch(err => err)
-    },
-    async sendMessageWithId(socket_id) {
-      const room = this.usersIds.split('+').join('');
-
-      const message = {
-        message: socket_id,
-        sender_id: this.user.id,
-        isIdMessage: true,
-        createdAt: new Date(),
-        id: uuid.v1()
-      }
-
-      socket.emit('sendMessage', { message, room });
-
-      const newMessages = this.messages.map(message => ({...message}))
-      newMessages.push(message)
-
-      await axios.put(`${API_URL}/chat-conversations/${this.conversation.id}`, { messages: newMessages }, {
-        headers: {
-          users_ids: this.usersIds,
-          Authorization: `Bearer ${jwt}`
-        }
-      })
     },
     async fetchConversation() {
       await axios.get(`${API_URL}/chat-conversations`, {
@@ -242,7 +217,7 @@ export default {
       }
 
       await axios.post(`${API_URL}/chat-conversations`, conversation, authorization)
-      .then(res => {
+      .then(async res => {
         this.conversation = res.data
 
         this.usersIds.split('+').forEach(async user_id => {
@@ -252,6 +227,9 @@ export default {
             lastSeenMessage_id: ""
           }
           await axios.post(`${API_URL}/last-seen-messages`, data, authorization)
+          .then(async () => {
+            await fetchLastSeenMessages(this.conversation);
+          })
           .catch(err => console.log(err))
         })
       })

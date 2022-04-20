@@ -31,12 +31,21 @@ export default {
     conversationUserID: String
   },
   created() {
-    if(notReadConversations.includes(this.conversation.code)) this.showNotification = true;
+    if(notReadConversations.includes(this.conversation.code)) {
+      this.showNotification = true;
+      this.$emit('move-converastion-to-top', this.conversation.id)
+    }
     socket.on('message', ({ message, room }) => {
-      if(message.sender_id !== user.id && !this.$route.path.includes(message.sender_id) && this.conversation.code === room) this.showNotification = true;
+      if(message.sender_id !== user.id && !this.$route.path.includes(message.sender_id) && this.conversation.code === room) {
+        this.showNotification = true;
+        this.$emit('move-converastion-to-top', this.conversation.id)
+      }
     });
     socket.on('displayNotifications', () => {
-      if(notReadConversations.includes(this.conversation.code)) this.showNotification = true;
+      if(notReadConversations.includes(this.conversation.code)) {
+        this.showNotification = true;
+        this.$emit('move-converastion-to-top', this.conversation.id)
+      }
     })
     socket.on('hideNotifications', () => {
       if(!notReadConversations.includes(this.conversation.code)) this.showNotification = false;

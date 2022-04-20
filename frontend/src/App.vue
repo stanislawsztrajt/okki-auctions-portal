@@ -1,19 +1,20 @@
 <template >
   <div id="app">
     <Navbar
-      v-if="showNavbar && !isBlocked"
+      v-if="showNavbarAndFooter && !isBlocked"
       :conversations="conversations"
     />
     <BlockedUser v-if="isBlocked"/>
-    <router-view v-else />
+    <router-view v-else class="min-h-screen" />
     <div v-if="cookieModalShow" class="w-screen h-screen fixed top-0 left-0 flex flex-col justify-center items-center">
       <div class="fixed z-50 bottom-0 w-screen bg-white text-green-600 py-6 px-10 md:px-20 lg:px-40 flex flex-col justify-around">
-        <h1 class="font-bold text-xl">Informacja Cookies</h1>
+        <h1 class="font-bold text-xl">Informacja o plikach cookies</h1>
         <p class="text-gray-600 mt-2 mb-4 md:text-lg">Pliki cookies które wykorzystujemy na naszej stronie są wykorzystywane tylko i wyłącznie do prawidłowego działania strony, nie gromadzimy żadnych danych dotyczących użytkowników. Dowiedz się więcej w <router-link to="privacy-policy" class="rodo-link">Polityce prywatności</router-link>.</p>
         <button @click="acceptUserCookie" class="h-10 w-40 bg-green-600 text-white font-bold flex items-center justify-center">Akceptuję</button>
       </div>
       <div class="absolute bg-gray-500 opacity-30 z-10 w-screen h-screen top-0 left-0"></div>
     </div>
+    <Footer v-if="showNavbarAndFooter && !isBlocked" />
   </div>
 </template>
 
@@ -26,25 +27,24 @@ import { socket } from '../config/web-sockets.js';
 
 import BlockedUser from './components/BlockedUser.vue'
 import Navbar from "./components/Navbar.vue"
+import Footer from './components/Footer.vue';
 
 export default {
   name: 'App',
   components: {
     BlockedUser,
-    Navbar
+    Navbar,
+    Footer
   },
   data(){
     return{
       isBlocked: false,
       cookieModalShow: false,
-      showNavbar: true,
+      showNavbarAndFooter: true,
       conversations: []
     }
   },
   async created(){
-    let pies = 'hau'
-    socket.emit('witom', { pies })
-
     if(!userAcceptedCookie) {
       this.cookieModalShow = true;
     }
@@ -55,13 +55,13 @@ export default {
 
       this.fetchUserConversations()
 
-      socket.on('newConversaion', async ({ conversation }) => {
+      socket.on('newConversation', async ({ conversation }) => {
         fetchLastSeenMessages(conversation)
 
         const room = conversation.code
         socket.emit('joinToNewRoom', { room })
       })
-      socket.on('createdNewConversaion', async ({ conversation }) => {
+      socket.on('createdNewConversation', async ({ conversation }) => {
         const room = conversation.code
         socket.emit('joinToNewRoom', { room })
       })
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     async acceptUserCookie() {
-      await this.$cookies.set('user-accepted-cookies', true, '7d')
+      await this.$cookies.set('user-accepted-cookies', true, '10y')
       this.cookieModalShow = false
     },
     async fetchUserConversations() {
@@ -92,7 +92,8 @@ export default {
   },
   watch: {
     $route(route) {
-      this.showNavbar = route.path !== '/login' && route.path !== '/register'
+      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register'
+      window.scrollTo(0,0);
     }
   },
 }

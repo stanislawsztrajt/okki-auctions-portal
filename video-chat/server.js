@@ -5,7 +5,9 @@ const server = http.createServer(app)
 const io = require("socket.io")(server, {
 	cors: {
 		origin: "http://localhost:8080",
-		methods: [ "GET", "POST" ]
+		methods: [ "GET", "POST" ],
+    allowedHeaders: ["*"],
+    credentials: true
 	}
 })
 
@@ -46,9 +48,9 @@ io.on("connection", (socket) => {
       let sockets = await io.fetchSockets();
       sockets = sockets.filter(socket => socket.strapi_id === seconUser_id)
       // emit to second user in room
-      io.to(sockets[0].id).emit('newConversaion', { conversation })
+      io.to(sockets[0].id).emit('newConversation', { conversation })
       // emit to myself
-      socket.emit('createdNewConversaion', { conversation })
+      socket.emit('createdNewConversation', { conversation })
     })
 
     socket.on('displayNotifications', () => {

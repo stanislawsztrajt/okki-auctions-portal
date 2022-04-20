@@ -133,20 +133,12 @@ export default {
 			this.callerSignal = data.signal
 		})
 	},
-	watch: {
-		conversation(){
-			this.sendMessageWithId(this.me)
-		},
-	},
 	methods: {
 		connect(){
 			socket.on('me', id =>{
 				this.me = id;
 				console.log('connecting:',id)
 			})
-		},
-		sendMessageWithId(socket_id){
-			this.$emit('send-message-with-id', socket_id)
 		},
 		toggleIsCalling(){
 			this.$emit('toggle-is-calling')

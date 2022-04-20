@@ -26,7 +26,8 @@ module.exports = {
     return sanitizeEntity(entity, { model: strapi.models['chat-conversations'] });
   },
   async findUserConversations(ctx) {
-    let entity = await strapi.query('chat-conversations').find({ code: { $regex: ctx.state.user.id }});
+    let entity = await strapi.query('chat-conversations').find({ code: { $regex: ctx.state.user.id } })
+    entity.sort((conversationA, converastionB) => conversationA.updatedAt < converastionB.updatedAt ? 1 : -1);
 
     return entity;
   }

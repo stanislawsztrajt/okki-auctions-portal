@@ -11,6 +11,7 @@
         :key="conversation.id"
         :conversation="conversation"
         :conversationUserID="conversation.code.replace(this.user.id, '')"
+        @move-converastion-to-top="moveConverastionToTop"
       />
     </div>
     <h1 v-else class="mt-8 text-xl text-gray-700">
@@ -47,7 +48,7 @@ export default {
     }
     this.fetchUserConversations()
 
-    socket.on('newConversaion', async ({ conversation }) => {
+    socket.on('newConversation', async ({ conversation }) => {
       this.conversations.unshift(conversation)
     })
   },
@@ -58,6 +59,9 @@ export default {
         this.conversations = res.data
         this.isLoading = false
       })
+    },
+    moveConverastionToTop(converastion_id) {
+      this.conversations.sort(el => el.id === converastion_id ? -1 : 1)
     }
   },
 }

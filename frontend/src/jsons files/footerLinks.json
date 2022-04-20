@@ -1,0 +1,69 @@
+[
+  {
+    "label": "Moje konto",
+    "labelLink": "dashboard",
+    "links": [
+      {
+        "displayWhenLogged": true,
+        "text": "Polubione",
+        "route": "likeds"
+      },
+      {
+        "displayWhenLogged": true,
+        "text": "Konwersacje",
+        "route": "conversations"
+      },
+      {
+        "displayWhenLogged": true,
+        "text": "Zmień dane",
+        "route": "dashboard/change-user-info"
+      },
+      {
+        "displayWhenLogged": false,
+        "text": "Logowanie",
+        "route": "login"
+      },
+      {
+        "displayWhenLogged": false,
+        "text": "Rejestracja",
+        "route": "register"
+      }
+    ]
+  },
+  {
+    "label": "Przydane linki",
+    "labelLink": "",
+    "links": [
+      {
+        "text": "Dodaj ogłoszenie",
+        "route": "new-auction"
+      },
+      {
+        "text": "Kontakt",
+        "route": "contact"
+      }
+    ]
+  },
+  {
+    "label": "Informacje",
+    "labelLink": "info",
+    "links": [
+      {
+        "text": "Regulamin",
+        "route": "terms-of-use"
+      },
+      {
+        "text": "Rodo",
+        "route": "rodo"
+      },
+      {
+        "text": "Polityka prywatności",
+        "route": "privacy-policy"
+      },
+      {
+        "text": "Często zadawane pytania",
+        "route": "faq"
+      }
+    ]
+  }
+]
