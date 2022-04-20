@@ -1,7 +1,10 @@
 <template>
-  <nav class="flex items-center justify-between bg-white relative shadow text-gray-600 h-20">
+  <nav class="flex items-center justify-between bg-white relative shadow text-gray-600 h-20 z-50">
     <div class="text-4xl md:text-6xl ml-4 md:ml-8 font-light text-gray-600">
-      <router-link to="/">okki</router-link>
+      <router-link to="/" class="flex flex-row">
+        <!-- <img src="../images/logo/logo1.png" class="h-16" alt=""> -->
+        okki
+      </router-link>
     </div>
     <div ref="menuElements" class="flex flex-row items-center bg-transparent mr-2 md:m-0 anima">
       <div

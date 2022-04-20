@@ -2,28 +2,49 @@ const express = require("express")
 const http = require("http")
 const app = express()
 const server = http.createServer(app)
+
+const getUserSocket = async user_id =>{
+  const sockets = await io.fetchSockets();
+  const socketIndex = await sockets.findIndex(socket => socket.VideoChat_id === user_id);
+  return sockets[socketIndex]?.id;
+}
+
 const io = require("socket.io")(server, {
 	cors: {
 		origin: "http://localhost:8080",
-		methods: [ "GET", "POST" ],
-    allowedHeaders: ["*"],
-    credentials: true
+		// origin: "https://okki.herokuapp.com",
+    allowedHeadears: '*',
+    credentials: true,
+		methods: [ "GET", "POST" ]
 	}
 })
 
 io.on("connection", (socket) => {
-	socket.emit("me", socket.id)
+	socket.on("setVideoChatId", user_id =>{
+    socket.VideoChat_id = user_id
+  })
 
-	socket.on("disconnect", () => {
+	socket.on("disconnect", async () => {
 		socket.broadcast.emit("callEnded")
 	})
 
-	socket.on("callUser", (data) => {
-		io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
+	socket.on("callUser", async (data) => {
+    const from_id = await getUserSocket(data.from);
+    const userToCallId = await getUserSocket(data.userToCall);
+
+    io.to(userToCallId).emit("callUser", { signal: data.signalData, from: from_id, userIdFrom: data.from })
 	})
 
-	socket.on("answerCall", (data) => {
-		io.to(data.to).emit("callAccepted", data.signal)
+	socket.on("answerCall", async (data) => {
+    const userToCallId = await getUserSocket(data.to);
+
+		io.to(userToCallId).emit("callAccepted", data.signal)
+	})
+
+  socket.on('endCall', async (data) => {
+    const userToCallId = await getUserSocket(data.userToCall);
+
+		io.to(userToCallId).emit('endCall', data.ended)
 	})
 
   socket.on('join', ({ rooms, user_id }) => {
@@ -63,4 +84,6 @@ io.on("connection", (socket) => {
   })
 })
 
-server.listen(5000, () => console.log("server is running on port 5000"))
+const port = process.env.PORT || 5000
+
+server.listen(port, () => console.log("server is running on port 5000"))

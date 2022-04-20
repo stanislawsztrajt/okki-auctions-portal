@@ -121,7 +121,7 @@
           <button
             v-if="displayRenewButton"
             @click="renewAuction"
-            class="font-semibold border border-gray-300 py-1 md:py-2 px-2 md:px-3 rounded-full flex items-center justify-center button-animation-hover"
+            class="font-semibold cursor-pointer border border-gray-300 py-1 md:py-2 px-2 md:px-3 rounded-full flex items-center justify-center button-animation-hover"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1 md:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -179,8 +179,8 @@ export default {
       auctionReports: [],
       amountOfLikes: 0,
       amountOfViews: 0,
+      displayRenewButton: false,
       published_at: this.auction.published_at,
-      displayRenew: false,
     }
   },
   created(){
@@ -196,7 +196,7 @@ export default {
       this.$emit('remove-auction', id)
     },
     async renewAuction(){
-      this.published_at += this.additionalTimeToDelete
+      this.displayRenewButton = false;
       await axios.get(`${API_URL}/renew-auctions/${this.auction.id}`, authorization)
     },
     toggleDeleteAuctionLayer(){

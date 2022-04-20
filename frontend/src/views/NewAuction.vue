@@ -66,8 +66,8 @@
             <label>Zdjęcia</label>
             <input
               type="file"
+              accept="image/png, image/jpeg, image/jpg"
               class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2 mb-2"
-              accept="image/png, image/jpeg"
               @change="onFileChange($event)"
               multiple
               :disabled="urls.length >= 4"
@@ -174,11 +174,14 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
-import API_URL from '../../API_URL'
 import convert from 'image-file-resize';
+
+// import categoriesJSON from '../jsons files/categories.json'
+import vulgarWords from '../jsons files/vulgarWords.json'
+
+import API_URL from '../../API_URL'
 import streetsCapitalize from '../jsons files/streetsCapitalize.json'
 import { formKitStreetRule } from '../constants/formKitCustomRules'
 import { authorization, jwt, user } from '../constants/const-variables'
@@ -256,6 +259,14 @@ export default {
     async createAuction(){
       this.$refs.filteringComponent.checkIfAllFiltersChoosen()
 
+        const titleDescriptionArray = this.titleValue.split(' ').concat(this.descriptionValue.split(' '));
+
+        if(this.findVulgarWord(vulgarWords, titleDescriptionArray) === true){
+          return console.log('wulgarne słowo!')
+        } else{
+          console.log('jest git')
+        }
+
       if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
@@ -269,22 +280,30 @@ export default {
             location: this.locationValue,
             phoneNumber: this.phoneNumberValue,
             user_id: user.id,
+            imagesPublic_id: [],
             images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
             filters: this.filtersValue
           }
 
           await axios.post(`${API_URL}/auctions`, data, authorization)
           .then(() => this.$router.push('/dashboard'))
-          .catch(err=>{console.log(err)})
-        } else {
-          await this.images.forEach(async image =>{
+          .catch(err=>console.log(err))
+        } else{
+          await this.images.forEach(async (image, index) =>{
             let isPostedImages = false;
+            const img = new Image();
+            const typeImg = image.type.slice(6)
+            img.src = this.urls[index];
+
+            const proportionImg = (img.width > img.height ? img.width : img.height) / 608;
+            const width = img.width / proportionImg;
+            const height = img.height / proportionImg;
 
             convert({
               file: image,
-              width: 800,
-              height: 450,
-              type: 'jpeg'
+              width,
+              height,
+              type: typeImg
             })
             .then(async file => {
               const data = new FormData()
@@ -299,6 +318,7 @@ export default {
                 data
               )
               .then(async res => {
+                await this.imagesPublic_id.push(res.data.public_id);
                 await this.imageUrls.push(res.data.url);
                 if(this.imageUrls.length === this.images.length) isPostedImages = true;
               })
@@ -312,8 +332,9 @@ export default {
                   priceType: this.priceTypeValue,
                   description: this.descriptionValue,
                   location: this.locationValue,
-                  phoneNumber: this.phoneNumberValue,
+                  phoneNumber:  String(this.phoneNumberValue),
                   user_id: user.id,
+                  imagesPublic_id: this.imagesPublic_id,
                   images: this.imageUrls,
                   filters: this.filtersValue
                 }
@@ -395,6 +416,17 @@ export default {
           costs[s2.length] = lastValue;
       }
       return costs[s2.length];
+    },
+    findVulgarWord(array1, array2){
+      for(let i = 0; i < array1.length; i++) {
+        for(let j = 0; j < array2.length; j++) {
+          if(array1[i].toLowerCase() === array2[j].toLowerCase()) {
+            console.log(array1[i].toLowerCase(), " ", array2[j].toLowerCase())
+            return true;
+          }
+        }
+      }
+      return false;
     }
   }
 }

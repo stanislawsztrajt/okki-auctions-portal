@@ -1,16 +1,16 @@
 <template>
-  <div class="w-full h-screen -mt-20 pt-1">
+  <div>
     <VideoChat
       v-if="conversation !== {}"
-      :idToCall="idToCall"
-      :conversation="conversation"
       :isCallingShow="isCallingShow"
       @toggle-is-calling="toggleIsCalling"
+      @set-true-is-calling="setTrueIsCalling"
       ref="VideoChat"
     />
     <Loading :isCenter="true" v-if="isLoading" />
 
-    <div v-else v-show="!isCallingShow" class="mt-20 w-full h-5/6 flex flex-col items-center justify-center">
+    <!-- <div v-show="!isCallingShow" class="w-screen h-5/6 flex flex-col items-center justify-center"> -->
+    <div v-else v-show="!isCallingShow" class="w-full h-5/6 absolute flex flex-col items-center justify-center">
       <div class="w-11/12 xs:w-3/4 md:w-3/5 xl:w-1/2 h-4/5 bg-white text-gray-700 flex flex-col shadow border border-gray-300 rounded-md overflow-x-hidden">
         <div class="w-full h-20 flex flex-row justify-between items-center px-5 ">
           <router-link to="/conversations" class="text-2xl  flex flex-row items-center">
@@ -28,19 +28,21 @@
               {{ secondUser.username }}
             </span>
           </router-link>
-          <div v-if="conversation !== {}" class="flex flex-row items-center">
-            <button @click="call({video: false, audio: true})">
-              <!-- Zadzwoń z samym głosem -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-4 button-animation-hover cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
+          <div class="flex flex-row items-center">
+            <button v-if="idToCall !== ''" @click="call({video: false, audio: true})">
+              <svg  xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-4 button-animation-hover cursor-pointer text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
             </button>
-            <button @click="call({video: true, audio: true})">
-              <!-- Zadzwoń z kamerą -->
+            <butto v-else>
+              <svg class="h-7 w-7 mr-4 button-animation-hover cursor-not-allowed text-gray-400"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91" />  <line x1="23" y1="1" x2="1" y2="23" /></svg>
+            </butto>
+            <button v-if="idToCall !== ''" @click="call({video: true, audio: true})">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 button-animation-hover cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
             </button>
+            <butto v-else>
+              <svg class="h-7 w-7 mr-4 button-animation-hover cursor-not-allowed text-gray-400"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" />  <line x1="1" y1="1" x2="23" y2="23" /></svg>
+            </butto>
           </div>
         </div>
         <div ref="chatWindow" class="flex flex-col pb-2 px-4 md:px-10 2xl:px-24 h-full bg-gray-100 border border-gray-200 overflow-y-scroll">
@@ -103,8 +105,6 @@ export default {
       conversationExists: true,
       isLoading: true,
       isCallingShow: false,
-
-      idToCall: ''
     }
   },
   props: {
@@ -133,7 +133,7 @@ export default {
       this.$router.push('/conversations')
     }
 
-    socket.on('message', async ({ message, room }) => {
+    socket.on('message', async ({message,room}) => {
       if(this.$route.path.includes('/chat') && this.conversation.code === room){
         await this.messages.push(message)
         this.scrollToBottom()
@@ -143,17 +143,6 @@ export default {
         }
       }
     })
-  },
-  watch: {
-    messages: {
-      handler(newMessages){
-        const indexIdToCall = newMessages.findLastIndex(message => message.isIdMessage && message.message !== this.$refs.VideoChat.me)
-
-        if(indexIdToCall > -1){
-          this.idToCall = newMessages[indexIdToCall].message
-        }
-      }, deep: true
-    }
   },
   methods: {
     async sendMessage(emitNewConversation) {
@@ -180,6 +169,7 @@ export default {
         }
       })
       .then((res) => {
+        console.log(res)
         this.conversation = res.data
         if(emitNewConversation) {
           const seconUser_id = this.secondUser.id
@@ -217,7 +207,7 @@ export default {
       }
 
       await axios.post(`${API_URL}/chat-conversations`, conversation, authorization)
-      .then(async res => {
+      .then(res => {
         this.conversation = res.data
 
         this.usersIds.split('+').forEach(async user_id => {
@@ -227,9 +217,6 @@ export default {
             lastSeenMessage_id: ""
           }
           await axios.post(`${API_URL}/last-seen-messages`, data, authorization)
-          .then(async () => {
-            await fetchLastSeenMessages(this.conversation);
-          })
           .catch(err => console.log(err))
         })
       })
@@ -245,6 +232,9 @@ export default {
     },
     toggleIsCalling(){
       this.isCallingShow = !this.isCallingShow;
+    },
+    setTrueIsCalling(){
+      this.isCallingShow = true;
     },
     call(userMediaOptions){
       if(this.idToCall === '') return

@@ -45,6 +45,9 @@ export default {
     }
   },
   async created(){
+    let pies = 'hau'
+    socket.emit('witom', { pies })
+
     if(!userAcceptedCookie) {
       this.cookieModalShow = true;
     }

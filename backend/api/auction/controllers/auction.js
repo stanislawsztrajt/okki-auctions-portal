@@ -96,15 +96,15 @@ module.exports = {
 
     let entity;
 
-    const isStreetExist = streets
-      .findIndex(street => street == ctx.request.body.location.toLowerCase())
+    // const isStreetExist = streets
+    //   .findIndex(street => street == ctx.request.body.location.toLowerCase())
 
-    const isStreetWithoutPLcharsExist = streetsWithoutPLchars
-      .findIndex(street => street == ctx.request.body.location.toLowerCase())
+    // const isStreetWithoutPLcharsExist = streetsWithoutPLchars
+    //   .findIndex(street => street == ctx.request.body.location.toLowerCase())
 
-    if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
-      throw strapi.errors.badRequest('this street does not exist in kalisz');
-    }
+    // if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
+    //   throw strapi.errors.badRequest('this street does not exist in kalisz');
+    // }
 
     if(ctx.state.user.role.name === 'Admin') {
       if (ctx.is('multipart')) {

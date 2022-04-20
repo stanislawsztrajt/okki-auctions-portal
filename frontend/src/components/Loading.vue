@@ -1,6 +1,6 @@
 <template>
-  <div :class="`${isCenter ? 'h-192' : 'h-auto'} flex items-center justify-center mt-10`">
-    <div class="w-80 h-80 border-t-4 border-b-4 border-green-500 rounded-full animate-spin"></div>
+  <div :class="`${isCenter ? 'h-128' : 'h-auto'} flex items-center justify-center mt-10`">
+    <div class="w-44 h-44 border-t-4 border-b-4 border-green-500 rounded-full animate-spin"></div>
   </div>
 </template>
 <script>
