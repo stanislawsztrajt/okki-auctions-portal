@@ -22,7 +22,7 @@ import axios from 'axios';
 
 import API_URL from '../API_URL';
 import { authorization, user, jwt, userAcceptedCookie, fetchLastSeenMessages } from './constants/const-variables';
-import { socket } from '../config/web-sockets';
+import { socket } from '../config/web-sockets.js';
 
 import BlockedUser from './components/BlockedUser.vue'
 import Navbar from "./components/Navbar.vue"
@@ -42,6 +42,9 @@ export default {
     }
   },
   async created(){
+    let pies = 'hau'
+    socket.emit('witom', { pies })
+
     if(!userAcceptedCookie) {
       this.cookieModalShow = true;
     }
@@ -66,8 +69,7 @@ export default {
   },
   methods: {
     async acceptUserCookie() {
-      const tenYearsInMiliseconds = 315360000000
-      await this.$cookies.set('user-accepted-cookies', true, { expires: new Date(Date.now()+tenYearsInMiliseconds) })
+      await this.$cookies.set('user-accepted-cookies', true, '7d')
       this.cookieModalShow = false
     },
     async fetchUserConversations() {
@@ -90,7 +92,7 @@ export default {
   },
   watch: {
     $route(route) {
-      this.showNavbar = route.path !== '/login' && route.path !== '/register'
+      this.showNavbar = route.path !== '/login' && route.path !== '/register' && route.path !== '/forgot-password' && route.path !== '/reset-password'
     }
   },
 }

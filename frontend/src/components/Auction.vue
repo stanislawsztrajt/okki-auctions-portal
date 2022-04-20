@@ -24,20 +24,19 @@
       @toggle-layer="toggleBlockUserLayer"
       :question="'Czy na pewno chcesz zablokować użytkownika?'"
     />
-    <!-- :target=" isDashboardRoute ? '_blank' : '_self'" -->
     <router-link
       :to="`/auction/${auction.id}`"
-      class="flex flex-col lg:flex-row w-full xl:w-10/12 border-gray-300 mt-4 text-gray-600 bg-white border"
+      class="flex flex-col lg:flex-row w-full xl:w-10/12 border border-gray-300 mt-4 text-gray-600 bg-white"
     >
       <div
-        class="h-48 sm:h-48 w-full lg:w-72 xl:w-96 bg-gray-300 bg-cover bg-no-repeat bg-center border-gray-200 border-b-2 sm:border-r-2 sm:border-b-0"
+        class="h-36 sm:h-48 w-full lg:w-96 xl:w-108 bg-gray-300 bg-cover bg-no-repeat bg-center border-gray-200 border-b-2 sm:border-r-2 sm:border-b-0"
         :style="{ backgroundImage: 'url(' + auction.images[0] + ')' }"
       ></div>
       <div class="px-3 py-2 sm:px-5 sm:py-4 w-full flex flex-col justify-between">
         <div class="flex flex-row justify-between">
           <div>
             <h2 class="xs:text-xl">{{ auction.title }}</h2>
-            <h3 class=" font-bold xs:text-3xl">{{ auction.price }}zł</h3>
+            <h3 class=" font-bold xs:text-3xl">{{ auction.price }}zł<span class="text-lg">{{ auction.priceType === 'na-godzine' ? '/godz.' : auction.priceType === 'na-miesiac' ? '/mies.' : '' }}</span></h3>
           </div>
           <Liking
             v-if="auction.user_id !== user.id && user && user.role.name !== 'Admin'"
@@ -45,7 +44,7 @@
             :auction_id="auction.id"
           />
         </div>
-        <router-link to="" class="flex items-end justify-between">
+        <div class="flex items-end justify-between">
           <h3 class="text-xs sm:text-sm font-normal flex flex-col mt-2">
             <span class="xs:text-lg">{{ auction.location }}</span>
             <span>{{ auction.createdAt.substring(0,10).split('-').reverse().join('.') }}</span>
@@ -56,7 +55,7 @@
               <span>Wyświetlenia: {{ amountOfViews }}</span>
             </div>
           </div>
-        </router-link>
+        </div>
       </div>
     </router-link>
     <div v-if="isDashboardRoute" class="w-full xl:w-10/12 bg-white border border-t-0 border-dashed border-gray-300 p-2 exsm:p-4 text-gray-700 cursor-auto">
@@ -66,7 +65,7 @@
           <div
             v-for="(report, index) in auctionReports"
             :key="report.id"
-            class="text-base md:text-lg"
+            class="text-base md:text-lg dont-break-out"
           >
             {{ index + 1 }}. {{ report.message }}
           </div>
@@ -85,7 +84,7 @@
           <button
             v-else
             @click="togglePublishLayer(auction.id)"
-            class="bg-green-500 auction-comment-admin-button"
+            class="bg-green-600 auction-comment-admin-button"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -122,7 +121,7 @@
           <button
             v-if="displayRenewButton"
             @click="renewAuction"
-            class="font-semibold border border-gray-300 py-1 md:py-2 px-2 md:px-3 rounded-full flex items-center justify-center button-animation-hover"
+            class="font-semibold cursor-pointer border border-gray-300 py-1 md:py-2 px-2 md:px-3 rounded-full flex items-center justify-center button-animation-hover"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1 md:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -131,11 +130,11 @@
           </button>
         </div>
         <div :class="`flex justify-center items-center ${displayRenewButton ? 'flex-col sm:flex-row min-h-full' : 'flex-row'}`">
-          <button @click="toggleEditAuctionLayer(auction.id)" :class="`${displayRenewButton ? 'mb-1 sm:mb-0' : ''} mr-1 h-7 w-7 xs:h-10 xs:w-10 button-animation-hover text-blue-400 hover:text-blue-600`">
+          <router-link :to='`/edit-auction/${auction.id}`' :class="`${displayRenewButton ? 'mb-1 sm:mb-0' : ''} mr-1 h-7 w-7 xs:h-10 xs:w-10 button-animation-hover text-blue-400 hover:text-blue-600`">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-          </button>
+          </router-link>
           <button @click="toggleDeleteAuctionLayer(auction.id)" class="h-7 w-7 xs:h-10 xs:w-10 button-animation-hover text-red-400 hover:text-red-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -180,12 +179,13 @@ export default {
       auctionReports: [],
       amountOfLikes: 0,
       amountOfViews: 0,
+      displayRenewButton: false,
       published_at: this.auction.published_at,
-      displayRenew: false,
     }
   },
   created(){
-    if(this.reports) this.auctionReports = this.reports.filter(report => report.auction_id.includes(this.auction.id));
+    if(this.reports) this.auctionReports = this.reports.filter(report => report.auction_id === this.auction.id);
+
     if(this.auction.user_id === user.id) this.getAuctionLikesNumber();
     this.getAuctionViewsNumber();
 
@@ -196,7 +196,7 @@ export default {
       this.$emit('remove-auction', id)
     },
     async renewAuction(){
-      this.published_at += this.additionalTimeToDelete
+      this.displayRenewButton = false;
       await axios.get(`${API_URL}/renew-auctions/${this.auction.id}`, authorization)
     },
     toggleDeleteAuctionLayer(){

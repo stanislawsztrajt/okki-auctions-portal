@@ -5,7 +5,7 @@
       v-else
       class="flex flex-col items-center gap-8"
     >
-      <div class="w-11/12 xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
+      <div class="w-11/12 2xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
         <p
           class="text-xl lg:text-2xl pointer-events-none"
           spellcheck="false"
@@ -17,27 +17,36 @@
         <p class="text-2xl lg:text-3xl text-green-600 font-bold">{{ auction.price }}zł</p>
       </div>
 
-      <div class="w-11/12 xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
-        <div class="w-full xl:w-3/4 bg-white p-4 shadow">
+      <div class="w-11/12 2xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
+        <div class="w-full 2xl:w-3/4 bg-white p-4 shadow">
           <div
             v-if="auction.images"
             class="flex flex-row flex-wrap justify-center items-center h-full mt-1 xl:mt-0"
           >
             <div v-if="auction.images.length > 1" class="flex justify-between w-3/4 xl:w-9/16 absolute">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                class="h-10 w-10 xl:h-12 xl:w-12 ml-10 p-2 opacity-50 text-white bg-black cursor-pointer"
+              <button
                 @click="decrementImageIndex"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                class="h-10 w-10 xl:h-12 xl:w-12 ml-10 p-2 opacity-50 text-white bg-black cursor-pointer focus:outline-none hover:opacity-60 transition-all duration-100"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h110" />
-              </svg>
-
-              <svg xmlns="http://www.w3.org/2000/svg"
-                class="h-10 w-10 xl:h-12 xl:w-12 mr-10 p-2 opacity-50 text-white bg-black cursor-pointer"
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  class="w-full h-full"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h110" />
+                </svg>
+              </button>
+              <button
                 @click="incrementImageIndex"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
+                class="h-10 w-10 xl:h-12 xl:w-12 mr-10 p-2 opacity-50 text-white bg-black cursor-pointer focus:outline-none hover:opacity-60 transition-all duration-100"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  class="w-full h-full"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+
             </div>
             <img
               class="max-h-96 xl:max-h-full"
@@ -62,7 +71,17 @@
               :auction_id="auction.id"
               :route="'auctions'"
             />
-            <router-link
+            <a 
+              :href="`/chat/${user.id}`"
+              class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-green-600 hover:opacity-80 duration-100"
+              v-if="auction.user_id !== userCookie.id && jwt"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              Wyślij wiadomość
+            </a>
+            <!-- <router-link
               :to="`/chat/${user.id}`"
               class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-green-600 hover:opacity-80 duration-100"
               v-if="auction.user_id !== userCookie.id && jwt"
@@ -71,17 +90,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               Wyślij wiadomość
-            </router-link>
+            </router-link> -->
 
             <div class=" mt-3 text-center text-md 2xl:text-lg bg-green-600 rounded-md p-2 text-white">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              {{ auction.phoneNumber }}
+              {{ auction.phoneNumber.trim() === '' ? 'Numer telefonu ukryty' : auction.phoneNumber }}
             </div>
-            <div
-              class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-white duration-100"
-            >
+            <div class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-white duration-100">
               <span v-if="rate < 55 && rate > 45">
                 <svg class="h-6 w-6 inline mb-1"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <line x1="9" y1="15" x2="15" y2="15" /></svg>
                 {{ rate }}
@@ -136,8 +153,8 @@
           </div>
         </div>
       </div>
-      <div class="w-11/12 xl:w-3/4 flex flex-col xl:flex-row gap-8">
-        <div class="w-full xl:w-3/4 bg-white h-full p-4 shadow">
+      <div class="w-11/12 2xl:w-3/4 flex flex-col xl:flex-row gap-8">
+        <div class="w-full 2xl:w-3/4 bg-white h-full p-4 shadow">
           <h2 class="text-3xl lg:text-4xl bold">Opis ogłoszenia</h2>
           <div
             class="w-full min-h-56 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none pointer-events-none"
@@ -152,9 +169,9 @@
             target="blank"
             :href="`https://www.google.pl/maps/place/${auction.location},+62-800+Kalisz`"
           >
-            Sprawdź lokalizacje
+            Sprawdź lokalizację
             <div
-              class="font-bold pointer-events-none inline xl:block"
+              class="font-bold pointer-events-none inline xl:block text-green-500 xl:-my-1"
               contenteditable=""
               spellcheck="false"
               disabled
@@ -162,7 +179,9 @@
               {{ auction.location }}
             </div>
             na google maps
-            <img class="mt-4" src="../images/google-maps.jpg" alt="">
+            <div class="flex justify-center">
+              <img class="mt-4 w-72" src="../images/google-maps.jpg" alt="">
+            </div>
           </a>
         </div>
       </div>

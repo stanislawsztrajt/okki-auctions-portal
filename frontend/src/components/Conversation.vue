@@ -1,6 +1,6 @@
 <template>
-  <router-link
-    :to="`/chat/${conversationUserID}`"
+  <a
+    :href="`/chat/${conversationUserID}`"
     v-if="conversationUser.id"
     class="w-11/12 sm:w-4/5 md:3/4 xl:w-1/2 h-18 mt-4 bg-white border-gray-300 shadow flex flex-col items-start justify-center p-5"
   >
@@ -9,13 +9,13 @@
       <span>{{ lastMessage.sender_id === conversationUserID ? '' : 'Ty: ' }}</span>
       <span :class="showNotification ? 'font-semibold' : ''">{{ lastMessage.message.length > 80 ? lastMessage.message.substring(0, 80) + '...' :  lastMessage.message}}</span>
     </div>
-  </router-link>
+  </a>
 </template>
 <script>
 import { authorization, user, notReadConversations } from '../constants/const-variables'
 import axios from 'axios'
 import API_URL from '../../API_URL'
-import { socket } from '../../config/web-sockets';
+import { socket } from '../../config/web-sockets.js';
 
 export default {
   data() {
@@ -43,11 +43,12 @@ export default {
     })
 
     this.fetchConversationUser()
-    this.lastMessage = this.conversation.messages[this.conversation.messages.length-1]
+    const filteredMessages = this.conversation.messages.filter(message => !message.isIdMessage);
+    this.lastMessage = filteredMessages[filteredMessages.length-1]
 
     socket.on('message', ({ message, room }) => {
       if(this.conversation.code === room) {
-        this.lastMessage = message
+        if(!message.isIdMessage) this.lastMessage = message
       }
     });
   },

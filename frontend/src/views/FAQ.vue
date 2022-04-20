@@ -51,6 +51,7 @@
     </main>
   </div>
 </template>
+
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import questionsAndAnswers from '../jsons files/questionsAndAnswers'

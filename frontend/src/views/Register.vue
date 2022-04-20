@@ -18,7 +18,9 @@
             class="login-register-input"
             placeholder="Nazwa użytkownika"
             type="text"
-            v-model="usernameValue">
+            required
+            v-model="usernameValue"
+          >
         </div>
         <div class="login-register-input-box">
           <label for="">Adres email</label>
@@ -32,7 +34,9 @@
             class="login-register-input"
             placeholder="Adres email"
             type="email"
-            v-model="emailValue">
+            required
+            v-model="emailValue"
+          >
         </div>
         <div class="login-register-input-box">
           <label for="">Hasło</label>
@@ -45,7 +49,9 @@
             class="login-register-input"
             placeholder="Hasło"
             type="password"
-            v-model="passwordValue">
+            required
+            v-model="passwordValue"
+          >
         </div>
         <div class="login-register-input-box">
           <label for="">Powtórz hasło</label>
@@ -58,7 +64,9 @@
             class="login-register-input"
             placeholder="Powtórz hasło"
             type="password"
-            v-model="repeatPasswordValue">
+            required
+            v-model="repeatPasswordValue"
+          >
         </div>
         <div class="text-xs pb-4">
           Klikając przycisk rejestracji, potwierdzasz przeczytanie i przyjmujesz do wiadomości wytyczne przedstawione w

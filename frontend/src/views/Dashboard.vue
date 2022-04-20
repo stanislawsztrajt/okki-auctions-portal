@@ -1,14 +1,7 @@
 <template>
   <div>
     <Loading :isCenter="true" v-show="isLoading" />
-    <div v-if="isEditAuctionLayer"></div>
-    <ApproveLayer
-      v-else-if="isDeleteAuctionLayer"
-      :question="'Czy jesteś pewny/na, że chcesz usunąć to ogłoszenie?'"
-      @action="deleteAuction"
-      @toggle-layer="toggleDeleteAuctionLayer"
-    />
-    <div v-else v-show="!isLoading" class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+    <div v-show="!isLoading" class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <InfoElement
         :value="`Witaj ${user.username}!`"
         :icon="'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'"
@@ -36,8 +29,8 @@
       />
 
       <Auction
-        @toggle-edit-auction-layer="toggleEditAuctionLayer"
         @toggle-delete-auction-layer="toggleDeleteAuctionLayer"
+        @remove-auction="removeAuction"
         v-for="auction in auctions"
         :key="auction.id"
         :auction="auction"
@@ -58,10 +51,9 @@
 import axios from 'axios'
 
 import API_URL from '../../API_URL'
-import { authorization, jwt, user } from '../constants/const-variables'
+import { jwt, user } from '../constants/const-variables'
 
 import Auction from '../components/Auction.vue'
-import ApproveLayer from '../components/ApproveLayer.vue'
 import Loading from '../components/Loading.vue'
 import InfoElement from '../components/InfoElement.vue'
 import ButtonElement from '../components/ButtonElement.vue'
@@ -72,7 +64,6 @@ export default {
   name: 'Dashboard',
   components: {
     Auction,
-    ApproveLayer,
     Loading,
     InfoElement,
     ButtonElement,
@@ -84,12 +75,10 @@ export default {
       user: user,
       auctions: [],
       comments: [],
-      activeAuction_id: '',
       isLoading: false,
       rate: null,
 
-      isEditAuctionLayer: false,
-      isDeleteAuctionLayer: false
+      isDeleteAuctionLayer: false,
     }
   },
   async created() {
@@ -115,16 +104,9 @@ export default {
     this.isLoading = false
   },
   methods: {
-    async deleteAuction(){
-      const index = this.auctions.findIndex(auction => auction.id === this.activeAuction_id);
+    async removeAuction(id){
+      const index = this.auctions.findIndex(auction => auction.id === id);
       this.auctions.splice(index, 1);
-      this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
-
-      await axios.delete(`${API_URL}/auctions/${this.activeAuction_id}`, authorization)
-    },
-    toggleEditAuctionLayer(id){
-      this.activeAuction_id = id;
-      this.isEditAuctionLayer = !this.isEditAuctionLayer;
     },
     toggleDeleteAuctionLayer(id){
       this.activeAuction_id = id;

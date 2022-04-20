@@ -11,7 +11,7 @@ module.exports = {
     const { id } = ctx.params;
 
     const entity = await strapi.services.comment.find({ user_profile_id: id });
-    
+
     let positiveRate = 0;
     entity.forEach(comment =>{
       if(comment.rate === true){
@@ -24,7 +24,7 @@ module.exports = {
     if(entity.length > 0){
       accucuracyRate = Math.round(positiveRate/entity.length*100);
     } else{
-      accucuracyRate = 'Brak opini użytkowników'
+      accucuracyRate = 'Brak opinii użytkowników'
     }
 
     return sanitizeEntity({
@@ -34,20 +34,20 @@ module.exports = {
   },
   async findHiddenComments(ctx) {
     let result = await strapi.query('comment').model.find({ published_at: { $eq: null } });
-    
+
     let comments = sanitizeEntity(result, {
       model: strapi.models['comment'],
     });
-    
+
     ctx.send(comments);
   },
   async countHiddenComments(ctx) {
     let result = await strapi.query('comment').model.find({ published_at: { $eq: null } });
-    
+
     let comments = sanitizeEntity(result, {
       model: strapi.models['comment'],
     });
-    
+
     ctx.send(comments.length);
   },
   async create(ctx) {
@@ -60,7 +60,7 @@ module.exports = {
     const isCommentExist = comments.findIndex(
       comment =>
         comment.user_profile_id === ctx.request.body.user_profile_id &&
-        ( 
+        (
           comment.user_id === ctx.state.user.id
         ||
           comment.user_ip === ctx.request.body.user_ip
@@ -79,7 +79,7 @@ module.exports = {
         entity = await strapi.services.comment.create(ctx.request.body);
       }
     }
-    
+
     return sanitizeEntity(entity, { model: strapi.models['comment-report'] });
   },
   async publishComment(ctx){
@@ -108,11 +108,11 @@ module.exports = {
         id: ctx.params.id,
         'user_id': ctx.state.user.id,
       });
-  
+
       if (!comment) {
         return ctx.unauthorized(`You can't update this entry`);
       }
-  
+
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
         entity = await strapi.services.comment.update({ id }, data, {
@@ -144,11 +144,11 @@ module.exports = {
         id: ctx.params.id,
         'user_id': ctx.state.user.id,
       });
-  
+
       if (!comment) {
         return ctx.unauthorized(`You can't delete this entry`);
       }
-  
+
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
         entity = await strapi.services.comment.delete({ id }, data, {

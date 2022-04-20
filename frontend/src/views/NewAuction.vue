@@ -1,150 +1,189 @@
 <template>
   <div id="NewAuction">
     <Loading :isCenter="true" v-if="isLoading"/>
-    <form
-      v-else
-      @submit.prevent="createAuction"
-      class="w-3/4 lg:w-3/5 py-10 m-auto"
-    >
-      <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
-      <div class="new-auction-main-box">
-        <h1 class="new-auction-title">Informacje podstawowe</h1>
-        <div class="new-auction-data-box">
-          <label class="text-gray-100 mb-1">Tytuł ogłoszenia</label>
-          <input
-            type="text"
-            placeholder="Np. Opel Corsa 2014 1.4 benzyna"
-            required
-            class="new-auction-input"
-            v-model.trim="titleValue"
-            maxlength="70"
-            minlength="8"
-          >
+    <div v-else class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
+      <FormKit
+        type="form"
+        id="create-auction-form"
+        @submit="createAuction"
+        :actions="false"
+        :config="{
+          classes: {
+            message: 'text-gray-800 font-semibold mt-1',
+            messages: 'list-none ml-0',
+            help: 'text-gray-800 -mb-2'
+          },
+        }"
+        validation-visibility="blur"
+      >
+        <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
+        <div class="new-auction-main-box">
+          <h1 class="new-auction-title">Informacje podstawowe</h1>
+          <div class="new-auction-data-box">
+            <FormKit
+              type="text"
+              v-model.trim="titleValue"
+              placeholder="Np. Opel Corsa 2014 1.4 benzyna"
+              label="Tytuł ogłoszenia"
+              validation="required|length:8,70"
+              :classes="{ input: 'new-auction-input' }"
+            />
+          </div>
+          <div class="new-auction-data-box">
+            <FormKit
+              type="number"
+              label="Cena"
+              placeholder="Np. 8600"
+              v-model="priceValue"
+              validation="required|length:0,15"
+              :classes="{ input: 'new-auction-input' }"
+              :validation-messages="{
+                required: 'Cena jest wymagana.',
+              }"
+              help="*Cena wyrażana jest w złotówkach (PLN)"
+            />
+          </div>
+          <div class="new-auction-data-box">
+            <FormKit
+              type="select"
+              label="Rodzaj ceny"
+              placeholder="Wybierz"
+              v-model="priceTypeValue"
+              :options="{
+                jednorazowa: 'Jednorazowa',
+                'na-godzine': 'Na godzinę',
+                'na-miesiac': 'Na miesiąc'
+              }"
+              validation="required"
+              validation-visibility="blur"
+              :classes="{ input: 'h-12 min-h-12 w-full md:w-72 sm:text-lg flex items-center text-gray-700 bg-gray-100 p-2' }"
+            />
+          </div>
         </div>
-        <div class="new-auction-data-box">
-          <h2>Cena</h2>
-          <input
-            type="number"
-            placeholder="Np. 8600"
-            required
-            class="new-auction-input"
-            v-model="priceValue"
-            maxlength="15"
-          >
-        </div>
-      </div>
-      <div class="new-auction-main-box">
-        <h1 class="new-auction-title">Zdjęcia i opis</h1>
-        <div class="new-auction-data-box">
-          <label>Zdjęcia</label>
-          <div v-if="urls.length < 4" class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2">
+        <div class="new-auction-main-box">
+          <h1 class="new-auction-title">Zdjęcia i opis</h1>
+          <div class="new-auction-data-box">
+            <label>Zdjęcia</label>
             <input
               type="file"
-              accept="image/png, image/jpeg"
-              class=""
+              accept="image/png, image/jpeg, image/jpg"
+              class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2 mb-2"
               @change="onFileChange($event)"
+              multiple
+              :disabled="urls.length >= 4"
             >
-          </div>
-
-          <div class="grid grid-cols-1 2xl:grid-cols-2 h-auto">
-            <div
-              v-for="(url, index) in urls"
-              :key="url"
-              class="bg-cover bg-no-repeat bg-center grid-cols-1 m-2 h-72 flex flex-col"
-              :style="{ backgroundImage: 'url(' + url + ')' }"
-            >
+            <div class="grid grid-cols-1 xl:grid-cols-2 h-auto">
               <div
-                class=" text-black bg-white text-center text-sm md:text-base xl:text-xl p-2 w-full opacity-40"
-                v-if="index === 0"
+                v-for="(url, index) in urls"
+                :key="url"
+                class="bg-cover bg-no-repeat bg-center grid-cols-1 h-72 flex flex-col mr-2 mb-2 border-2 border-gray-600"
+                :style="{ backgroundImage: 'url(' + url + ')' }"
               >
-                To zdjęcie będzie główne
-              </div>
-              <div class="flex justify-end items-end h-full">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                @click="removeImage(index)"
-                class="h-10 w-10 text-red-600 button-animation-hover cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
+                <span v-if="index === 0" class="text-black bg-gray-300 text-center text-sm md:text-base xl:text-xl p-2 w-full opacity-70">
+                  To zdjęcie będzie główne
+                </span>
+                <div class="flex justify-end items-end h-full">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    @click="removeImage(index)"
+                    class="h-10 w-10 text-red-600 button-animation-hover cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
-
+          <div class="new-auction-data-box">
+            <FormKit
+              type="textarea"
+              label="Opis"
+              placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
+              v-model.trim="descriptionValue"
+              validation="required|length:50,1000"
+              :validation-messages="{
+                length: `Opis musi mieć 50-1000 znaków (obecnie: ${descriptionValue.length}).`,
+              }"
+              :classes="{ input: 'bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full lg:w-3/5 h-72 -mb-1' }"
+            />
+          </div>
         </div>
-        <div class="new-auction-data-box">
-          <label>Opis</label>
-          <textarea
-            class="bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full md:w-3/5 h-72"
-            placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
-            required
-            v-model.trim="descriptionValue"
-            minlength="50"
-            maxlength="1000"
-          >
-          </textarea>
-        </div>
-      </div>
 
-      <div class="new-auction-main-box">
-        <h1 class="new-auction-title">Filtry</h1>
-        <SearchFilters
-          class="text-white"
-          @select-change="updateFilters"
-          :selectDefaultOption="'Wybierz'"
-          :isRequired="true"
-        />
-      </div>
-
-      <div class="new-auction-main-box">
-        <h1 class="new-auction-title">Dane kontaktowe</h1>
-        <div class="new-auction-data-box">
-          <label>Lokalizacja</label>
-          <input
-            type="text"
-            placeholder="Np. Złota, Stawiszyńska"
-            required
-            class="new-auction-input"
-            v-model="locationValue"
-            maxlength="30"
-          >
+        <div class="new-auction-main-box">
+          <h1 class="new-auction-title">Filtry</h1>
+          <SearchFilters
+            class="text-white"
+            ref="filteringComponent"
+            @select-change="updateFilters"
+            @display-filters-validation-error="displayFiltersValidationError"
+            @hide-filters-validation-error="hideFiltersValidationError"
+            :selectDefaultOption="'Wybierz'"
+            :isRequired="true"
+          />
+          <p v-if="filtersValidationErr" class="text-gray-800 font-semibold mt-1">Filtry są wymagane.</p>
         </div>
-        <div class="new-auction-data-box">
-          <label>Numer Telefonu</label>
-          <input
-            type="number"
-            placeholder="Np. 111222333"
-            required
-            class="new-auction-input"
-            v-model="phoneNumberValue"
-            minlength="9"
-            maxlength="12"
-          >
-        </div>
-      </div>
 
-      <input
-        type="submit"
-        value="Stwórz ogłoszenie"
-        class="new-auction-button cursor-pointer"
-      >
-    </form>
-    <div v-if="validationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 right-1/2 transform translate-x-1/2 bottom-10 rounded fixed" role="alert">
-      <span class="block sm:inline">{{ validationText }}</span>
-      <span class="absolute top-0 bottom-0 right-0 px-4 py-3"></span>
+        <div class="new-auction-main-box">
+          <h1 class="new-auction-title">Kontakt i lokalizacja</h1>
+          <div class="new-auction-data-box">
+            <FormKit
+              v-model="hidePhoneNumber"
+              type="checkbox"
+              label="Ukryj numer telefonu"
+              :classes="{ wrapper: `flex flex-row items-center h-14 -mt-2 ${hidePhoneNumber ? '-mb-2' : ''}`, input: 'h-8 w-8', inner: 'h-8 w-8', label: 'text-xl ml-2' }"
+              @change="() => phoneNumberValue = ''"
+            />
+            <FormKit
+              v-if="!hidePhoneNumber"
+              type="number"
+              label="Numer telefonu"
+              placeholder="Np. 111222333"
+              v-model.trim="phoneNumberValue"
+              validation="required|length:9,12"
+              :classes="{ input: 'new-auction-input' }"
+            />
+          </div>
+          <div class="new-auction-data-box">
+            <FormKit
+              type="text"
+              list="streets"
+              label="Lokalizacja (ulica)"
+              placeholder="Np. Złota"
+              v-model.trim="locationValue"
+              validation="required|formKitStreetRule"
+              :validation-rules="{ formKitStreetRule }"
+              :validation-messages="{
+                required: 'Lokalizacja jest wymagana.',
+                formKitStreetRule: 'Podana ulica nie istnieje w Kaliszu.',
+              }"
+              help="*Podaj pełną nazwę ulicy"
+              :classes="{ input: 'new-auction-input' }"
+            />
+            <datalist id="streets">
+              <option v-for="street in streetsCapitalize" :key="street" :value="street"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <p v-if="validationErr" class="text-xl mb-3 font-semibold text-red-500">{{ validationMsg }}</p>
+        <input
+          type="submit"
+          value="Stwórz ogłoszenie"
+          class="new-auction-button cursor-pointer"
+          @click="checkFiltersValidation"
+        >
+      </FormKit>
     </div>
   </div>
 </template>
-
 <script>
-import Loading from '../components/Loading'
-import SearchFilters from '../components/SearchFilters'
-
 import axios from 'axios'
 import convert from 'image-file-resize';
-import categoriesJSON from '../jsons files/categories.json'
-import streets from '../jsons files/streets.json'
-import streetsWithoutPLchars from '../jsons files/streetsWithoutPLchars.json'
+
+// import categoriesJSON from '../jsons files/categories.json'
+import vulgarWords from '../jsons files/vulgarWords.json'
 
 import API_URL from '../../API_URL'
+import streetsCapitalize from '../jsons files/streetsCapitalize.json'
+import { formKitStreetRule } from '../constants/formKitCustomRules'
 import { authorization, jwt, user } from '../constants/const-variables'
 import {
   CLOUDINARY_API_KEY,
@@ -153,6 +192,8 @@ import {
   CLOUDINARY_UPLOAD_PRESET
 } from '../../secret.js'
 
+import Loading from '../components/Loading'
+import SearchFilters from '../components/SearchFilters'
 
 export default {
   name: 'NewAdvert',
@@ -165,71 +206,68 @@ export default {
       // v-models
       titleValue: '',
       priceValue: '',
+      priceTypeValue: '',
       descriptionValue: '',
       locationValue: '',
       phoneNumberValue: '',
-      auctionFilters: [],
-
-      isLoading: false,
+      filtersValue: {},
 
       urls: [],
       images: [],
+      imagesPublic_id: [],
       imageUrls: [],
+      userOtherAuctions: [],
 
-      categories: categoriesJSON,
-      validationText: '',
-      validationError: false,
-      setTimeout: Function,
-      setTimeoutTime: 4000,
+      isLoading: false,
+      filtersValidationErr: false,
+      validationErr: false,
+      validationMsg: '',
       used: false,
-      userOtherAuctions: []
+      hidePhoneNumber: false,
+
+      streetsCapitalize,
+      formKitStreetRule
     }
   },
   async created(){
-
     await axios.get(`${API_URL}/user-auctions/${user.id}`)
     .then(res => {
       this.userOtherAuctions = res.data
     })
 
-    this.categories.sort((categoryA, categoryB) => (categoryA.name > categoryB.name) ? 1 : -1);
-
-    if(!jwt){
-      this.$router.push('/login')
-    }
+    if(!jwt) this.$router.push('/login')
   },
   methods: {
     updateFilters(filters) {
-      this.auctionFilters = Object.values(filters)
+      this.filtersValue = filters
     },
     async onFileChange(e){
-      const image = e.target.files[0]
-      this.images.push(image)
-      this.urls.push(URL.createObjectURL(image))
+      const images = Object.values(e.target.files)
+      images.forEach(image => {
+        const imageIsDuplicate = this.images.some(arrImage => image.name === arrImage.name)
+
+        if(this.urls.length < 4 && !imageIsDuplicate) {
+          this.images.push(image)
+          this.urls.push(URL.createObjectURL(image))
+        }
+      })
     },
     removeImage(index){
       this.images.splice(index,1)
       this.urls.splice(index,1)
     },
     async createAuction(){
-      this.checkIfAuctionIsNotDuplicate()
-      this.validateAuction()
+      this.$refs.filteringComponent.checkIfAllFiltersChoosen()
 
-      if(!this.validationError) {
-        const isStreetExist = streets
-          .findIndex(street => street == this.locationValue.toLowerCase())
+        const titleDescriptionArray = this.titleValue.split(' ').concat(this.descriptionValue.split(' '));
 
-        const isStreetWithoutPLcharsExist = streetsWithoutPLchars
-          .findIndex(street => street == this.locationValue.toLowerCase())
-
-        if(isStreetExist === -1 && isStreetWithoutPLcharsExist === -1){
-          this.setTimeout = setTimeout(()=>{
-            this.validationError = false
-          },this.setTimeoutTime)
-          this.validationText = 'Podana ulica nie istnieje w Kaliszu (upewnij się, że tekst nie zawiera błędów)'
-          return this.validationError = true
+        if(this.findVulgarWord(vulgarWords, titleDescriptionArray) === true){
+          return console.log('wulgarne słowo!')
+        } else{
+          console.log('jest git')
         }
 
+      if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
 
@@ -237,26 +275,35 @@ export default {
           const data = {
             title: this.titleValue,
             price: parseFloat(this.priceValue),
+            priceType: this.priceTypeValue,
             description: this.descriptionValue,
             location: this.locationValue,
             phoneNumber: this.phoneNumberValue,
             user_id: user.id,
+            imagesPublic_id: [],
             images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
-            filters: this.auctionFilters
+            filters: this.filtersValue
           }
 
           await axios.post(`${API_URL}/auctions`, data, authorization)
           .then(() => this.$router.push('/dashboard'))
-          .catch(err=>{console.log(err)})
+          .catch(err=>console.log(err))
         } else{
-          await this.images.forEach(async image =>{
+          await this.images.forEach(async (image, index) =>{
             let isPostedImages = false;
+            const img = new Image();
+            const typeImg = image.type.slice(6)
+            img.src = this.urls[index];
+
+            const proportionImg = (img.width > img.height ? img.width : img.height) / 608;
+            const width = img.width / proportionImg;
+            const height = img.height / proportionImg;
 
             convert({
               file: image,
-              width: 800,
-              height: 450,
-              type: 'jpeg'
+              width,
+              height,
+              type: typeImg
             })
             .then(async file => {
               const data = new FormData()
@@ -271,6 +318,7 @@ export default {
                 data
               )
               .then(async res => {
+                await this.imagesPublic_id.push(res.data.public_id);
                 await this.imageUrls.push(res.data.url);
                 if(this.imageUrls.length === this.images.length) isPostedImages = true;
               })
@@ -281,12 +329,14 @@ export default {
                 const data = {
                   title: this.titleValue,
                   price: parseFloat(this.priceValue),
+                  priceType: this.priceTypeValue,
                   description: this.descriptionValue,
                   location: this.locationValue,
-                  phoneNumber: this.phoneNumberValue,
+                  phoneNumber:  String(this.phoneNumberValue),
                   user_id: user.id,
+                  imagesPublic_id: this.imagesPublic_id,
                   images: this.imageUrls,
-                  filters: this.auctionFilters
+                  filters: this.filtersValue
                 }
 
                 await axios.post(`${API_URL}/auctions`, data, authorization)
@@ -296,71 +346,20 @@ export default {
             })
           })
         }
-
       }
-
     },
-    validateAuction() {
-      clearTimeout(this.setTimeout)
-
-      if(!this.titleValue || !this.priceValue || !this.auctionFilters || !this.descriptionValue || !this.locationValue || !this.phoneNumberValue){
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Uzupełnij puste pola'
-        return this.validationError = true
-      }
-
-      if(this.titleValue.length < 8){
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Tytuł ogłoszenia jest za krótki (co najmniej 8 znaków)'
-        return this.validationError = true
-      }
-
-      if(this.priceValue.length > 15) {
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Podana kwota jest za długa (maksymalnie 15 znaków)'
-        return this.validationError = true
-      }
-
-      if(this.descriptionValue.length < 50){
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Opis ogłoszenia jest za krótki (co najmniej 50 znaków)'
-        return this.validationError = true
-      }
-
-      if(this.descriptionValue.length > 10000){
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Opis ogłoszenia jest zbyt długi (najwiecej 10000 znaków)'
-        return this.validationError = true
-      }
-
-      if(this.phoneNumberValue.length < 9) {
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Podany numer telefonu jest za krótki (co najmniej 9 znaków)'
-        return this.validationError = true
-      }
-
-      if(this.phoneNumberValue.length > 12) {
-        this.setTimeout = setTimeout(()=>{
-          this.validationError = false
-        },this.setTimeoutTime)
-        this.validationText = 'Podany numer telefonu jest za długi (maksymalnie 12 znaków)'
-        return this.validationError = true
-      }
-
+    checkFiltersValidation() {
+      this.$refs.filteringComponent.checkIfAllFiltersChoosen()
     },
-    checkIfAuctionIsNotDuplicate() {
+    displayFiltersValidationError() {
+      this.filtersValidationErr = true
+    },
+    hideFiltersValidationError() {
+      this.filtersValidationErr = false
+    },
+    checkIfAuctionIsDuplicate() {
+      this.validationErr = false
+
       this.userOtherAuctions.forEach(auction => {
         const otherAuctionTexts = `${auction.title} ${auction.description}`
         const thisAuctionTexts = `${this.titleValue} ${this.descriptionValue}`
@@ -368,13 +367,16 @@ export default {
         const similarityInPercentage = this.similarity(otherAuctionTexts, thisAuctionTexts) * 100
 
         if(similarityInPercentage >= 70) {
-          this.setTimeout = setTimeout(()=>{
-            this.validationError = false
-          },this.setTimeoutTime)
-          this.validationText = 'Ogłoszenie jest zbyt podobne do Twojego innego ogłoszenia'
-          return this.validationError = true
+          this.validationErr = true
+          this.validationMsg = 'To ogłoszenie jest zbyt podobne do innego z Twoich ogłoszeń.'
+
+          setTimeout(() => {
+            this.validationErr = false
+          }, 5000);
         }
       })
+
+      return this.validationErr
     },
     similarity(s1, s2) {
       var longer = s1;
@@ -414,6 +416,17 @@ export default {
           costs[s2.length] = lastValue;
       }
       return costs[s2.length];
+    },
+    findVulgarWord(array1, array2){
+      for(let i = 0; i < array1.length; i++) {
+        for(let j = 0; j < array2.length; j++) {
+          if(array1[i].toLowerCase() === array2[j].toLowerCase()) {
+            console.log(array1[i].toLowerCase(), " ", array2[j].toLowerCase())
+            return true;
+          }
+        }
+      }
+      return false;
     }
   }
 }

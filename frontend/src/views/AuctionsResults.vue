@@ -10,15 +10,24 @@
         :searchInputLocation="searchInputLocation"
       />
       <div class="w-full bg-white text-gray-600 my-5 p-5 shadow-sm">
-        <h2 class="w-full text-2xl font-semibold mb-5 pb-2 border-b border-gray-200">Filtry</h2>
-        <SearchFilters
-          ref="filteringComponent"
-          @select-change="updateAppliedFilters"
-          @update-auctions="updateAuctions"
-          :appliedFiltersCookies="appliedFilters"
-          :selectDefaultOption="'Wszystko'"
-          :isRequired="false"
-        />
+        <Disclosure v-slot="{ open }" :defaultOpen="true">
+          <DisclosureButton class="lg:cursor-default w-full flex flex-row justify-between items-center text-left pb-2 border-b border-gray-200 focus:outline-none lg:mb-5" :class="open ? 'mb-5' : ''">
+            <span class="text-2xl font-semibold">Filtry</span>
+            <svg xmlns="http://www.w3.org/2000/svg" :class="open ? 'transform rotate-180' : ''" class="lg:hidden transition duration-100 h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 15l7-7 7 7" />
+            </svg>
+          </DisclosureButton>
+          <DisclosurePanel :static="windowWidth > 1024 ? true : false">
+            <SearchFilters
+              ref="filteringComponent"
+              @select-change="updateAppliedFilters"
+              @update-auctions="updateAuctions"
+              :appliedFiltersCookies="appliedFilters"
+              :selectDefaultOption="'Wszystko'"
+              :isRequired="false"
+            />
+          </DisclosurePanel>
+        </Disclosure>
       </div>
       <SearchSorting
         ref="sortingComponent"
@@ -49,6 +58,9 @@
 </template>
 <script>
 import axios from 'axios'
+import API_URL from '../../API_URL'
+import { jwt, user } from '../constants/const-variables'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 
 import Loading from '../components/Loading'
 import SearchInputs from '../components/SearchInputs'
@@ -58,8 +70,6 @@ import NoAuctionsFound from '../components/NoAuctionsFound'
 import InfoElement from '../components/InfoElement'
 import Auction from '../components/Auction'
 
-import API_URL from '../../API_URL'
-import { jwt, user } from '../constants/const-variables'
 
 export default {
   name: 'AuctionsResults',
@@ -70,7 +80,10 @@ export default {
     SearchSorting,
     InfoElement,
     NoAuctionsFound,
-    Auction
+    Auction,
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
   },
   data() {
     return {
@@ -79,6 +92,7 @@ export default {
       activeAuctionId: '',
       appliedFilters: {},
       searchData: {},
+      windowWidth: window.innerWidth,
 
       auctions: [],
       auctionsCopy: [],
@@ -133,7 +147,9 @@ export default {
       // Sorting the adverts array
       this.$refs.sortingComponent.sortAuctions(this.auctions);
       // Filter the adverts array by categories
-      this.$refs.filteringComponent.filterAdverts(this.auctions, this.appliedFilters);
+      if(this.appliedFilters.category !== '') {
+        this.$refs.filteringComponent.filterAuctions(this.auctions, this.appliedFilters);
+      }
     },
     updateAuctions(auctions) {
       this.auctions = auctions;

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full min-h-screen py-10 2xl:p-0 flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
-  <router-link to="/" class="text-white text-5xl mb-4 font-light">okki</router-link>
+    <router-link to="/" class="text-white text-5xl mb-4 font-light">okki</router-link>
     <div class="flex flex-col items-center bg-white w-84 xs:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Zaloguj się na konto</h2>
       <form @submit.prevent="login" class="p-10 w-full">

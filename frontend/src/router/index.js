@@ -1,9 +1,9 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
-
 import Home from '../views/Home.vue'
 
 import NewAuction from '../views/NewAuction.vue'
+import EditAuction from '../views/EditAuction.vue'
 import AuctionsResults from '../views/AuctionsResults.vue'
 import Auction from '../views/Auction.vue'
 import Likeds from '../views/Likeds.vue'
@@ -28,6 +28,8 @@ import Info from '../views/Info.vue'
 import FAQ from '../views/FAQ.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import TermsOfUse from '../views/TermsOfUse.vue'
+import Contact from '../views/Contact.vue'
+import ViewNotFound from '../views/ViewNotFound.vue'
 
 const routes = [
   {
@@ -39,6 +41,12 @@ const routes = [
     path: '/new-auction',
     name: 'NewAuction',
     component: NewAuction
+  },
+  {
+    path: '/edit-auction/:id',
+    name: 'EditAuction',
+    component: EditAuction,
+    props: true,
   },
   {
     path: '/auctions-results',
@@ -153,6 +161,16 @@ const routes = [
     name: 'TermsOfUse',
     component: TermsOfUse
   },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'ViewNotFound',
+    component: ViewNotFound
+  }
 ]
 
 const router = createRouter({

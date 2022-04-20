@@ -43,6 +43,12 @@
     "filters": {
       "required": true,
       "type": "json"
+    },
+    "imagesPublic_id": {
+      "type": "json"
+    },
+    "priceType": {
+      "type": "string"
     }
   }
 }

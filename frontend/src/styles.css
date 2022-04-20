@@ -101,7 +101,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .new-auction-button{
-  @apply w-52 md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150
+  @apply w-full md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150
 }
 
 /* SearchSorting styles */
@@ -147,7 +147,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .like-button-scale:hover{
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .new-message-icon::after {
