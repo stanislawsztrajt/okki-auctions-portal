@@ -5,7 +5,7 @@
       v-else
       class="flex flex-col items-center gap-8"
     >
-      <div class="w-11/12 2xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
+      <header class="w-11/12 2xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
         <p
           class="text-xl lg:text-2xl pointer-events-none"
           spellcheck="false"
@@ -15,7 +15,7 @@
           {{auction.title}}
         </p>
         <p class="text-2xl lg:text-3xl text-green-600 font-bold">{{ auction.price }}zł</p>
-      </div>
+      </header>
 
       <div class="w-11/12 2xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
         <div class="w-full 2xl:w-3/4 bg-white p-4 shadow">
@@ -71,16 +71,16 @@
               :auction_id="auction.id"
               :route="'auctions'"
             />
-            <a 
-              :href="`/chat/${user.id}`"
+            <router-link
+              :to="`/chat/${user.id}`"
               class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-green-600 hover:opacity-80 duration-100"
               v-if="auction.user_id !== userCookie.id && jwt"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              Wyślij wiadomość
-            </a>
+              Rozmowa / Wideorozmowa
+            </router-link>
             <!-- <router-link
               :to="`/chat/${user.id}`"
               class=" mt-3 text-center text-md 2xl:text-lg bg-gray-200 rounded-md p-2 text-green-600 hover:opacity-80 duration-100"

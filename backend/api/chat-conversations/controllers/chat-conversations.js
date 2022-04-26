@@ -25,6 +25,21 @@ module.exports = {
 
     return sanitizeEntity(entity, { model: strapi.models['chat-conversations'] });
   },
+  async update(ctx){
+    const { id } = ctx.params;
+    
+    const chatConversation = ctx.request.body;
+
+    await chatConversation.messages.forEach(message =>{
+      if(message.message.length > 600 || message.createdAt.length > 100 || message.id.length > 100 || message.sender_id.length > 100){
+        return ctx.response.badRequest('Message must be shorter than 600 chars.');
+      }
+    })
+
+    const entity = await strapi.services['chat-conversation'].update({ id }, chatConversation);
+
+    return sanitizeEntity(entity, { model: strapi.models['chat-conversation'] });
+  },
   async findUserConversations(ctx) {
     let entity = await strapi.query('chat-conversations').find({ code: { $regex: ctx.state.user.id } })
     entity.sort((conversationA, converastionB) => conversationA.updatedAt < converastionB.updatedAt ? 1 : -1);

@@ -68,3 +68,4 @@ export const displayNotifications = async () => {
 const hideNotifications = async () => {
   socket.emit('hideNotifications')
 }
+

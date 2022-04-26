@@ -213,6 +213,9 @@ export default {
       urls: [],
       images: [],
       imageUrls: [],
+      imagesPublicId: [],
+      imagesToDelete: [],
+
       userOtherAuctions: [],
 
       isLoading: false,
@@ -243,6 +246,7 @@ export default {
       if(auction.phoneNumber.trim() === '') this.hidePhoneNumber = true
       else this.phoneNumberValue = auction.phoneNumber
       this.filtersValue = auction.filters
+      this.imagesPublicId = auction.imagesPublic_id
       if(auction.images[0] !== 'https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg') {
         auction.images.forEach(image => {
           this.urls.push(image)
@@ -275,8 +279,13 @@ export default {
       })
     },
     removeImage(index){
-      this.images.splice(index,1)
-      this.urls.splice(index,1)
+      if(typeof(this.images[index]) === 'string'){
+        this.imagesToDelete.push(this.imagesPublicId[index]);
+        this.imagesPublicId.splice(index,1);
+      }
+      
+      this.images.splice(index,1);
+      this.urls.splice(index,1);
     },
     async createAuction(){
       this.$refs.filteringComponent.checkIfAllFiltersChoosen()
@@ -284,6 +293,7 @@ export default {
       if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
+        document.getElementsByTagName('app')[0].scrollIntoView({ behavior: "smooth" })
 
         if(this.images.length === 0){
           const data = {
@@ -302,17 +312,28 @@ export default {
           .then(() => this.$router.push(`/auction/${this.id}`))
           .catch(err=>{console.log(err)})
         } else {
-          await this.images.forEach(async image =>{
-            let isPostedImages = false;
+          console.log(this.imagesToDelete)
+          this.imagesToDelete.forEach(async public_id =>{
+            await axios.delete(`${API_URL}/auction-image/${this.id}/${public_id}`, authorization)
+          })
 
+          this.images.forEach(async (image, index) =>{
             if(typeof(image) === 'string') {
               this.imageUrls.push(image)
             } else {
+              const img = new Image();
+              const typeImg = image.type.slice(6)
+              img.src = this.urls[index];
+
+              const proportionImg = (img.width > img.height ? img.width : img.height) / 608;
+              const width = img.width / proportionImg;
+              const height = img.height / proportionImg;
+
               await convert({
                 file: image,
-                width: 800,
-                height: 450,
-                type: 'jpeg'
+                width,
+                height,
+                type: typeImg
               })
               .then(async file => {
                 const data = new FormData()
@@ -329,9 +350,7 @@ export default {
               })
             }
 
-            if(this.imageUrls.length === this.images.length) isPostedImages = true;
-
-            if(isPostedImages && this.used){
+            if(this.imageUrls.length === this.images.length && this.used){
               const data = {
                 title: this.titleValue,
                 price: parseFloat(this.priceValue),

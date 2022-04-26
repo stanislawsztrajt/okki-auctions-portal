@@ -29,6 +29,7 @@ import FAQ from '../views/FAQ.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import TermsOfUse from '../views/TermsOfUse.vue'
 import Contact from '../views/Contact.vue'
+import Visit from '../views/Visit.vue'
 import ViewNotFound from '../views/ViewNotFound.vue'
 
 const routes = [
@@ -165,6 +166,11 @@ const routes = [
     path: '/contact',
     name: 'Contact',
     component: Contact
+  },
+  {
+    path: '/visit',
+    name: 'Visit',
+    component: Visit
   },
   {
     path: '/:catchAll(.*)',

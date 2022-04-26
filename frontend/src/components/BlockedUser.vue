@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen flex flex-row justify-center items-center">
     <div class="text-2xl p-8 py-16 text-center text-red-500">
-      Twoje konto zostało zablokowane z powodu niestosownego ogłoszenia lub komentarza
+      Twoje konto zostało zablokowane z powodu niestosownego ogłoszenia lub komentarza. Lub napotkaliśmy problemy z serverem.
       <br>
       <button @click="logout" class="font-bold cursor-pointer text-gray-700">Wróć na stronę główną</button>
     </div>

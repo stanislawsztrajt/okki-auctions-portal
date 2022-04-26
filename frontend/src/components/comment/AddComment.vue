@@ -64,8 +64,15 @@ export default {
           this.isValidate = false
         }, 4000)
         this.validateText = 'Wybierz ocenę.'
-        this.isValidate = true;
-        return
+        return this.isValidate = true;
+      }
+
+      if(this.body.length <= 20){
+        setTimeout(() =>{
+          this.isValidate = false
+        }, 4000)
+        this.validateText = 'Zgłoszenie musi być dłuższe niż 20 znaków.'
+        return this.isValidate = true;
       }
 
       const comment = {

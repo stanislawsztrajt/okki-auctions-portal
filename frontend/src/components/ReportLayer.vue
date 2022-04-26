@@ -81,6 +81,12 @@ export default {
         this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
         return this.validationText = "Minimalna długość zgłoszenia to 20 znaków";
       }
+      
+      if(this.message.length > 500) {
+        this.isValidation = true
+        this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
+        return this.validationText = "Maksymalna długość zgłoszenia to 500 znaków";
+      }
 
       this.isLoading = true;
 

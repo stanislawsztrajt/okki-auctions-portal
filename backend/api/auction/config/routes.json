@@ -25,14 +25,6 @@
       }
     },
     {
-      "method": "DELETE",
-      "path": "/user-auctions/:id",
-      "handler": "auction.deleteUserAuctions",
-      "config": {
-        "policies": []
-      }
-    },
-    {
       "method": "GET",
       "path": "/publish-auction/:id",
       "handler": "auction.publishAuction",
@@ -44,6 +36,22 @@
       "method": "GET",
       "path": "/renew-auctions/:id",
       "handler": "auction.renewAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/user-auctions/:id",
+      "handler": "auction.deleteUserAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/auction-image/:auction_id/:id",
+      "handler": "auction.deleteAuctionImage",
       "config": {
         "policies": []
       }

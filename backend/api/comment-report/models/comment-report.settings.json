@@ -12,16 +12,24 @@
   "pluginOptions": {},
   "attributes": {
     "user_id": {
-      "type": "string"
+      "type": "string",
+      "min": 20,
+      "max": 30
     },
     "user_ip": {
-      "type": "string"
+      "type": "string",
+      "min": 10,
+      "max": 30
     },
     "message": {
-      "type": "text"
+      "type": "text",
+      "min": 20,
+      "max": 500
     },
     "comment_id": {
-      "type": "string"
+      "type": "string",
+      "min": 20,
+      "max": 30
     }
   }
 }

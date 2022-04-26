@@ -13,10 +13,14 @@
   "pluginOptions": {},
   "attributes": {
     "user_id": {
-      "type": "string"
+      "type": "string",
+      "min": 20,
+      "max": 30
     },
     "auction_id": {
-      "type": "string"
+      "type": "string",
+      "min": 20,
+      "max": 30
     }
   }
 }

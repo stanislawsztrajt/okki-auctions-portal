@@ -53,7 +53,7 @@
 					Czekanie na użytkownika...
 				</div>
 			</div>
-			<div class="flex flex-row justify-center items-end absolute w-full h-screen top-0">
+			<div class="flex flex-row justify-center items-end fixed w-full h-screen top-0">
 				<div class="flex flex-row items-center justify-center mb-2">
 					<button
 						:class="`call_button cursor-pointer duration-100 ${isNotMute ? 'text-blue-400 border-blue-400 hover:text-gray-400 hover:border-gray-400' : 'hover:text-blue-400 hover:border-blue-400'}`"

@@ -1,6 +1,6 @@
 <template>
-  <a
-    :href="`/chat/${conversationUserID}`"
+  <router-link
+    :to="`/chat/${conversationUserID}`"
     v-if="conversationUser.id"
     class="w-11/12 sm:w-4/5 md:3/4 xl:w-1/2 h-18 mt-4 bg-white border-gray-300 shadow flex flex-col items-start justify-center p-5"
   >
@@ -9,7 +9,7 @@
       <span>{{ lastMessage.sender_id === conversationUserID ? '' : 'Ty: ' }}</span>
       <span :class="showNotification ? 'font-semibold' : ''">{{ lastMessage.message.length > 80 ? lastMessage.message.substring(0, 80) + '...' :  lastMessage.message}}</span>
     </div>
-  </a>
+  </router-link>
 </template>
 <script>
 import { authorization, user, notReadConversations } from '../constants/const-variables'

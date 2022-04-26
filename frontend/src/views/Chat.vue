@@ -64,6 +64,7 @@
               placeholder="Wyślij wiadomość"
               class="px-4 w-full h-full bg-gray-100 focus:outline-none focus:shadow-inner"
               v-model.trim="message"
+              maxlength="600"
               @keyup.enter="conversationExists ? sendMessage() : createConversation()"
             >
             <button

@@ -14,18 +14,26 @@
   "attributes": {
     "title": {
       "type": "string",
+      "min": 8,
+      "max": 70,
       "required": true
     },
     "user_id": {
       "type": "string",
+      "min": 20,
+      "max": 30,
       "required": true
     },
     "price": {
       "type": "float",
+      "min": 0,
+      "max": 15,
       "required": true
     },
     "phoneNumber": {
       "required": true,
+      "min": 9,
+      "max": 12,
       "type": "string"
     },
     "images": {
@@ -34,10 +42,14 @@
     },
     "location": {
       "required": true,
+      "min": 3,
+      "max": 36,
       "type": "string"
     },
     "description": {
       "required": true,
+      "min": 50,
+      "max": 1000,
       "type": "text"
     },
     "filters": {
@@ -48,7 +60,8 @@
       "type": "json"
     },
     "priceType": {
-      "type": "string"
+      "type": "string",
+      "max": 15
     }
   }
 }

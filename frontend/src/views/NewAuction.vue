@@ -270,6 +270,7 @@ export default {
       if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
+        document.getElementsByTagName('app')[0].scrollIntoView({ behavior: "smooth" })
 
         if(this.images.length === 0){
           const data = {
@@ -289,8 +290,7 @@ export default {
           .then(() => this.$router.push('/dashboard'))
           .catch(err=>console.log(err))
         } else{
-          await this.images.forEach(async (image, index) =>{
-            let isPostedImages = false;
+          this.images.forEach(async (image, index) =>{
             const img = new Image();
             const typeImg = image.type.slice(6)
             img.src = this.urls[index];
@@ -299,7 +299,7 @@ export default {
             const width = img.width / proportionImg;
             const height = img.height / proportionImg;
 
-            convert({
+            await convert({
               file: image,
               width,
               height,
@@ -320,12 +320,11 @@ export default {
               .then(async res => {
                 await this.imagesPublic_id.push(res.data.public_id);
                 await this.imageUrls.push(res.data.url);
-                if(this.imageUrls.length === this.images.length) isPostedImages = true;
               })
               .catch(err => console.log(err))
 
 
-              if(isPostedImages && this.used){
+              if(this.imageUrls.length === this.images.length && this.used){
                 const data = {
                   title: this.titleValue,
                   price: parseFloat(this.priceValue),
