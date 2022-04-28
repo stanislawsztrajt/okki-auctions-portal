@@ -293,7 +293,7 @@ export default {
       if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
-        document.getElementsByTagName('app')[0].scrollIntoView({ behavior: "smooth" })
+        window.scrollTo(0,0);
 
         if(this.images.length === 0){
           const data = {
@@ -305,6 +305,7 @@ export default {
             phoneNumber: this.phoneNumberValue,
             user_id: user.id,
             images: ['https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg'],
+            imagesPublic_id: [],
             filters: this.filtersValue
           }
 
@@ -360,6 +361,7 @@ export default {
                 phoneNumber: this.phoneNumberValue,
                 user_id: user.id,
                 images: this.imageUrls,
+                imagesPublic_id: this.imagesPublic_id,
                 filters: this.filtersValue
               }
 

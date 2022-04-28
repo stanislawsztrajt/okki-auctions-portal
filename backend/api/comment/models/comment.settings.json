@@ -14,23 +14,23 @@
   "attributes": {
     "body": {
       "type": "text",
-      "min": 20,
-      "max": 450
+      "minLength": 20,
+      "maxLength": 450
     },
     "username": {
       "type": "string",
-      "min": 3,
-      "max": 30
+      "minLength": 3,
+      "maxLength": 30
     },
     "user_id": {
       "type": "string",
-      "min": 20,
-      "max": 30
+      "minLength": 20,
+      "maxLength": 30
     },
     "user_profile_id": {
       "type": "string",
-      "min": 20,
-      "max": 30
+      "minLength": 20,
+      "maxLength": 30
     },
     "rate": {
       "type": "boolean"

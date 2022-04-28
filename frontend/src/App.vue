@@ -54,7 +54,11 @@ export default {
 
     if(jwt){
       await axios.get(`${API_URL}/users/me`, authorization)
-      .catch(() => this.isBlocked = true)
+      .catch((error) => {
+        if(error.response.data.message === 'Your account has been blocked by the administrator.'){
+          this.isBlocked = true;
+        }
+      })
 
       this.fetchUserConversations()
 

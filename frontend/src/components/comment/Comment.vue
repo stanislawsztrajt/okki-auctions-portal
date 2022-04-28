@@ -169,17 +169,17 @@ export default {
     toggleDeleteReportLayer(){
       this.isDeleteReportLayer = !this.isDeleteReportLayer;
     },
-    async deleteReport(){
+    deleteReport(){
       this.isDeleteReportLayer = !this.isDeleteReportLayer;
 
-      await axios.delete(`${API_URL}/reported-comments/${this.comment.id}`, authorization)
+      axios.delete(`${API_URL}/reported-comments/${this.comment.id}`, authorization)
       this.removeComment(this.comment.id)
     },
     toggleDeleteCommentLayer(){
       this.isDeleteCommentLayer = !this.isDeleteCommentLayer
     },
-    async deleteComment(){
-      await axios.delete(`${API_URL}/comments/${this.comment.id}`, authorization)
+    deleteComment(){
+      axios.delete(`${API_URL}/comments/${this.comment.id}`, authorization)
 
       if(this.isReportUserProfile){
         this.changeChangeDetector()
@@ -190,21 +190,21 @@ export default {
     toggleBlockUserLayer(){
       this.isBlockUserLayer = !this.isBlockUserLayer;
     },
-    async blockUser(){
+    blockUser(){
       this.isBlockUserLayer = !this.isBlockUserLayer;
 
-      await axios.put(`${API_URL}/users/${this.comment.user_id}`, { blocked: true }, authorization)
-      await axios.get(`${API_URL}/block-user/${this.comment.user_id}`, authorization)
+      axios.put(`${API_URL}/users/${this.comment.user_id}`, { blocked: true }, authorization)
+      axios.get(`${API_URL}/block-user/${this.comment.user_id}`, authorization)
       this.removeComment(this.comment.id)
     },
     togglePublishLayer(){
       this.isPublishLayer = !this.isPublishLayer;
     },
-    async publish(){
+    publish(){
       this.isPublishLayer = !this.isPublishLayer;
 
-      await axios.get(`${API_URL}/publish-comment/${this.comment.id}`, authorization)
-      await axios.delete(`${API_URL}/reported-comments/${this.comment.id}`, authorization)
+      axios.get(`${API_URL}/publish-comment/${this.comment.id}`, authorization)
+      axios.delete(`${API_URL}/reported-comments/${this.comment.id}`, authorization)
       // get because put respone 403 forbidden, i don't why
       this.removeComment(this.comment.id)
     },

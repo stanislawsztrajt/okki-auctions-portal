@@ -22,7 +22,6 @@
         </svg>
         Polub
       </router-link>
-      
     </div>
 
     <div v-else class="w-full flex flex-col items-end">

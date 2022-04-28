@@ -33,12 +33,12 @@
 							</button>
 							<button
 								type="button"
-								class="w-full inline-flex mt-1 md:mt-0 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+								class="w-full inline-flex mt-2 md:mt-0 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
 								@click="answerCall({video: false, audio: true})"
 							>
 								Dołącz bez kamerki
 							</button>
-							<div class="mt-1 md:mt-0"></div>
+							<div class="mt-2 md:mt-0"></div>
 							<button @click="cancelCall" type="button" class="w-full x inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
 								Odrzuć
 							</button>

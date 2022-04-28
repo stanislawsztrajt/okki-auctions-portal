@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full h-screen -mt-20 pt-28">
+  <div class="w-full h-screen">
     <Loading :isCenter="true" v-if="isLoading"/>
     <form
-      class="h-2/3 flex flex-col items-center xl:items-start justify-center xl:ml-96 xl:mt-14"
+      class="w-full h-5/6 flex flex-col items-center justify-center "
       @submit.prevent="checkPassword"
-      v-if="!isGivenPassword"
+      v-if="isGivenPassword"
     >
-      <div class="flex flex-col w-2/3 bg-green-600 rounded-xl shadow p-7 text-white">
+      <div class="flex flex-col w-1/3 bg-green-600 rounded-xl shadow p-7 text-white">
         <label for="" class="text-xl exsm:text-2xl lg:text-4xl">
           Podaj obecne hasło
         </label>
@@ -30,12 +30,11 @@
       >
     </form>
 
-
     <div v-else class="flex flex-col items-center mt-12 text-white">
       <!-- <div @click="deleteAccount" class="absolute p-5 bg-red-600 rounded-lg font-bold cursor-pointer button-animation-hover left-4 top-24">
         Usuń konto
       </div> -->
-      <form @submit.prevent="saveEditedUsername" class="new-auction-main-box w-2/3 lg:w-1/2">
+      <form @submit.prevent="saveEditedUsername" class="new-auction-main-box w-3/4 lg:w-1/2">
         <label for="" class="text-lg exsm:text-xl lg:text-2xl">
           Podaj nową nazwa użtkownika
         </label>
@@ -53,12 +52,12 @@
         <input
           value="Zapisz zmiany"
           type="submit"
-          class="change-user-info-button"
+          class="change-user-info-button button-animation-hover"
           @submit.prevent="saveEditedUsername"
         />
       </form>
 
-      <form @submit.prevent="saveEditedEmail" class="new-auction-main-box w-2/3 lg:w-1/2">
+      <form @submit.prevent="saveEditedEmail" class="new-auction-main-box w-3/4 lg:w-1/2">
         <label for="" class="text-lg exsm:text-xl lg:text-2xl">
           Podaj nowy email
         </label>
@@ -74,14 +73,14 @@
         >
         <input
           type="submit"
-          class="change-user-info-button"
+          class="change-user-info-button button-animation-hover"
           value="Zapisz zmiany"
           maxlength="30"
           @submit.prevent="saveEditedEmail"
         />
       </form>
 
-      <form @submit.prevent="saveEditedPassword" class="new-auction-main-box w-2/3 lg:w-1/2">
+      <form @submit.prevent="saveEditedPassword" class="new-auction-main-box w-3/4 lg:w-1/2">
         <label for="" class="text-lg exsm:text-xl lg:text-2xl">
           Podaj nowe hasło
         </label>
@@ -113,37 +112,39 @@
         <input
           value="Zapisz zmiany"
           type="submit"
-          class="change-user-info-button"
+          class="change-user-info-button button-animation-hover"
           @submit.prevent="saveEditedPassword"
         />
       </form>
     </div>
-    <div
-      v-if="validationError"
-      class=" bg-red-100 text-red-900 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md block w-2/3 md:w-1/3 m-auto"
-      role="alert"
-    >
-      <div class="flex">
-        <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-        <div>
-          <p class="font-bold">
-            {{ validationText }}
-          </p>
+    <div class="fixed w-full top-3/4"> 
+      <div
+        v-if="validationError"
+        class=" bg-red-100 text-red-900 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md block w-3/4 md:w-1/3 m-auto"
+        role="alert"
+      >
+        <div class="flex">
+          <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+          <div>
+            <p class="font-bold">
+              {{ validationText }}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      v-if="responseAlert"
-      class=" bg-green-100 text-green-900 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md block w-1/3 m-auto"
-      role="alert"
-    >
-      <div class="flex">
-        <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-        <div>
-          <p class="font-bold">
-            {{ responseText }}
-          </p>
+      <div
+        v-if="responseAlert"
+        class=" bg-green-100 mt-4 text-green-900 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md block w-3/4 md:w-1/3 m-auto"
+        role="alert"
+      >
+        <div class="flex">
+          <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+          <div>
+            <p class="font-bold">
+              {{ responseText }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -370,3 +371,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.change-user-info-button{
+  @apply mt-2 px-3 py-2 xl:p-2 border border-white bg-white text-green-600 rounded xl:w-64 font-medium text-sm md:text-base xl:text-lg text-center cursor-pointer
+}
+</style>

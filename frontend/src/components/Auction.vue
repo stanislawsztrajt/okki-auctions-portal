@@ -195,47 +195,48 @@ export default {
     removeAuction(id){
       this.$emit('remove-auction', id)
     },
-    async renewAuction(){
+    renewAuction(){
       this.displayRenewButton = false;
-      await axios.get(`${API_URL}/renew-auctions/${this.auction.id}`, authorization)
+      axios.get(`${API_URL}/renew-auctions/${this.auction.id}`, authorization)
     },
     toggleDeleteAuctionLayer(){
       this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
     },
-    async deleteAuction(){
+    deleteAuction(){
       this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
 
-      await axios.delete(`${API_URL}/auctions/${this.auction.id}`, authorization)
+      axios.delete(`${API_URL}/auctions/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
     },
     toggleDeleteReportLayer(){
       this.isDeleteReportLayer = !this.isDeleteReportLayer;
     },
-    async deleteReport(){
+    deleteReport(){
       this.isDeleteReportLayer = !this.isDeleteReportLayer;
 
-      await axios.delete(`${API_URL}/reported-auctions/${this.auction.id}`, authorization)
+      axios.delete(`${API_URL}/reported-auctions/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
     },
     toggleBlockUserLayer(){
       this.isBlockUserLayer = !this.isBlockUserLayer;
     },
-    async blockUser(){
+    blockUser(){
       this.isBlockUserLayer = !this.isBlockUserLayer;
 
-      await axios.put(`${API_URL}/users/${this.auction.user_id}`, { blocked: true }, authorization)
-      await axios.get(`${API_URL}/block-user/${this.comment.user_id}`, authorization)
+      axios.put(`${API_URL}/users/${this.auction.user_id}`, { blocked: true }, authorization)
+      axios.get(`${API_URL}/block-user/${this.comment.user_id}`, authorization)
       this.removeAuction(this.auction.id)
     },
     togglePublishLayer(){
       this.isPublishLayer = !this.isPublishLayer;
     },
-    async publish(){
+    publish(){
       this.isPublishLayer = !this.isPublishLayer;
 
-      await axios.get(`${API_URL}/publish-auction/${this.auction.id}`, authorization)
-      // get because put respone 403 forbidden, i don't why
+      axios.delete(`${API_URL}/reported-auctions/${this.auction.id}`, authorization)
+      axios.get(`${API_URL}/publish-auction/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
+      // get because put respone 403 forbidden, i don't why
     },
     async getAuctionLikesNumber () {
       await axios.get(`${API_URL}/likeds/count`, { headers: { auction_id: this.auction.id, Authorization: `Bearer ${jwt}` }})

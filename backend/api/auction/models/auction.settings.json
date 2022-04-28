@@ -14,26 +14,25 @@
   "attributes": {
     "title": {
       "type": "string",
-      "min": 8,
-      "max": 70,
+      "minLength": 8,
+      "maxLength": 70,
       "required": true
     },
     "user_id": {
       "type": "string",
-      "min": 20,
-      "max": 30,
+      "minLength": 20,
+      "maxLength": 30,
       "required": true
     },
     "price": {
       "type": "float",
-      "min": 0,
-      "max": 15,
+      "minLength": 0,
+      "maxLength": 15,
       "required": true
     },
     "phoneNumber": {
       "required": true,
-      "min": 9,
-      "max": 12,
+      "maxLength": 12,
       "type": "string"
     },
     "images": {
@@ -42,14 +41,14 @@
     },
     "location": {
       "required": true,
-      "min": 3,
-      "max": 36,
+      "minLength": 3,
+      "maxLength": 36,
       "type": "string"
     },
     "description": {
       "required": true,
-      "min": 50,
-      "max": 1000,
+      "minLength": 50,
+      "maxLength": 1000,
       "type": "text"
     },
     "filters": {
@@ -61,7 +60,7 @@
     },
     "priceType": {
       "type": "string",
-      "max": 15
+      "maxLength": 15
     }
   }
 }

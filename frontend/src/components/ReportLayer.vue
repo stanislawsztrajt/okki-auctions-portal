@@ -65,6 +65,10 @@ export default {
       isAuctionRoute: window.location.href.includes('auction')
     }
   },
+  created(){
+      fetch('https://api.ipify.org?format=json')
+      .then(res=>console.log(res))
+  },
   props: {
     id: String
   },
@@ -90,26 +94,36 @@ export default {
 
       this.isLoading = true;
 
-      fetch('https://api.ipify.org?format=json')
+      await fetch('http://api.ipify.org/?format=json')
       .then(x => x.json())
       .then(async ({ ip }) => {
         let data = {};
 
-        if(this.isAuctionRoute){
-          data = {
-            auction_id: this.id,
-            user_ip: ip,
-            user_id: user.id,
-            message: this.message
-          }
-        } else{
-          data = {
-            comment_id: this.id,
-            user_ip: ip,
-            user_id: user.id,
-            message: this.message
-          }
+        // if(this.isAuctionRoute){
+        //   data = {
+        //     auction_id: this.id,
+        //     user_ip: ip,
+        //     user_id: user.id,
+        //     message: this.message
+        //   }
+        // } else{
+        //   data = {
+        //     comment_id: this.id,
+        //     user_ip: ip,
+        //     user_id: user.id,
+        //     message: this.message
+        //   }
+        // }
+
+        data = {
+          ...(this.isAuctionRoute ? { auction_id: this.id } : { comment_id: this.id }),
+          user_ip: ip,
+          user_id: user.id,
+          message: this.message
         }
+
+        console.log(data)
+        console.log('hej')
 
         await axios.post(`${API_URL}/${this.isAuctionRoute ? 'auction': 'comment'}-reports`, data, authorization)
         .then(() => {

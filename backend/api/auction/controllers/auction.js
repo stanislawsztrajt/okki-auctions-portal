@@ -207,15 +207,6 @@ module.exports = {
 
     let entity;
 
-    const [auction] = await strapi.services.auction.find({
-      id: ctx.params.id,
-      'user_id': ctx.state.user.id,
-    });
-
-    if (!auction) {
-      return ctx.unauthorized(`You can't delete this entry`);
-    }
-
     if(ctx.state.user.role.name === 'Admin'){
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
@@ -226,6 +217,15 @@ module.exports = {
         entity = await strapi.services.auction.delete({ id }, ctx.request.body);
       }
     } else{
+      const [auction] = await strapi.services.auction.find({
+        id: ctx.params.id,
+        'user_id': ctx.state.user.id,
+      });
+  
+      if (!auction ) {
+        return ctx.unauthorized(`You can't delete this entry`);
+      }
+
       if (ctx.is('multipart')) {
         const { data, files } = parseMultipartData(ctx);
         entity = await strapi.services.auction.delete({ id }, data, {

@@ -14,27 +14,28 @@
   "attributes": {
     "user_id": {
       "type": "string",
-      "min": 20,
-      "max": 30,
+      "minLength": 20,
+      "maxLength": 30,
       "required": true
     },
     "user_ip": {
       "type": "string",
       "private": true,
-      "min": 10,
-      "max": 30,
+      "minLength": 10,
+      "maxLength": 30,
       "required": true
     },
     "auction_id": {
       "type": "string",
-      "min": 20,
-      "max": 30,
+      "minLength": 20,
+      "maxLength": 30,
       "required": true
     },
     "message": {
       "type": "text",
-      "min": 20,
-      "max": 500
+      "minLength": 20,
+      "maxLength": 500,
+      "required": true
     }
   }
 }

@@ -14,13 +14,13 @@
   "attributes": {
     "user_id": {
       "type": "string",
-      "min": 20,
-      "max": 30
+      "minLength": 20,
+      "maxLength": 30
     },
     "auction_id": {
       "type": "string",
-      "min": 20,
-      "max": 30
+      "minLength": 20,
+      "maxLength": 30
     }
   }
 }

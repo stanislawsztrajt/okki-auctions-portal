@@ -122,10 +122,6 @@ body::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-300 float-right rounded rounded-tr-none rounded-bl-xl mr-0;
 }
 
-/* change user info styles */
-.change-user-info-button{
-  @apply mt-2 px-3 py-2 xl:p-2 text-green-700 xl:w-64 font-medium text-sm md:text-base xl:text-lg text-center button-animation-hover cursor-pointer
-}
 
 .auction-textarea{
   overflow-x: hidden;

@@ -270,7 +270,8 @@ export default {
       if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
-        document.getElementsByTagName('app')[0].scrollIntoView({ behavior: "smooth" })
+        window.scrollTo(0,0);
+        // document.getElementsByTagName('app')[0].scrollIntoView({ behavior: "smooth" })
 
         if(this.images.length === 0){
           const data = {
@@ -317,9 +318,9 @@ export default {
                 `https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`,
                 data
               )
-              .then(async res => {
-                await this.imagesPublic_id.push(res.data.public_id);
-                await this.imageUrls.push(res.data.url);
+              .then(res => {
+                this.imagesPublic_id.push(res.data.public_id);
+                this.imageUrls.push(res.data.url);
               })
               .catch(err => console.log(err))
 

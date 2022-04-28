@@ -73,11 +73,9 @@ export default {
     } else {
       await axios.get(`${API_URL}/comment-reports`, authorization)
       .then(res => this.reports = res.data)
-      .then(res=>console.log(res))
 
       await axios.get(`${API_URL}/reported-comments`, authorization)
       .then(res => this.comments = res.data)
-      .then(res=>console.log(res))
     }
   },
   methods: {

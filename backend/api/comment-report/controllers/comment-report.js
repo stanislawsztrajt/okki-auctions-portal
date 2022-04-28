@@ -43,16 +43,18 @@ module.exports = {
     let entity;
     const reports = await strapi.services['comment-report'].find();
 
-    // ctx.request.body.user_id = ctx.state.user.id
-    const isReportExist = reports.findIndex(
-      report =>
-        report.comment_id === ctx.request.body.comment_id &&
-        (
-          report.user_id === ctx.request.body.user_id
-        ||
-          report.user_ip === ctx.request.body.user_ip
-        )
-    )
+    ctx.request.body.user_id = ctx.state.user.id
+
+    // const isReportExist = reports.findIndex(
+    //   report =>
+    //     report.auction_id === ctx.request.body.auction_id &&
+    //     (
+    //       report.user_id === ctx.state.user.id
+    //     ||
+    //       report.user_ip === ctx.request.body.user_ip
+    //     )
+    // )
+    const isReportExist = -1
 
     if(isReportExist > -1){
       throw strapi.errors.badRequest('Your report already exist');
@@ -72,10 +74,10 @@ module.exports = {
 
         const keys = Object.keys(counts);
 
-        Object.values(counts).forEach(async (value, index) =>{
+        Object.values(counts).forEach((value, index) =>{
           // 2 is the number of minimum number of reports to hide comment
           if(value >= 2){
-            await strapi.services.comment.update({ id: keys[index]}, { published_at: null } );
+            strapi.services.comment.update({ id: keys[index]}, { published_at: null } );
           }
         })
       }
