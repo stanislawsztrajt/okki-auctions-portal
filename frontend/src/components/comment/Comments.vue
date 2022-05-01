@@ -9,13 +9,16 @@
       :id="id"
       @push-comment="pushComment"
     />
-    <Comment
-      v-for="comment in comments"
-      :key="comment.id"
-      :comment="comment"
-      @change-change-detector="changeChangeDetector"
-      @remove-comment="removeComment"
-    />
+
+    <div class="flex flex-col">
+      <Comment
+        v-for="comment in comments"
+        :key="comment.id"
+        :comment="comment"
+        @change-change-detector="changeChangeDetector"
+        @remove-comment="removeComment"
+      />
+    </div>
     <div class="p-10"></div>
   </div>
 </template>
@@ -24,8 +27,8 @@
 import axios from 'axios'
 
 import { user } from '../../constants/const-variables'
-
 import API_URL from '../../../API_URL'
+
 import Comment from './Comment.vue'
 import AddComment from './AddComment.vue'
 import InfoElement from '../InfoElement.vue'
@@ -48,21 +51,26 @@ export default {
     }
   },
   async created(){
-    await axios.get(`${API_URL}/comments-in-users-profiles/${this.id}`)
+    await axios.get(`${API_URL}/first-six-comments-in-users-profiles/${this.id}`)
     .then(res => {
+      this.commentsLength = res.data.comments.length;
       this.comments = res.data.comments;
-      this.rate = res.data.accucuracyRate
+      this.rate = res.data.accucuracyRate;
+
+      if(this.commentsLength > 5){
+        this.comments.pop();
+      }
     })
   },
   methods: {
     changeChangeDetector(){
       this.$emit('change-change-detector')
     },
-    async pushComment(comment){
-      this.comments.push(comment);
+    pushComment(comment){
+      this.comments.unshift(comment);
       this.changeChangeDetector();
     },
-    async removeComment(id){
+    removeComment(id){
       const index = this.comments.findIndex(comment => comment.id === id);
       this.comments.splice(index,1);
     }

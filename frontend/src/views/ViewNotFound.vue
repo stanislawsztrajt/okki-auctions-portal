@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center flex-col">
+  <div class="flex justify-center items-center flex-col p-8">
     <h1 class="text-3xl mb-6">
       Nie znaleziono strony
       <router-link to="/" class="font-semibold cursor-pointer">wróć na stronę główną</router-link>

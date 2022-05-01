@@ -9,6 +9,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/first-six-comments-in-users-profiles/:id",
+      "handler": "comment.findFirstSixCommentsInUsersProfiles",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/comments-in-users-profiles/:id",
       "handler": "comment.findCommentsInUsersProfiles",

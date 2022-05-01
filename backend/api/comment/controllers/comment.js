@@ -32,6 +32,33 @@ module.exports = {
       comments: entity
     }, { model: strapi.models.comment });
   },
+  async findFirstSixCommentsInUsersProfiles(ctx){
+    const { id } = ctx.params;
+
+    const entity = await strapi.services.comment.find({ user_profile_id: id });
+
+    let positiveRate = 0;
+    entity.forEach(comment =>{
+      if(comment.rate === true){
+        positiveRate++
+      }
+    })
+
+    let accucuracyRate = 0;
+
+    if(entity.length > 0){
+      accucuracyRate = Math.round(positiveRate/entity.length*100);
+    } else{
+      accucuracyRate = 'Brak opinii użytkowników'
+    }
+
+    const comments = entity.splice(0,6)
+
+    return sanitizeEntity({
+      accucuracyRate,
+      comments
+    }, { model: strapi.models.comment });
+  },
   async findHiddenComments(ctx) {
     let result = await strapi.query('comment').model.find({ published_at: { $eq: null } });
 
@@ -53,21 +80,22 @@ module.exports = {
   async create(ctx) {
     let entity;
 
-    const comments = await strapi.services.comment.find();
+    // const comments = await strapi.services.comment.find();
 
-    ctx.request.body.user_id = ctx.state.user.id
+    // ctx.request.body.user_id = ctx.state.user.id
 
-    const isCommentExist = comments.findIndex(
-      comment =>
-        comment.user_profile_id === ctx.request.body.user_profile_id &&
-        (
-          comment.user_id === ctx.state.user.id
-        ||
-          comment.user_ip === ctx.request.body.user_ip
-        ||
-          comment.user_profile_id === ctx.request.body.user_id
-        )
-    )
+    // const isCommentExist = comments.findIndex(
+    //   comment =>
+    //     comment.user_profile_id === ctx.request.body.user_profile_id &&
+    //     (
+    //       comment.user_id === ctx.state.user.id
+    //     ||
+    //       comment.user_ip === ctx.request.body.user_ip
+    //     ||
+    //       comment.user_profile_id === ctx.request.body.user_id
+    //     )
+    // )
+    const isCommentExist = -1
 
     if(isCommentExist > -1){
       throw strapi.errors.badRequest('Your comment already exist');

@@ -170,7 +170,7 @@ export default {
       jwt,
       additionalTimeToDelete,
       date: new Date(Date.parse(new Date()) + additionalTimeToDelete).toISOString(),
-      isDashboardRoute: window.location.href.includes('dashboard'),
+      isDashboardRoute: window.location.href.includes('dashboard') || window.location.href.includes(`user-auctions/${user.id}`),
       isReportRoute: window.location.href.includes('report'),
       isDeleteAuctionLayer: false,
       isDeleteReportLayer: false,

@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-col items-center text-gray-800">
-    <section class="section-main flex-col w-5/6 mt-20">
+    <section class="section-main flex-col w-5/6 mt-8 xl:mt-20">
       <div class="section-header">
         <h2 class="text-6xl xl:text-7xl font-bold">Sprzedawaj, kupuj oraz wymieniaj szybko i przyjemnie</h2>
         <p class="section-header-paragraph">
@@ -109,6 +109,6 @@ export default {
   }
 
   .svg{
-    @apply w-2/3 xl:w-1/2
+    @apply w-2/3 xl:w-1/2 mt-1
   }
 </style>

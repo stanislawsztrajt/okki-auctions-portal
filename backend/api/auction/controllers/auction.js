@@ -101,7 +101,16 @@ module.exports = {
   async findUserAuctions(ctx){
     const { id } = ctx.params;
 
-    const entity = await strapi.services.auction.find({ user_id: id })
+    const entity = await strapi.services.auction.find({ user_id: id });
+
+    return sanitizeEntity(entity, { model: strapi.models.auction });
+  },
+  async findFirstSixUserAuctions(ctx){
+    const { id } = ctx.params;
+
+    //idk why .limit() isn't working
+    const auctions = await strapi.services.auction.find({ user_id: id });
+    const entity = auctions.splice(0, 6);
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },

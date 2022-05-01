@@ -149,7 +149,7 @@ export default {
       isBlockUserLayer: false,
       commentReports: [],
 
-      isReportUserProfile: window.location.href.includes('users'),
+      isReportUserProfile: window.location.href.includes('users') || window.location.href.includes('user-comments'),
       isReportRoute: window.location.href.includes('report'),
     }
   },
@@ -178,12 +178,9 @@ export default {
     toggleDeleteCommentLayer(){
       this.isDeleteCommentLayer = !this.isDeleteCommentLayer
     },
-    deleteComment(){
-      axios.delete(`${API_URL}/comments/${this.comment.id}`, authorization)
-
-      if(this.isReportUserProfile){
-        this.changeChangeDetector()
-      }
+    async deleteComment(){
+      await axios.delete(`${API_URL}/comments/${this.comment.id}`, authorization)
+      this.changeChangeDetector();
 
       this.removeComment(this.comment.id)
     },

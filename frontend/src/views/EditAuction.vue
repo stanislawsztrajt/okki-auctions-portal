@@ -313,7 +313,6 @@ export default {
           .then(() => this.$router.push(`/auction/${this.id}`))
           .catch(err=>{console.log(err)})
         } else {
-          console.log(this.imagesToDelete)
           this.imagesToDelete.forEach(async public_id =>{
             await axios.delete(`${API_URL}/auction-image/${this.id}/${public_id}`, authorization)
           })
@@ -346,6 +345,7 @@ export default {
 
                 await axios.post(`https://api.cloudinary.com/v1_1/dh35iucxu/image/upload`, data)
                 .then(res => {
+                  this.imagesPublicId.push(res.data.public_id)
                   this.imageUrls.push(res.data.url);
                 })
               })
@@ -361,7 +361,7 @@ export default {
                 phoneNumber: this.phoneNumberValue,
                 user_id: user.id,
                 images: this.imageUrls,
-                imagesPublic_id: this.imagesPublic_id,
+                imagesPublic_id: this.imagesPublicId,
                 filters: this.filtersValue
               }
 

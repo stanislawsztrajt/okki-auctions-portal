@@ -15,6 +15,8 @@ import Register from '../views/Register.vue'
 import ChangeUserInfo from '../views/ChangeUserInfo.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Dashboard from '../views/Dashboard.vue'
+import UserAuctions from '../views/UserAuctions.vue'
+import UserComments from '../views/UserComments.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import ReportedAuctions from '../views/ReportedAuctions.vue'
 import HiddenAuctions from '../views/HiddenAuctions.vue'
@@ -76,6 +78,23 @@ const routes = [
     component: Dashboard,
   },
   {
+    path: '/dashboard/change-user-info',
+    name: 'ChangeUserInfo',
+    component: ChangeUserInfo,
+  },
+  {
+    path: '/user-auctions/:id',
+    name: 'UserAuctions',
+    component: UserAuctions,
+    props: true,
+  },
+  {
+    path: '/user-comments/:id',
+    name: 'UserComments',
+    component: UserComments,
+    props: true,
+  },
+  {
     path: '/likeds',
     name: 'Likeds',
     component: Likeds,
@@ -95,11 +114,6 @@ const routes = [
     path: '/faq',
     name: 'FAQ',
     component: FAQ,
-  },
-  {
-    path: '/dashboard/change-user-info',
-    name: 'ChangeUserInfo',
-    component: ChangeUserInfo,
   },
   {
     path: '/forgot-password',

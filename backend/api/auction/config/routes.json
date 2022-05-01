@@ -26,6 +26,14 @@
     },
     {
       "method": "GET",
+      "path": "/first-six-user-auctions/:id",
+      "handler": "auction.findFirstSixUserAuctions",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/publish-auction/:id",
       "handler": "auction.publishAuction",
       "config": {
