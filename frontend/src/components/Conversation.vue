@@ -12,7 +12,7 @@
   </router-link>
 </template>
 <script>
-import { authorization, user, notReadConversations } from '../constants/const-variables'
+import { user, notReadConversations } from '../constants/const-variables'
 import axios from 'axios'
 import API_URL from '../../API_URL'
 import { socket } from '../../config/web-sockets.js';
@@ -33,12 +33,12 @@ export default {
   created() {
     if(notReadConversations.includes(this.conversation.code)) {
       this.showNotification = true;
-      this.$emit('move-converastion-to-top', this.conversation.id)
     }
     socket.on('message', ({ message, room }) => {
       if(message.sender_id !== user.id && !this.$route.path.includes(message.sender_id) && this.conversation.code === room) {
         this.showNotification = true;
         this.$emit('move-converastion-to-top', this.conversation.id)
+        this.lastMessage = message
       }
     });
     socket.on('displayNotifications', () => {
@@ -54,16 +54,10 @@ export default {
     this.fetchConversationUser()
     const filteredMessages = this.conversation.messages.filter(message => !message.isIdMessage);
     this.lastMessage = filteredMessages[filteredMessages.length-1]
-
-    socket.on('message', ({ message, room }) => {
-      if(this.conversation.code === room) {
-        if(!message.isIdMessage) this.lastMessage = message
-      }
-    });
   },
   methods: {
     async fetchConversationUser() {
-      await axios.get(`${API_URL}/users/${this.conversationUserID}`, authorization)
+      await axios.get(`${API_URL}/users/${this.conversationUserID}`)
       .then(res => this.conversationUser = res.data)
     }
   },

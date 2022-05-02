@@ -27,7 +27,7 @@ module.exports = {
   },
   async update(ctx){
     const { id } = ctx.params;
-    
+
     const chatConversation = ctx.request.body;
 
     await chatConversation.messages.forEach(message =>{
@@ -36,9 +36,9 @@ module.exports = {
       }
     })
 
-    const entity = await strapi.services['chat-conversation'].update({ id }, chatConversation);
+    const entity = await strapi.services['chat-conversations'].update({ id }, chatConversation);
 
-    return sanitizeEntity(entity, { model: strapi.models['chat-conversation'] });
+    return sanitizeEntity(entity, { model: strapi.models['chat-conversations'] });
   },
   async findUserConversations(ctx) {
     let entity = await strapi.query('chat-conversations').find({ code: { $regex: ctx.state.user.id } })

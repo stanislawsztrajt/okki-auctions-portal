@@ -141,9 +141,6 @@ export default {
 		})
 	},
 	methods: {
-		sendMessageWithId(socket_id){
-			this.$emit('send-message-with-id', socket_id)
-		},
 		toggleIsCalling(){
 			this.$emit('toggle-is-calling')
 		},

@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full h-screen">
-    <Loading :isCenter="true" v-if="isLoading"/>
-    <div v-else class="h-full">
+  <Loading :isCenter="true" v-if="isLoading"/>
+  <div v-else class="w-full h-screen">
+    <div class="h-full">
       <form
           class="w-full h-5/6 flex flex-col items-center justify-center "
           @submit.prevent="checkPassword"
@@ -118,7 +118,7 @@
             />
           </form>
         </div>
-        <div class="absolute w-full bottom-0 mb-4"> 
+        <div class="absolute w-full bottom-0 mb-4">
           <div
             v-if="validationError"
             class=" bg-red-100 text-red-900 rounded-b text-teal-900 px-4 py-3 shadow-md block w-3/4 md:w-1/3 m-auto"

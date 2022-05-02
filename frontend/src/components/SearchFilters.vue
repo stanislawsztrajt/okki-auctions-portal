@@ -94,6 +94,8 @@ export default {
   created() {
     if(this.appliedFiltersCookies) {
       this.filtersVariables = this.appliedFiltersCookies
+    } else if(this.appliedFiltersEditing) {
+      this.filtersVariables = this.appliedFiltersEditing
     }
   },
   watch: {
@@ -102,23 +104,6 @@ export default {
     }
   },
   methods: {
-    filterAuctions(auctionsCopy, appliedFilters) {
-      this.auctions = auctionsCopy
-      if(appliedFilters) {
-        this.filtersVariables = appliedFilters
-      }
-
-      this.appliedFilters = Object.values(this.filtersVariables)
-      this.appliedFilters = this.appliedFilters.filter((a) => a)
-
-      this.auctions = this.auctions.filter((auction) => {
-        if(!auction.filters) return
-        const auctionFiltersArr = Object.values(auction.filters)
-        return this.appliedFilters.every(filter => auctionFiltersArr.includes(filter));
-      })
-
-      this.$emit('update-auctions', this.auctions)
-    },
     clearSubcategory() {
       Object.keys(this.filtersVariables).forEach(key => {
         if(key !== 'category') {
@@ -136,10 +121,17 @@ export default {
       this.updateAppliedFilters()
     },
     updateAppliedFilters() {
+      if(!this.$route.path.includes('edit-auction') && !this.$route.path.includes('new-auction')) {
+        Object.keys(this.filtersVariables).forEach(key => {
+          if(this.filtersVariables[key].trim() === '') {
+            delete this.filtersVariables[key]
+          }
+        })
+      }
       this.$emit('select-change', this.filtersVariables)
     },
     checkIfAllFiltersChoosen() {
-      if(this.$route.path.includes('edit-auction')) {
+      if(this.$route.path.includes('edit-auction') || this.$route.path.includes('new-auction')) {
         if(this.filtersVariables['category'].trim() === '' || this.filtersVariables['subcategory'].trim() === '') {
           this.$emit('display-filters-validation-error')
         } else if(this.subcategoriesFilters[this.filtersVariables['subcategory']]) {

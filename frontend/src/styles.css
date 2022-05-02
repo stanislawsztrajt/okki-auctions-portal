@@ -11,8 +11,12 @@
   }
 }
 
-.rodo-div > h2 {
+.rodo-div h2 {
   @apply text-xl font-semibold mt-5;
+}
+
+.rodo-div li::marker {
+  @apply text-xl font-semibold;
 }
 
 .rodo-link {

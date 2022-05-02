@@ -53,27 +53,7 @@ export default {
       if (e.key === "Enter") {
         this.$emit('update-search-input-values', this.inputItem, this.inputLocation);
       }
-    },
-    filterByInputItem(auctionsCopy) {
-      // Filtering auctions array by item
-      this.auctions = auctionsCopy
-      this.auctions = this.auctions.filter((auction) => {
-        let auctionTitle = auction.title.toLowerCase()
-        let inputItem = this.inputItem.toLowerCase().split(' ')
-        return inputItem.every(searchingWord => auctionTitle.includes(searchingWord));
-      })
-      this.$emit('update-auctions', this.auctions)
-    },
-    filterByInputLocation(auctionsCopy) {
-      // Filtering auctions array by location
-      this.auctions = auctionsCopy
-      this.auctions = this.auctions.filter((auction) => {
-        let auctionLocation = auction.location.toLowerCase()
-        let inputLocation = this.inputLocation.toLowerCase().split(' ')
-        return inputLocation.every(searchingWord => auctionLocation.includes(searchingWord));
-      })
-      this.$emit('update-auctions', this.auctions)
     }
-  },
+  }
 }
 </script>

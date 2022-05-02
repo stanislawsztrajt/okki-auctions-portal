@@ -1,7 +1,7 @@
 <template>
-  <div id="NewAuction">
-    <Loading :isCenter="true" v-if="isLoading"/>
-    <div v-else class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
+  <Loading :isCenter="true" v-if="isLoading"/>
+  <div v-else id="NewAuction">
+    <div class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
       <FormKit
         type="form"
         id="create-auction-form"
@@ -176,15 +176,11 @@
 </template>
 <script>
 import axios from 'axios'
-import convert from 'image-file-resize';
-
-// import categoriesJSON from '../jsons files/categories.json'
-import vulgarWords from '../jsons files/vulgarWords.json'
-
 import API_URL from '../../API_URL'
+import convert from 'image-file-resize';
 import streetsCapitalize from '../jsons files/streetsCapitalize.json'
 import { formKitStreetRule } from '../constants/formKitCustomRules'
-import { authorization, jwt, user } from '../constants/const-variables'
+import { authorization, jwt, user, findVulgarWord } from '../constants/const-variables'
 import {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
@@ -258,20 +254,19 @@ export default {
     },
     async createAuction(){
       this.$refs.filteringComponent.checkIfAllFiltersChoosen()
+      this.checkIfIncludesVulgarWords()
 
-        const titleDescriptionArray = this.titleValue.split(' ').concat(this.descriptionValue.split(' '));
-
-        if(this.findVulgarWord(vulgarWords, titleDescriptionArray) === true){
-          return console.log('wulgarne słowo!')
-        } else{
-          console.log('jest git')
-        }
-
-      if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
+      if(!this.validationErr && !this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
         window.scrollTo(0,0);
-        // document.getElementsByTagName('app')[0].scrollIntoView({ behavior: "smooth" })
+
+        // filtering filters from empty elements
+        Object.keys(this.filtersValue).forEach(key => {
+          if(this.filtersValue[key].trim() === '') {
+            delete this.filtersValue[key]
+          }
+        })
 
         if(this.images.length === 0){
           const data = {
@@ -378,6 +373,18 @@ export default {
 
       return this.validationErr
     },
+    checkIfIncludesVulgarWords() {
+      const titleDescriptionArray = this.titleValue.split(' ').concat(this.descriptionValue.split(' '));
+
+      if(findVulgarWord(titleDescriptionArray) === true){
+        this.validationErr = true
+        this.validationMsg = 'To ogłoszenie zawiera wulgarne słowo!'
+
+        setTimeout(() => {
+          this.validationErr = false
+        }, 5000);
+      }
+    },
     similarity(s1, s2) {
       var longer = s1;
       var shorter = s2;
@@ -416,17 +423,6 @@ export default {
           costs[s2.length] = lastValue;
       }
       return costs[s2.length];
-    },
-    findVulgarWord(array1, array2){
-      for(let i = 0; i < array1.length; i++) {
-        for(let j = 0; j < array2.length; j++) {
-          if(array1[i].toLowerCase() === array2[j].toLowerCase()) {
-            console.log(array1[i].toLowerCase(), " ", array2[j].toLowerCase())
-            return true;
-          }
-        }
-      }
-      return false;
     }
   }
 }

@@ -49,6 +49,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/last-week-most-popular-auctions",
+      "handler": "auction.findLastWeekMostPopular",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/user-auctions/:id",
       "handler": "auction.deleteUserAuctions",
@@ -64,10 +72,6 @@
         "policies": []
       }
     },
-
-
-    
-
     {
       "method": "GET",
       "path": "/auctions",

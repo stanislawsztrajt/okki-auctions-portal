@@ -8,6 +8,8 @@ const streetsWithoutPLchars = require('../../../json_files/streetsWithoutPLchars
 
 const cloudinary = require('cloudinary').v2;
 
+const auctionsAtPage = 5
+
 // Change cloud name, API Key, and API Secret below
 
 cloudinary.config({
@@ -61,7 +63,7 @@ const auctionValidation = async (ctx) =>{
   }
   if(!Array.isArray(auction.imagesPublic_id)){
     return ctx.response.badRequest('Images public id must be an array.');
-  } 
+  }
   await auction.imagesPublic_id.forEach(imagePublicId =>{
     if(imagePublicId.length > 100){
       return ctx.response.badRequest('Image must be shorter than 100 chars.');
@@ -84,19 +86,113 @@ const auctionValidation = async (ctx) =>{
   }
 }
 
-module.exports = {
-  async find() {
-    const auctions = await strapi.services.auction.find();
+const checkAuctionsExpiration = (auctions) => {
+  auctions.map(async auction =>{
+    // deleting auction after additionalTimeToDelete
+    if(Date.parse(auction.published_at) + additionalTimeToDelete <= Date.parse(auction.published_at) + (Date.parse(new Date()) - Date.parse(auction.published_at))){
+      deleteAuctionImages(auction.imagesPublic_id);
+      await strapi.services.auction.delete({ id: auction.id });
+    }
+  })
+}
 
-    auctions.map(async auction =>{
-      // deleting auction after additionalTimeToDelete
-      if(Date.parse(auction.published_at) + additionalTimeToDelete <= Date.parse(auction.published_at) + (Date.parse(new Date()) - Date.parse(auction.published_at))){
-        deleteAuctionImages(auction.imagesPublic_id);
-        await strapi.services.auction.delete({ id: auction.id });
+module.exports = {
+  async find(ctx) {
+    let auctions;
+    let numberOfAllAuctions;
+
+    if(ctx.request.header.likeds_ids) {
+      const likedsIds = JSON.parse(ctx.request.header.likeds_ids)
+      auctions = await strapi.services.auction.find({ id: { $in: likedsIds }});
+    } else {
+      auctions = await strapi.services.auction.find()
+    }
+
+    checkAuctionsExpiration(auctions);
+
+    if(ctx.request.header.applied_filters) {
+      let appliedFilters = Object.values(JSON.parse(ctx.request.header.applied_filters))
+      appliedFilters = appliedFilters.filter((a) => a)
+
+      auctions = auctions.filter((auction) => {
+        if(!auction.filters) return
+        const auctionFiltersArr = Object.values(auction.filters)
+        return appliedFilters.every(filter => auctionFiltersArr.includes(filter));
+      })
+    }
+
+    if(ctx.request.header.sorting_option) {
+      switch(ctx.request.header.sorting_option) {
+        case 'najnowsze': {
+          auctions.sort((auctionA,auctionB) => new Date(auctionB.createdAt) - new Date(auctionA.createdAt) ? -1 : 1);
+          break;
+        }
+        case 'najtansze': {
+          auctions.sort((auctionA, auctionB) => (auctionA.price > auctionB.price) ? 1 : -1);
+          break;
+        }
+        case 'najdrozsze': {
+          auctions.sort((auctionA, auctionB) => (auctionA.price < auctionB.price) ? 1 : -1);
+          break;
+        }
       }
+    }
+
+    if(ctx.request.header.input_item) {
+      // Filtering auctions array by item
+      auctions = auctions.filter((auction) => {
+        let auctionTitle = auction.title.toLowerCase()
+        let inputItem = ctx.request.header.input_item.toLowerCase().split(' ')
+        return inputItem.every(searchingWord => auctionTitle.includes(searchingWord));
+      })
+    }
+
+    if(ctx.request.header.input_location) {
+      // Filtering auctions array by location
+      auctions = auctions.filter((auction) => {
+        let auctionLocation = auction.location.toLowerCase()
+        let inputLocation = ctx.request.header.input_location.toLowerCase().split(' ')
+        return inputLocation.every(searchingWord => auctionLocation.includes(searchingWord));
+      })
+    }
+
+    numberOfAllAuctions = auctions.length
+
+    if(ctx.request.header.page) {
+      auctions = auctions.slice((ctx.request.header.page * auctionsAtPage) - auctionsAtPage, ctx.request.header.page * auctionsAtPage);
+    }
+
+    if(ctx.request.header.return_auctions_number) {
+      return {
+        "auctions": auctions,
+        "numberOfAllAuctions": numberOfAllAuctions
+      }
+    } else {
+      return sanitizeEntity(auctions, { model: strapi.models.auction });
+    }
+  },
+  async findLastWeekMostPopular() {
+    let auctions = await strapi.query('auction').find()
+    const auctionsIdsViewsNumber = {};
+
+    auctions.forEach(auction => {
+      auctionsIdsViewsNumber[auction.id] = 0
     })
 
-    return sanitizeEntity(auctions, { model: strapi.models.auction });
+    // find only views created in last week
+    const dateWeekAgo = new Date(new Date() - (7 * 24 * 60 * 60 * 1000))
+    let viewsOfAuctions = await strapi.query('views-of-auctions').find();
+    viewsOfAuctions = viewsOfAuctions.filter(view => new Date(view.createdAt) > dateWeekAgo)
+
+    viewsOfAuctions.forEach((x) => {
+      auctionsIdsViewsNumber[x.auction_id] = (auctionsIdsViewsNumber[x.auction_id] || 0) + 1;
+    });
+
+    auctions.sort((auctionA, auctionB) => auctionsIdsViewsNumber[auctionB.id] - auctionsIdsViewsNumber[auctionA.id])
+
+    auctions = auctions.slice(0, 12)
+
+    return auctions;
   },
   async findUserAuctions(ctx){
     const { id } = ctx.params;
@@ -159,7 +255,7 @@ module.exports = {
   },
   async deleteAuctionImage(ctx){
     const { auction_id, id } = ctx.params;
-    
+
     const [auction] = await strapi.services.auction.find({
       'id': auction_id,
       'user_id': ctx.state.user.id,
@@ -170,7 +266,7 @@ module.exports = {
     }
 
     await cloudinary.uploader.destroy(id, function(result) { console.log(result) });
-    
+
     return sanitizeEntity('Successful image has been deleted', { model: strapi.models.auction });
   },
   async update(ctx) {
@@ -230,7 +326,7 @@ module.exports = {
         id: ctx.params.id,
         'user_id': ctx.state.user.id,
       });
-  
+
       if (!auction ) {
         return ctx.unauthorized(`You can't delete this entry`);
       }

@@ -5,7 +5,6 @@
         class="sm:w-3/4"
         ref="inputsComponent"
         @update-search-input-values="updateSearchInputValues"
-        @update-auctions="updateAuctions"
         :searchInputItem="searchInputItem"
         :searchInputLocation="searchInputLocation"
       />
@@ -21,7 +20,6 @@
             <SearchFilters
               ref="filteringComponent"
               @select-change="updateAppliedFilters"
-              @update-auctions="updateAuctions"
               :appliedFiltersCookies="appliedFilters"
               :selectDefaultOption="'Wszystko'"
               :isRequired="false"
@@ -31,7 +29,7 @@
       </div>
       <SearchSorting
         ref="sortingComponent"
-        @search-auctions="searchAuctions"
+        @update-sorting-value="updateSortingValue"
       />
     </div>
     <InfoElement
@@ -53,6 +51,12 @@
         :searchInputItem="searchInputItem"
         :searchInputLocation="searchInputLocation"
       />
+      <Pagination
+        :numberOfAllAuctions="numberOfAllAuctions"
+        :currentPage="this.page ? parseInt(this.page) : 1"
+        :isLoading="isLoading"
+        :defaultRoute="'/auctions-results'"
+      />
     </div>
   </div>
 </template>
@@ -69,6 +73,7 @@ import SearchSorting from '../components/SearchSorting'
 import NoAuctionsFound from '../components/NoAuctionsFound'
 import InfoElement from '../components/InfoElement'
 import Auction from '../components/Auction'
+import Pagination from '../components/Pagination'
 
 
 export default {
@@ -84,22 +89,26 @@ export default {
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
+    Pagination
   },
   data() {
     return {
       searchInputItem: '',
       searchInputLocation: '',
-      activeAuctionId: '',
+      sortingOption: '',
       appliedFilters: {},
-      searchData: {},
-      windowWidth: window.innerWidth,
 
       auctions: [],
-      auctionsCopy: [],
       likeds: [],
+      searchData: {},
 
-      isLoading: false,
+      isLoading: true,
+      numberOfAllAuctions: null,
+      windowWidth: window.innerWidth
     }
+  },
+  props: {
+    page: String
   },
   async created() {
     if(this.$cookies.isKey('searchData')) {
@@ -116,54 +125,60 @@ export default {
       this.appliedFilters['subcategory'] = ''
     }
 
-    this.isLoading = true
-
     if(jwt){
       await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
-      .then(res => this.likeds = res.data)
+      .then(res => this.likeds = res.data )
     }
 
-    await axios.get(`${API_URL}/auctions`)
-    .then(res => {
-      this.auctions = res.data;
-      this.auctionsCopy = res.data;
-      this.isLoading = false;
-      this.searchAuctions();
-    })
+    this.searchAuctions();
+
   },
   methods: {
-    searchAuctions () {
+    async searchAuctions () {
+      this.isLoading = true;
+
+      // Setting cookies with searching/filtering data
       this.searchData['item'] = this.searchInputItem
       this.searchData['location'] = this.searchInputLocation
       this.searchData['filters'] = this.appliedFilters
       this.$cookies.set('searchData', this.searchData, '5MIN')
 
-      // Reseting the adverts array
-      this.auctions = this.auctionsCopy;
-      // Filter the adverts array by the searched item
-      this.$refs.inputsComponent.filterByInputItem(this.auctions);
-      // Filter the adverts table by the searched location
-      this.$refs.inputsComponent.filterByInputLocation(this.auctions);
-      // Sorting the adverts array
-      this.$refs.sortingComponent.sortAuctions(this.auctions);
-      // Filter the adverts array by categories
-      if(this.appliedFilters.category !== '') {
-        this.$refs.filteringComponent.filterAuctions(this.auctions, this.appliedFilters);
-      }
-    },
-    updateAuctions(auctions) {
-      this.auctions = auctions;
+      await axios.get(`${API_URL}/auctions`, { headers: {
+        page: this.page ? this.page : 1,
+        applied_filters: JSON.stringify(this.appliedFilters),
+        sorting_option: this.sortingOption,
+        input_item: this.searchInputItem,
+        input_location: this.searchInputLocation,
+        return_auctions_number: true
+      }})
+      .then(res => {
+        this.auctions = res.data.auctions;
+        this.numberOfAllAuctions = res.data.numberOfAllAuctions;
+        this.isLoading = false;
+      })
     },
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
+      this.$router.push('/auctions-results')
       this.searchAuctions()
     },
     updateAppliedFilters(filters) {
       this.appliedFilters = filters
+      this.$router.push('/auctions-results')
       this.searchAuctions()
     },
+    updateSortingValue(sorting_option) {
+      this.sortingOption = sorting_option
+      this.$router.push('/auctions-results')
+      this.searchAuctions()
+    }
   },
+  watch: {
+    page() {
+      this.searchAuctions()
+    }
+  }
 }
 
 </script>

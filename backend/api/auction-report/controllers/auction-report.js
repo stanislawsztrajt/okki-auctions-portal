@@ -74,8 +74,8 @@ module.exports = {
 
         const keys = Object.keys(counts);
         Object.values(counts).forEach((value, index) =>{
-          // equal 2 because if "value" is greater than 2 then every time 
-          // the request is sent and this is not needed 
+          // equal 2 because if "value" is greater than 2 then every time
+          // the request is sent and this is not needed
           // 2 is the number of minimum number of reports to hide auction
           if(value >= 2){
             strapi.services.auction.update({ id: keys[index]}, { published_at: null } );

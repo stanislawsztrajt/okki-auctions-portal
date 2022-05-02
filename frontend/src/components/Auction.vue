@@ -35,7 +35,7 @@
       <div class="px-3 py-2 sm:px-5 sm:py-4 w-full flex flex-col justify-between">
         <div class="flex flex-row justify-between">
           <div>
-            <h2 class="xs:text-xl">{{ auction.title }}</h2>
+            <h2 class="xs:text-xl dont-break-out">{{ auction.title }}</h2>
             <h3 class=" font-bold xs:text-3xl">{{ auction.price }}zł<span class="text-lg">{{ auction.priceType === 'na-godzine' ? '/godz.' : auction.priceType === 'na-miesiac' ? '/mies.' : '' }}</span></h3>
           </div>
           <Liking

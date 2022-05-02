@@ -38,7 +38,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    props: true,
   },
   {
     path: '/new-auction',
@@ -53,8 +54,10 @@ const routes = [
   },
   {
     path: '/auctions-results',
+    alias: '/auctions-results/page/:page',
     name: 'AuctionsResults',
     component: AuctionsResults,
+    props: true
   },
   {
     path: '/auction/:id',
@@ -96,8 +99,10 @@ const routes = [
   },
   {
     path: '/likeds',
+    alias: '/likeds/page/:page',
     name: 'Likeds',
     component: Likeds,
+    props: true
   },
   {
     path: '/users/:id',

@@ -1,11 +1,11 @@
 <template>
-  <div id="NewAuction">
-    <Loading :isCenter="true" v-if="isLoading"/>
-    <div v-else class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
+  <Loading :isCenter="true" v-if="isLoading"/>
+  <div v-else id="NewAuction">
+    <div class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
       <FormKit
         type="form"
         id="create-auction-form"
-        @submit="createAuction"
+        @submit="editAuction"
         :actions="false"
         :config="{
           classes: {
@@ -182,7 +182,7 @@ import API_URL from '../../API_URL'
 import convert from 'image-file-resize';
 import streetsCapitalize from '../jsons files/streetsCapitalize.json'
 import { formKitStreetRule } from '../constants/formKitCustomRules'
-import { authorization, jwt, user } from '../constants/const-variables'
+import { authorization, jwt, user, findVulgarWord } from '../constants/const-variables'
 import {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
@@ -218,7 +218,7 @@ export default {
 
       userOtherAuctions: [],
 
-      isLoading: false,
+      isLoading: true,
       filtersValidationErr: false,
       validationErr: false,
       validationMsg: '',
@@ -243,8 +243,6 @@ export default {
       this.priceTypeValue =  auction.priceType
       this.descriptionValue = auction.description
       this.locationValue = auction.location
-      if(auction.phoneNumber.trim() === '') this.hidePhoneNumber = true
-      else this.phoneNumberValue = auction.phoneNumber
       this.filtersValue = auction.filters
       this.imagesPublicId = auction.imagesPublic_id
       if(auction.images[0] !== 'https://res.cloudinary.com/dh35iucxu/image/upload/v1629822362/arst123_kebllh.jpg') {
@@ -253,6 +251,13 @@ export default {
           this.images.push(image)
         })
       }
+      if(auction.phoneNumber.trim() === '') {
+        this.hidePhoneNumber = true
+      }
+      else {
+        this.phoneNumberValue = auction.phoneNumber
+      }
+      this.isLoading = false
     })
     .catch(() => this.$router.push(`/`))
 
@@ -283,17 +288,25 @@ export default {
         this.imagesToDelete.push(this.imagesPublicId[index]);
         this.imagesPublicId.splice(index,1);
       }
-      
+
       this.images.splice(index,1);
       this.urls.splice(index,1);
     },
-    async createAuction(){
+    async editAuction(){
       this.$refs.filteringComponent.checkIfAllFiltersChoosen()
+      this.checkIfIncludesVulgarWords()
 
-      if(!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
+      if(!this.validationErr &&!this.filtersValidationErr && this.checkIfAuctionIsDuplicate() === false) {
         this.used = true;
         this.isLoading = true;
         window.scrollTo(0,0);
+
+        // filtering filters from empty elements
+        Object.keys(this.filtersValue).forEach(key => {
+          if(this.filtersValue[key].trim() === '') {
+            delete this.filtersValue[key]
+          }
+        })
 
         if(this.images.length === 0){
           const data = {
@@ -311,7 +324,7 @@ export default {
 
           await axios.put(`${API_URL}/auctions/${this.id}`, data, authorization)
           .then(() => this.$router.push(`/auction/${this.id}`))
-          .catch(err=>{console.log(err)})
+          .catch(err => console.log(err))
         } else {
           this.imagesToDelete.forEach(async public_id =>{
             await axios.delete(`${API_URL}/auction-image/${this.id}/${public_id}`, authorization)
@@ -365,6 +378,7 @@ export default {
                 filters: this.filtersValue
               }
 
+
               await axios.put(`${API_URL}/auctions/${this.id}`, data, authorization)
               .then(() => this.$router.push(`/auction/${this.id}`))
               .catch(err=> console.log(err))
@@ -402,6 +416,18 @@ export default {
       })
 
       return this.validationErr
+    },
+    checkIfIncludesVulgarWords() {
+      const titleDescriptionArray = this.titleValue.split(' ').concat(this.descriptionValue.split(' '));
+
+      if(findVulgarWord(titleDescriptionArray) === true){
+        this.validationErr = true
+        this.validationMsg = 'To ogłoszenie zawiera wulgarne słowo!'
+
+        setTimeout(() => {
+          this.validationErr = false
+        }, 5000);
+      }
     },
     similarity(s1, s2) {
       var longer = s1;

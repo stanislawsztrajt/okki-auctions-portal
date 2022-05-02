@@ -22,9 +22,9 @@
             name="name"
             placeholder="Mariusz"
             v-model.trim="name"
-            :classes="{ 
+            :classes="{
               label: 'block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-2',
-              input: 'appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' 
+              input: 'appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
             }"
             validation="required|length:0,50"
             :validation-messages="{
@@ -37,9 +37,9 @@
             name="email"
             placeholder="przykladowyemail@gmail.com"
             v-model.trim="email"
-            :classes="{ 
+            :classes="{
               label: 'block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-2',
-              input: 'appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' 
+              input: 'appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
             }"
             validation="required|length:0,50"
             :validation-messages="{

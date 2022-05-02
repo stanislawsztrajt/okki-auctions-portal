@@ -56,12 +56,12 @@ export default {
     async fetchUserConversations() {
       axios.get(`${API_URL}/user-conversations`, authorization)
       .then((res) => {
-        this.conversations = res.data
+        this.conversations = res.data.sort((conA, conB) => Date.parse(conB.updatedAt) - Date.parse(conA.updatedAt))
         this.isLoading = false
       })
     },
     moveConverastionToTop(converastion_id) {
-      this.conversations.sort(el => el.id === converastion_id ? -1 : 1)
+      this.conversations.sort(con => con.id === converastion_id ? -1 : 1)
     }
   },
 }

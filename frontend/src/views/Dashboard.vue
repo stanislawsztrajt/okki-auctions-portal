@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <Loading :isCenter="true" v-if="isLoading" />
-    <div v-else class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
+  <Loading :isCenter="true" v-if="isLoading" />
+  <div v-else>
+    <div class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
       <InfoElement
         :value="`Witaj ${user.username}!`"
         :icon="'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11'"
@@ -90,7 +90,7 @@ export default {
 
       auctions: [],
       auctionsLength: 0,
-      
+
       comments: [],
       commentsLength: 0,
       rate: '',

@@ -45,9 +45,6 @@ export default {
     }
   },
   async created(){
-    let pies = 'hau'
-    socket.emit('witom', { pies })
-
     if(!userAcceptedCookie) {
       this.cookieModalShow = true;
     }
@@ -99,7 +96,7 @@ export default {
   },
   watch: {
     $route(route) {
-      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register'
+      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register';
       window.scrollTo(0,0);
     }
   },
