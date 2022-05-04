@@ -78,7 +78,7 @@ module.exports = {
           // the request is sent and this is not needed
           // 2 is the number of minimum number of reports to hide auction
           if(value >= 2){
-            strapi.services.auction.update({ id: keys[index]}, { published_at: null } );
+            strapi.services.auction.update({ id: keys[index]}, { published_at: null })
           }
         })
       }

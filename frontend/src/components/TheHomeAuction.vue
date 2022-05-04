@@ -9,10 +9,7 @@
         :style="{ backgroundImage: 'url(' + auction.images[0] + ')' }"
       ></div>
       <h2
-        class="sm:text-xl pointer-events-none self-start px-1 py-2 sm:px-3"
-        spellcheck="false"
-        contenteditable=""
-        disabled
+        class="sm:text-xl pointer-events-none self-start px-1 py-2 sm:px-3 dont-break-out"
       >
         {{ auction.title }}
       </h2>
@@ -22,7 +19,7 @@
         <h3 class="text-xs sm:text-base">
           {{ auction.location }}
         </h3>
-        <h3 class="font-bold sm:text-3xl">
+        <h3 class="font-bold sm:text-3xl dont-break-out">
           {{ auction.price }}zł
         </h3>
       </div>

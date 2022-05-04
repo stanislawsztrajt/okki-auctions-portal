@@ -10,6 +10,15 @@
       }
     },
     {
+      "method": "DELETE",
+      "path": "/account/:id",
+      "handler": "User.deleteMe",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
+    },
+    {
       "method": "GET",
       "path": "/block-user/:id",
       "handler": "User.blockUser",

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full min-h-screen py-10 2xl:p-0 flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
     <router-link to="/" class="text-white text-5xl focus:outline-none mb-3 font-light">okki</router-link>
-    <div class="flex flex-col items-center bg-white w-84 xs:w-108 h-auto rounded-lg">
+    <div class="flex flex-col items-center bg-white w-11/12 xs:w-108 h-auto rounded-lg">
       <h2 class="text-2xl font-normal mt-10 text-green-600">Zmień swoje hasło</h2>
       <form
         class="p-10 w-full"
@@ -40,11 +40,11 @@
         <input
           class="w-full cursor-pointer h-11 flex justify-center items-center bg-gradient-to-r from-green-700 to-green-600 text-white text-lg font-medium py-2.5 px-4 rounded-md focus:outline-none hover:opacity-95"
           type="submit"
-          value="Zarejestruj"
+          value="Zresetuj"
         >
       </form>
     </div>
-    <div v-if="validationError" class="validation-alert mt-16 top-0 sm:top-3/4 sm:mt-24" role="alert">
+    <div v-if="validationError" class="validation-alert absolute bottom-0 mb-2 sm:mb-20" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
       </span>
@@ -102,13 +102,15 @@ export default {
 
       if(!this.isUsed){
         this.isUsed = true;
-        const code = this.$route.path.replace('/reset-password?code=', '')
-        
+
+        const code = this.$route.fullPath.replace('/reset-password?code=', '');
         const data = {
           code,
           password: this.password,
           passwordConfirmation: this.repeatPassword
         }
+
+        console.log(data)
         
         await axios.post(`${API_URL}/auth/reset-password`, data)
         .then(this.$router.push('/login'))

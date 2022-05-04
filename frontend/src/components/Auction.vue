@@ -36,7 +36,7 @@
         <div class="flex flex-row justify-between">
           <div>
             <h2 class="xs:text-xl dont-break-out">{{ auction.title }}</h2>
-            <h3 class=" font-bold xs:text-3xl">{{ auction.price }}zł<span class="text-lg">{{ auction.priceType === 'na-godzine' ? '/godz.' : auction.priceType === 'na-miesiac' ? '/mies.' : '' }}</span></h3>
+            <h3 class=" font-bold xs:text-3xl dont-break-out">{{ auction.price }}zł<span class="text-lg">{{ auction.priceType === 'na-godzine' ? '/godz.' : auction.priceType === 'na-miesiac' ? '/mies.' : '' }}</span></h3>
           </div>
           <Liking
             v-if="auction.user_id !== user.id && user && user.role.name !== 'Admin'"
@@ -206,6 +206,7 @@ export default {
       this.isDeleteAuctionLayer = !this.isDeleteAuctionLayer;
 
       axios.delete(`${API_URL}/auctions/${this.auction.id}`, authorization)
+      axios.delete(`${API_URL}/reported-auctions/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
     },
     toggleDeleteReportLayer(){
@@ -224,7 +225,8 @@ export default {
       this.isBlockUserLayer = !this.isBlockUserLayer;
 
       axios.put(`${API_URL}/users/${this.auction.user_id}`, { blocked: true }, authorization)
-      axios.get(`${API_URL}/block-user/${this.comment.user_id}`, authorization)
+      axios.get(`${API_URL}/block-user/${this.auction.user_id}`, authorization)
+      axios.delete(`${API_URL}/reported-auctions/${this.auction.id}`, authorization)
       this.removeAuction(this.auction.id)
     },
     togglePublishLayer(){

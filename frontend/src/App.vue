@@ -96,7 +96,11 @@ export default {
   },
   watch: {
     $route(route) {
-      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register';
+      this.showNavbarAndFooter = 
+                                route.path !== '/login' && 
+                                route.path !== '/register' && 
+                                route.path !== '/forgot-password' && 
+                                route.path !== '/reset-password'
       window.scrollTo(0,0);
     }
   },

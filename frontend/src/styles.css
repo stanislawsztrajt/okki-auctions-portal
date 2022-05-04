@@ -11,6 +11,10 @@
   }
 }
 
+html{
+  scroll-behavior: smooth;
+}
+
 .rodo-div h2 {
   @apply text-xl font-semibold mt-5;
 }
@@ -22,6 +26,7 @@
 .rodo-link {
   @apply text-green-500;
 }
+
 
 /* other */
 

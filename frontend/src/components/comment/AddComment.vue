@@ -47,8 +47,8 @@ export default {
       isValidate: false,
       validateText: '',
 
-      user: user,
-      jwt: jwt
+      user,
+      jwt
     }
   },
   methods: {
@@ -82,6 +82,7 @@ export default {
         username: user.username,
         rate: this.rate,
       }
+      console.log(comment)
 
       await axios.post(`${API_URL}/comments`, comment, authorization)
       .then(async res =>{

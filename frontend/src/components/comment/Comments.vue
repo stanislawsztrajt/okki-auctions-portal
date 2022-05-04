@@ -19,7 +19,6 @@
         @remove-comment="removeComment"
       />
     </div>
-    <div class="p-10"></div>
   </div>
 </template>
 
@@ -53,11 +52,10 @@ export default {
   async created(){
     await axios.get(`${API_URL}/first-six-comments-in-users-profiles/${this.id}`)
     .then(res => {
-      this.commentsLength = res.data.comments.length;
       this.comments = res.data.comments;
       this.rate = res.data.accucuracyRate;
 
-      if(this.commentsLength > 5){
+      if(res.data.comments.length > 5){
         this.comments.pop();
       }
     })

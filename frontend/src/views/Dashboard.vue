@@ -100,11 +100,10 @@ export default {
     }
   },
   async created() {
-    if(user && user.role.name === 'Admin'){
+    if(user.role.name === 'Admin'){
       this.$router.push('/admin-dashboard')
     }
-
-    if(!jwt) {
+    else if(!jwt) {
       this.$router.push('/login');
     } else{
       await axios.get(`${API_URL}/first-six-user-auctions/${user.id}`)

@@ -1,6 +1,6 @@
 <template>
   <Loading :isCenter="true" v-if="isLoading"/>
-  <div v-else id="NewAuction">
+  <div v-else>
     <div class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
       <FormKit
         type="form"
@@ -104,6 +104,7 @@
               }"
               :classes="{ input: 'bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full lg:w-3/5 h-72 -mb-1' }"
             />
+            <div class="mt-32 absolute" id="scrollDown"></div>
           </div>
         </div>
 
@@ -173,6 +174,26 @@
         >
       </FormKit>
     </div>
+    <a
+      :href="`/edit-auction/${this.id}#scrollDown`"
+      v-if="isScrollDown"
+      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
+      class="fixed bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </a>
+    <a
+      :href="`/edit-auction/${this.id}#`"
+      v-if="isScrollUp"
+      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
+      class="fixed bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </a>
   </div>
 </template>
 
@@ -225,6 +246,9 @@ export default {
       used: false,
       hidePhoneNumber: false,
 
+      isScrollDown: true,
+      isScrollUp: false,
+
       formKitStreetRule,
       streetsCapitalize
     }
@@ -233,10 +257,14 @@ export default {
     id: String
   },
   async created(){
+    if(!jwt) this.$router.push('/login')
+
     await axios.get(`${API_URL}/auctions/${this.id}`)
     .then(res => {
       const auction = res.data
       if(auction.user_id !== user.id) this.$router.push(`/`)
+
+      window.addEventListener('scroll', this.checkScroll);
 
       this.titleValue = auction.title
       this.priceValue = auction.price.toString()
@@ -257,6 +285,7 @@ export default {
       else {
         this.phoneNumberValue = auction.phoneNumber
       }
+
       this.isLoading = false
     })
     .catch(() => this.$router.push(`/`))
@@ -265,10 +294,13 @@ export default {
     .then(res => {
       this.userOtherAuctions = res.data.filter(auction => auction.id !== this.id)
     })
-
-    if(!jwt) this.$router.push('/login')
   },
   methods: {
+    checkScroll(){
+      let x = this.images.length > 2 ? 2.5 : 3.5;
+      this.isScrollDown = document.body.clientHeight > window.scrollY * x ? true : false
+      this.isScrollUp = document.body.clientHeight < window.scrollY * x ? true : false
+    },
     updateFilters(filters) {
       this.filtersValue = filters
     },

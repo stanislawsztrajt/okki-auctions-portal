@@ -11,7 +11,6 @@
         <span class="text-gray-600 text-base">
           Jeżeli uważasz że nastąpiła pomyłka, <button class="text-green-600 font-semibold" @click="{ goToContact = true; logout(); }">skontaktuj się</button> z nami.
         </span>
-        <span class="text-gray-600 text-sm">*W skrajnych przypadkach ten błąd może być spowodowany problemami z serwerem i zostanie wkrótce naprawiony.</span>
       </div>
       <button @click="logout" class="text-xl font-bold cursor-pointer bg-gray-800 text-white w-full xs:w-84 p-2 shadow-sm rounded-md">Wróć na stronę główną</button>
     </div>

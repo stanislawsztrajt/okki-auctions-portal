@@ -42,7 +42,7 @@ const auctionValidation = async (ctx) =>{
     return ctx.response.badRequest('This street does not exist in kalisz');
   }
 
-  if(auction.images.length > 3){
+  if(auction.images.length > 4){
     return ctx.response.badRequest('Images array is too long. (4 max)');
   }
   if(!Array.isArray(auction.images)){
@@ -58,7 +58,7 @@ const auctionValidation = async (ctx) =>{
     }
   })
 
-  if(auction.imagesPublic_id.length > 3){
+  if(auction.imagesPublic_id.length > 4){
     return ctx.response.badRequest('Images public id array is too long. (4 max)');
   }
   if(!Array.isArray(auction.imagesPublic_id)){
@@ -197,7 +197,8 @@ module.exports = {
   async findUserAuctions(ctx){
     const { id } = ctx.params;
 
-    const entity = await strapi.services.auction.find({ user_id: id });
+    const auctions = await strapi.services.auction.find({ user_id: id });
+    const entity = auctions.sort((auctionA,auctionB) => new Date(auctionB.published_at) - new Date(auctionA.published_at) ? -1 : 1)
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },
@@ -206,7 +207,8 @@ module.exports = {
 
     //idk why .limit() isn't working
     const auctions = await strapi.services.auction.find({ user_id: id });
-    const entity = auctions.splice(0, 6);
+    const entity = auctions .sort((auctionA,auctionB) => new Date(auctionB.published_at) - new Date(auctionA.published_at) ? -1 : 1)
+                            .slice(0, 6);
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },
@@ -336,12 +338,16 @@ module.exports = {
         entity = await strapi.services.auction.delete({ id }, data, {
           files,
         });
+        deleteAuctionImages(entity.imagesPublic_id);
+        await strapi.services['auction-report'].delete({ auction_id: id })
+        await strapi.services.liked.delete({ auction_id: id })
       } else {
         entity = await strapi.services.auction.delete({ id }, ctx.request.body);
+        deleteAuctionImages(entity.imagesPublic_id);
+        await strapi.services['auction-report'].delete({ auction_id: id })
+        await strapi.services.liked.delete({ auction_id: id })
       }
     }
-
-    deleteAuctionImages(entity.imagesPublic_id);
 
     return sanitizeEntity(entity, { model: strapi.models.auction });
   },

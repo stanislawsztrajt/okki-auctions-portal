@@ -73,13 +73,13 @@ export default {
       this.$router.push('/visit')
     }
 
+    await axios.get(`${API_URL}/last-week-most-popular-auctions`)
+    .then(res => this.auctions = res.data)
+
     if(jwt){
       await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
       .then(res => this.likeds = res.data)
     }
-
-    await axios.get(`${API_URL}/last-week-most-popular-auctions`)
-    .then(res => this.auctions = res.data)
 
     this.isLoading = false;
   },

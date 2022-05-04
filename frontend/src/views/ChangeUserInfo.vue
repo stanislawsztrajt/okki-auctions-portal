@@ -1,41 +1,44 @@
 <template>
-  <Loading :isCenter="true" v-if="isLoading"/>
-  <div v-else class="w-full h-screen">
-    <div class="h-full">
-      <form
-          class="w-full h-5/6 flex flex-col items-center justify-center "
-          @submit.prevent="checkPassword"
-          v-if="!isGivenPassword"
-        >
-          <div class="flex flex-col w-1/3 bg-green-600 rounded-xl shadow p-7 text-white">
-            <label for="" class="text-xl exsm:text-2xl lg:text-4xl">
-              Podaj obecne hasło
-            </label>
-            <div class="text-green-900 relative top-10 left-3 w-5">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-              </svg>
+  <div>
+    <ApproveLayer
+      v-if="isDeleteAccountLayer"
+      @action="deleteAccount"
+      @toggle-layer="toggleDeleteAccountLayer"
+      :question="'Czy na pewno chcesz usunąć konto?'"
+    />
+    <Loading :isCenter="true" v-if="isLoading"/>
+    <div v-else class="w-full h-screen">
+      <div class="h-full">
+        <form
+            class="w-full h-5/6 flex flex-col items-center justify-center px-4"
+            @submit.prevent="checkPassword"
+            v-if="!isGivenPassword"
+          >
+            <div class="flex flex-col w-full lg:w-1/2 xl:w-1/3 bg-green-600 rounded-xl shadow p-7 text-white">
+              <label for="" class="text-xl exsm:text-2xl lg:text-4xl">
+                Podaj obecne hasło
+              </label>
+              <div class="text-green-900 relative top-10 left-3 w-5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <input
+                name="password"
+                type="password"
+                class="text-black mt-6 login-register-input "
+                v-model="checkPasswordValue"
+              >
             </div>
             <input
-              name="password"
-              type="password"
-              class="text-black mt-6 login-register-input "
-              v-model="checkPasswordValue"
+              type="submit"
+              value="Sprawdź"
+              class="new-auction-button mt-8 cursor-pointer"
+              @submit="checkPassword"
             >
-          </div>
-          <input
-            type="submit"
-            value="Sprawdź"
-            class="new-auction-button mt-8 cursor-pointer"
-            @submit="checkPassword"
-          >
         </form>
-
-        <div v-else class="flex flex-col items-center mt-12 text-white">
-          <!-- <div @click="deleteAccount" class="absolute p-5 bg-red-600 rounded-lg font-bold cursor-pointer button-animation-hover left-4 top-24">
-            Usuń konto
-          </div> -->
-          <form @submit.prevent="saveEditedUsername" class="new-auction-main-box w-3/4 lg:w-1/2">
+        <div v-else class="flex flex-col items-center px-4 mt-6 xl:mt-12 text-white">
+          <form @submit.prevent="saveEditedUsername" class="new-auction-main-box w-full lg:w-3/4 xl:w-1/2">
             <label for="" class="text-lg exsm:text-xl lg:text-2xl">
               Podaj nową nazwa użtkownika
             </label>
@@ -58,7 +61,7 @@
             />
           </form>
 
-          <form @submit.prevent="saveEditedEmail" class="new-auction-main-box w-3/4 lg:w-1/2">
+          <form @submit.prevent="saveEditedEmail" class="new-auction-main-box  w-full lg:w-3/4 xl:w-1/2">
             <label for="" class="text-lg exsm:text-xl lg:text-2xl">
               Podaj nowy email
             </label>
@@ -81,7 +84,7 @@
             />
           </form>
 
-          <form @submit.prevent="saveEditedPassword" class="new-auction-main-box w-3/4 lg:w-1/2">
+          <form @submit.prevent="saveEditedPassword" class="new-auction-main-box w-full lg:w-3/4 xl:w-1/2">
             <label for="" class="text-lg exsm:text-xl lg:text-2xl">
               Podaj nowe hasło
             </label>
@@ -117,6 +120,14 @@
               @submit.prevent="saveEditedPassword"
             />
           </form>
+          <button 
+            @click="toggleDeleteAccountLayer" 
+            style="box-shadow: 0 0 2em rgb(127, 29, 29);"
+            class="fixed z-50 bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-red-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-red-800 transition duration-150"
+          >
+            Usuń konto
+            <svg class="h-5 w-5 ml-3"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="7" r="4" />  <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />  <path d="M17 9l4 4m0 -4l-4 4" /></svg>
+          </button>
         </div>
         <div class="absolute w-full bottom-0 mb-4">
           <div
@@ -151,18 +162,22 @@
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
-import API_URL from '../../API_URL'
 import Cookies from 'js-cookie';
 
-import Loading from '../components/Loading'
 import { authorization, jwt, user } from '../constants/const-variables'
+import API_URL from '../../API_URL'
+
+import ApproveLayer from '../components/ApproveLayer'
+import Loading from '../components/Loading'
 
 export default {
   components: {
+    ApproveLayer,
     Loading
   },
 
@@ -186,8 +201,7 @@ export default {
       setTimeoutTime: 4000,
 
       isLoading: false,
-      isAdvertsDeleted: false,
-      isUserDeleted: false
+      isDeleteAccountLayer: false
     }
   },
   async created(){
@@ -313,7 +327,6 @@ export default {
         return this.validationError = true
       })
     },
-
     async saveEditedPassword(){
       clearTimeout(this.setTimeout)
 
@@ -369,13 +382,29 @@ export default {
         this.responseText = `Pomyślnie zmieniono hasło`
         return this.responseAlert = true
       })
-    }
+    },
+    toggleDeleteAccountLayer(){
+      this.isDeleteAccountLayer = !this.isDeleteAccountLayer;
+    },
+    deleteAccount(){
+      axios.delete(`${API_URL}/account/${user.id}`, authorization)
+      .then(() =>{
+        this.$swal({ icon: "success", title: 'Konto zostało usunięte!'});
+        this.$cookies.remove('jwt');
+        this.$cookies.remove('user');
+        
+        setTimeout(() => {
+          this.$router.push('/');
+          this.$router.go();
+        }, 2000)
+      })
+    } 
   }
 }
 </script>
 
 <style scoped>
-.change-user-info-button{
-  @apply mt-2 px-3 py-2 xl:p-2 border border-white bg-white text-green-600 rounded xl:w-64 font-medium text-sm md:text-base xl:text-lg text-center cursor-pointer
-}
+  .change-user-info-button{
+    @apply mt-2 px-3 py-2 xl:p-2 border border-white bg-white text-green-600 rounded xl:w-64 font-medium text-sm md:text-base xl:text-lg text-center cursor-pointer
+  }
 </style>

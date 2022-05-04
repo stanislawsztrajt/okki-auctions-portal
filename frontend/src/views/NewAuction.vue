@@ -1,177 +1,200 @@
 <template>
-  <Loading :isCenter="true" v-if="isLoading"/>
-  <div v-else id="NewAuction">
-    <div class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
-      <FormKit
-        type="form"
-        id="create-auction-form"
-        @submit="createAuction"
-        :actions="false"
-        :config="{
-          classes: {
-            message: 'text-gray-800 font-semibold mt-1',
-            messages: 'list-none ml-0',
-            help: 'text-gray-800 -mb-2'
-          },
-        }"
-        validation-visibility="blur"
-      >
-        <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2">Dodaj ogłoszenie</h1>
-        <div class="new-auction-main-box">
-          <h1 class="new-auction-title">Informacje podstawowe</h1>
-          <div class="new-auction-data-box">
-            <FormKit
-              type="text"
-              v-model.trim="titleValue"
-              placeholder="Np. Opel Corsa 2014 1.4 benzyna"
-              label="Tytuł ogłoszenia"
-              validation="required|length:8,70"
-              :classes="{ input: 'new-auction-input' }"
-            />
+  <div class="main">
+    <Loading :isCenter="true" v-if="isLoading"/>
+    <div v-else>
+      <div class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto" >
+        <FormKit
+          type="form"
+          id="create-auction-form"
+          @submit="createAuction"
+          :actions="false"
+          :config="{
+            classes: {
+              message: 'text-gray-800 font-semibold mt-1',
+              messages: 'list-none ml-0',
+              help: 'text-gray-800 -mb-2'
+            },
+          }"
+          validation-visibility="blur"
+        >
+          <h1 class="text-4xl text-gray-700 font-semibold mb-7 ml-2" >Dodaj ogłoszenie</h1>
+          <div class="new-auction-main-box">
+            <h1 class="new-auction-title">Informacje podstawowe</h1>
+            <div class="new-auction-data-box">
+              <FormKit
+                type="text"
+                v-model.trim="titleValue"
+                placeholder="Np. Opel Corsa 2014 1.4 benzyna"
+                label="Tytuł ogłoszenia"
+                validation="required|length:8,70"
+                :classes="{ input: 'new-auction-input' }"
+              />
+            </div>
+            <div class="new-auction-data-box">
+              <FormKit
+                type="number"
+                label="Cena"
+                placeholder="Np. 8600"
+                v-model="priceValue"
+                validation="required|length:0,15"
+                :classes="{ input: 'new-auction-input' }"
+                :validation-messages="{
+                  required: 'Cena jest wymagana.',
+                }"
+                help="*Cena wyrażana jest w złotówkach (PLN)"
+              />
+            </div>
+            <div class="new-auction-data-box">
+              <FormKit
+                type="select"
+                label="Rodzaj ceny"
+                placeholder="Wybierz"
+                v-model="priceTypeValue"
+                :options="{
+                  jednorazowa: 'Jednorazowa',
+                  'na-godzine': 'Na godzinę',
+                  'na-miesiac': 'Na miesiąc'
+                }"
+                validation="required"
+                validation-visibility="blur"
+                :classes="{ input: 'h-12 min-h-12 w-full md:w-72 sm:text-lg flex items-center text-gray-700 bg-gray-100 p-2' }"
+              />
+            </div>
           </div>
-          <div class="new-auction-data-box">
-            <FormKit
-              type="number"
-              label="Cena"
-              placeholder="Np. 8600"
-              v-model="priceValue"
-              validation="required|length:0,15"
-              :classes="{ input: 'new-auction-input' }"
-              :validation-messages="{
-                required: 'Cena jest wymagana.',
-              }"
-              help="*Cena wyrażana jest w złotówkach (PLN)"
-            />
-          </div>
-          <div class="new-auction-data-box">
-            <FormKit
-              type="select"
-              label="Rodzaj ceny"
-              placeholder="Wybierz"
-              v-model="priceTypeValue"
-              :options="{
-                jednorazowa: 'Jednorazowa',
-                'na-godzine': 'Na godzinę',
-                'na-miesiac': 'Na miesiąc'
-              }"
-              validation="required"
-              validation-visibility="blur"
-              :classes="{ input: 'h-12 min-h-12 w-full md:w-72 sm:text-lg flex items-center text-gray-700 bg-gray-100 p-2' }"
-            />
-          </div>
-        </div>
-        <div class="new-auction-main-box">
-          <h1 class="new-auction-title">Zdjęcia i opis</h1>
-          <div class="new-auction-data-box">
-            <label>Zdjęcia</label>
-            <input
-              type="file"
-              accept="image/png, image/jpeg, image/jpg"
-              class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2 mb-2"
-              @change="onFileChange($event)"
-              multiple
-              :disabled="urls.length >= 4"
-            >
-            <div class="grid grid-cols-1 xl:grid-cols-2 h-auto">
-              <div
-                v-for="(url, index) in urls"
-                :key="url"
-                class="bg-cover bg-no-repeat bg-center grid-cols-1 h-72 flex flex-col mr-2 mb-2 border-2 border-gray-600"
-                :style="{ backgroundImage: 'url(' + url + ')' }"
+          <div class="new-auction-main-box">
+            <h1 class="new-auction-title">Zdjęcia i opis</h1>
+            <div class="new-auction-data-box">
+              <label>Zdjęcia</label>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/jpg"
+                class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2 mb-2"
+                @change="onFileChange($event)"
+                multiple
+                :disabled="urls.length >= 4"
               >
-                <span v-if="index === 0" class="text-black bg-gray-300 text-center text-sm md:text-base xl:text-xl p-2 w-full opacity-70">
-                  To zdjęcie będzie główne
-                </span>
-                <div class="flex justify-end items-end h-full">
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                    @click="removeImage(index)"
-                    class="h-10 w-10 text-red-600 button-animation-hover cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
+              <div class="grid grid-cols-1 xl:grid-cols-2 h-auto">
+                <div
+                  v-for="(url, index) in urls"
+                  :key="url"
+                  class="bg-cover bg-no-repeat bg-center grid-cols-1 h-72 flex flex-col mr-2 mb-2 border-2 border-gray-600"
+                  :style="{ backgroundImage: 'url(' + url + ')' }"
+                >
+                  <span v-if="index === 0" class="text-black bg-gray-300 text-center text-sm md:text-base xl:text-xl p-2 w-full opacity-70">
+                    To zdjęcie będzie główne
+                  </span>
+                  <div class="flex justify-end items-end h-full">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                      @click="removeImage(index)"
+                      class="h-10 w-10 text-red-600 button-animation-hover cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="new-auction-data-box">
+              <FormKit
+                type="textarea"
+                label="Opis"
+                placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
+                v-model.trim="descriptionValue"
+                validation="required|length:50,1000"
+                :validation-messages="{
+                  length: `Opis musi mieć 50-1000 znaków (obecnie: ${descriptionValue.length}).`,
+                }"
+                :classes="{ input: 'bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full lg:w-3/5 h-72 -mb-1' }"
+              />
+              <div class="mt-32 absolute" id="scrollDown"></div>
+            </div>
           </div>
-          <div class="new-auction-data-box">
-            <FormKit
-              type="textarea"
-              label="Opis"
-              placeholder="Np. Opel Corsa, rocznik 2014, silnik 1.4 benzyna, 110 tyś. km. przebiegu, samochód zadbany..."
-              v-model.trim="descriptionValue"
-              validation="required|length:50,1000"
-              :validation-messages="{
-                length: `Opis musi mieć 50-1000 znaków (obecnie: ${descriptionValue.length}).`,
-              }"
-              :classes="{ input: 'bg-gray-100 text-lg text-gray-700 px-4 py-2 w-full lg:w-3/5 h-72 -mb-1' }"
-            />
-          </div>
-        </div>
 
-        <div class="new-auction-main-box">
-          <h1 class="new-auction-title">Filtry</h1>
-          <SearchFilters
-            class="text-white"
-            ref="filteringComponent"
-            @select-change="updateFilters"
-            @display-filters-validation-error="displayFiltersValidationError"
-            @hide-filters-validation-error="hideFiltersValidationError"
-            :selectDefaultOption="'Wybierz'"
-            :isRequired="true"
-          />
-          <p v-if="filtersValidationErr" class="text-gray-800 font-semibold mt-1">Filtry są wymagane.</p>
-        </div>
-
-        <div class="new-auction-main-box">
-          <h1 class="new-auction-title">Kontakt i lokalizacja</h1>
-          <div class="new-auction-data-box">
-            <FormKit
-              v-model="hidePhoneNumber"
-              type="checkbox"
-              label="Ukryj numer telefonu"
-              :classes="{ wrapper: `flex flex-row items-center h-14 -mt-2 ${hidePhoneNumber ? '-mb-2' : ''}`, input: 'h-8 w-8', inner: 'h-8 w-8', label: 'text-xl ml-2' }"
-              @change="() => phoneNumberValue = ''"
+          <div class="new-auction-main-box">
+            <h1 class="new-auction-title">Filtry</h1>
+            <SearchFilters
+              class="text-white"
+              ref="filteringComponent"
+              @select-change="updateFilters"
+              @display-filters-validation-error="displayFiltersValidationError"
+              @hide-filters-validation-error="hideFiltersValidationError"
+              :selectDefaultOption="'Wybierz'"
+              :isRequired="true"
             />
-            <FormKit
-              v-if="!hidePhoneNumber"
-              type="number"
-              label="Numer telefonu"
-              placeholder="Np. 111222333"
-              v-model.trim="phoneNumberValue"
-              validation="required|length:9,12"
-              :classes="{ input: 'new-auction-input' }"
-            />
+            <p v-if="filtersValidationErr" class="text-gray-800 font-semibold mt-1">Filtry są wymagane.</p>
           </div>
-          <div class="new-auction-data-box">
-            <FormKit
-              type="text"
-              list="streets"
-              label="Lokalizacja (ulica)"
-              placeholder="Np. Złota"
-              v-model.trim="locationValue"
-              validation="required|formKitStreetRule"
-              :validation-rules="{ formKitStreetRule }"
-              :validation-messages="{
-                required: 'Lokalizacja jest wymagana.',
-                formKitStreetRule: 'Podana ulica nie istnieje w Kaliszu.',
-              }"
-              help="*Podaj pełną nazwę ulicy"
-              :classes="{ input: 'new-auction-input' }"
-            />
-            <datalist id="streets">
-              <option v-for="street in streetsCapitalize" :key="street" :value="street"></option>
-            </datalist>
-          </div>
-        </div>
 
-        <p v-if="validationErr" class="text-xl mb-3 font-semibold text-red-500">{{ validationMsg }}</p>
-        <input
-          type="submit"
-          value="Stwórz ogłoszenie"
-          class="new-auction-button cursor-pointer"
-          @click="checkFiltersValidation"
-        >
-      </FormKit>
+          <div class="new-auction-main-box">
+            <h1 class="new-auction-title">Kontakt i lokalizacja</h1>
+            <div class="new-auction-data-box">
+              <FormKit
+                v-model="hidePhoneNumber"
+                type="checkbox"
+                label="Ukryj numer telefonu"
+                :classes="{ wrapper: `flex flex-row items-center h-14 -mt-2 ${hidePhoneNumber ? '-mb-2' : ''}`, input: 'h-8 w-8', inner: 'h-8 w-8', label: 'text-xl ml-2' }"
+                @change="() => phoneNumberValue = ''"
+              />
+              <FormKit
+                v-if="!hidePhoneNumber"
+                type="number"
+                label="Numer telefonu"
+                placeholder="Np. 111222333"
+                v-model.trim="phoneNumberValue"
+                validation="required|length:9,12"
+                :classes="{ input: 'new-auction-input' }"
+              />
+            </div>
+            <div class="new-auction-data-box">
+              <FormKit
+                type="text"
+                list="streets"
+                label="Lokalizacja (ulica)"
+                placeholder="Np. Złota"
+                v-model.trim="locationValue"
+                validation="required|formKitStreetRule"
+                :validation-rules="{ formKitStreetRule }"
+                :validation-messages="{
+                  required: 'Lokalizacja jest wymagana.',
+                  formKitStreetRule: 'Podana ulica nie istnieje w Kaliszu.',
+                }"
+                help="*Podaj pełną nazwę ulicy"
+                :classes="{ input: 'new-auction-input' }"
+              />
+              <datalist id="streets">
+                <option v-for="street in streetsCapitalize" :key="street" :value="street"></option>
+              </datalist>
+            </div>
+          </div>
+
+          <p v-if="validationErr" class="text-xl mb-3 font-semibold text-red-500">{{ validationMsg }}</p>
+          <input
+            type="submit"
+            value="Stwórz ogłoszenie"
+            class="new-auction-button cursor-pointer"
+            @click="checkFiltersValidation"
+          >
+        </FormKit>
+      </div>
     </div>
+    <a
+      href="/new-auction#scrollDown"
+      v-if="isScrollDown"
+      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
+      class="fixed bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </a>
+    <a
+      href="/new-auction#"
+      v-if="isScrollUp"
+      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
+      class="fixed bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </a>
   </div>
 </template>
 <script>
@@ -221,19 +244,28 @@ export default {
       used: false,
       hidePhoneNumber: false,
 
+      isScrollDown: true,
+      isScrollUp: false,
+
       streetsCapitalize,
       formKitStreetRule
     }
   },
   async created(){
+    if(!jwt) this.$router.push('/login')
+
     await axios.get(`${API_URL}/user-auctions/${user.id}`)
     .then(res => {
       this.userOtherAuctions = res.data
     })
-
-    if(!jwt) this.$router.push('/login')
+    window.addEventListener('scroll', this.checkScroll);
   },
   methods: {
+    checkScroll(){
+      let x = this.images.length > 2 ? 2.5 : 3.5;
+      this.isScrollDown = document.body.clientHeight > window.scrollY * x ? true : false
+      this.isScrollUp = document.body.clientHeight < window.scrollY * x ? true : false
+    },
     updateFilters(filters) {
       this.filtersValue = filters
     },

@@ -1,6 +1,5 @@
 <template>
   <div class="mt-4">
-    <Loading v-if="isLoading"/>
     <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -34,7 +33,7 @@
             </div>
           </div>
           <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button @click="report" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Zgłoś</button>
+            <button @click="sendReport" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Zgłoś</button>
             <button @click="toggleReportLayer" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Anuluj</button>
           </div>
         </div>
@@ -46,28 +45,19 @@
 <script>
 import axios from 'axios'
 
-import Loading from './Loading.vue'
 import API_URL from '../../API_URL'
 import { authorization, user } from '../constants/const-variables'
 
 export default {
-  components: {
-    Loading
-  },
   data(){
     return{
       message: '',
       validationText: '',
       isValidation: false,
       isSent: false,
-      isLoading: false,
 
       isAuctionRoute: window.location.href.includes('auction')
     }
-  },
-  created(){
-      fetch('https://api.ipify.org?format=json')
-      .then(res=>console.log(res))
   },
   props: {
     id: String
@@ -77,7 +67,7 @@ export default {
       clearTimeout(this.setTimeoutFunction)
       this.$emit('toggle-report-layer')
     },
-    async report(){
+    async sendReport(){
       clearTimeout(this.setTimeoutFunction)
 
       if(this.message.length < 20) {
@@ -92,38 +82,15 @@ export default {
         return this.validationText = "Maksymalna długość zgłoszenia to 500 znaków";
       }
 
-      this.isLoading = true;
-
       await fetch('http://api.ipify.org/?format=json')
-      .then(x => x.json())
+      .then(res => res.json())
       .then(async ({ ip }) => {
-        let data = {};
-
-        // if(this.isAuctionRoute){
-        //   data = {
-        //     auction_id: this.id,
-        //     user_ip: ip,
-        //     user_id: user.id,
-        //     message: this.message
-        //   }
-        // } else{
-        //   data = {
-        //     comment_id: this.id,
-        //     user_ip: ip,
-        //     user_id: user.id,
-        //     message: this.message
-        //   }
-        // }
-
-        data = {
+        const data = {
           ...(this.isAuctionRoute ? { auction_id: this.id } : { comment_id: this.id }),
           user_ip: ip,
           user_id: user.id,
           message: this.message
         }
-
-        console.log(data)
-        console.log('hej')
 
         await axios.post(`${API_URL}/${this.isAuctionRoute ? 'auction': 'comment'}-reports`, data, authorization)
         .then(() => {
@@ -145,8 +112,6 @@ export default {
         this.setTimeoutFunction = setTimeout(() => this.isValidation = false, 4000)
         return this.validationText = "Aby wysłać zgłoszenie musisz wyłączyć ADBLOCK";
       })
-
-      this.isLoading = false;
     },
   }
 }

@@ -2,7 +2,7 @@
   <div class="w-full min-h-screen py-10 2xl:p-0 flex flex-col justify-center items-center bg-gradient-to-b from-green-600 to-green-800">
     <router-link to="/" class="text-white text-5xl mb-4 font-light">okki</router-link>
     
-    <div class="flex flex-col items-center bg-white w-84 xs:w-108 h-auto rounded-lg">
+    <div class="flex flex-col items-center bg-white w-11/12 xs:w-108 h-auto rounded-lg">
       <div class="h-64 text-xl flex flex-col items-center justify-center" v-if="isSent">
         <span class="text-center">
           Mail z linkiem został wysłany do {{ email }} <br>
@@ -24,7 +24,7 @@
             <input
               class="login-register-input"
               placeholder="Nazwa użytkownika lub email"
-              type="text"
+              type="email"
               v-model="email">
           </div>
           <input
@@ -35,7 +35,7 @@
         </form>
       </div>
     </div>
-    <div v-if="isError" class="validation-alert top-0 sm:top-3/4" role="alert">
+    <div v-if="isError" class="validation-alert absolute bottom-0 mb-2 sm:mb-20" role="alert">
       <span class="block sm:inline">Konto z podanym emailem nie istnieje</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
       </span>
@@ -65,7 +65,6 @@ export default {
     async sendMailWithPassword(){
       if(!this.isUsed){
         this.isUsed = true;
-
         await axios.post(`${API_URL}/auth/forgot-password`, { email: this.email })
         .then(() => {
           this.isError = false;

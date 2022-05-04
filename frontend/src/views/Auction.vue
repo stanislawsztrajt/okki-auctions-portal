@@ -14,7 +14,7 @@
         v-else
         class="flex flex-col items-center gap-8"
       >
-        <header class="w-11/12 2xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
+        <header class="w-11/12 2xl:w-3/4 mt-6 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
           <h1
             class="text-xl dont-break-out  lg:text-2xl pointer-events-none"
           >
@@ -23,7 +23,7 @@
           <h2 class="text-2xl lg:text-3xl text-green-600 font-bold">{{ auction.price }}zł</h2>
         </header>
 
-        <div class="w-11/12 2xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
+        <div class="w-11/12 2xl:w-3/4 -mt-2 flex flex-col xl:flex-row gap-x-8 xl:h-128">
           <div class="w-full 2xl:w-3/4 bg-white p-4 shadow">
             <div
               v-if="auction.images"

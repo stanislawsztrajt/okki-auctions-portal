@@ -27,9 +27,11 @@ module.exports = {
       accucuracyRate = 'Brak opinii użytkowników'
     }
 
+    const comments = entity.sort((commentA,commentB) => new Date(commentB.published_at) - new Date(commentA.published_at) ? -1 : 1)
+
     return sanitizeEntity({
       accucuracyRate,
-      comments: entity
+      comments
     }, { model: strapi.models.comment });
   },
   async findFirstSixCommentsInUsersProfiles(ctx){
@@ -52,7 +54,8 @@ module.exports = {
       accucuracyRate = 'Brak opinii użytkowników'
     }
 
-    const comments = entity.splice(0,6)
+    const comments = entity .sort((commentA,commentB) => new Date(commentB.published_at) - new Date(commentA.published_at) ? -1 : 1)
+                            .slice(0, 6);
 
     return sanitizeEntity({
       accucuracyRate,
@@ -80,22 +83,21 @@ module.exports = {
   async create(ctx) {
     let entity;
 
-    // const comments = await strapi.services.comment.find();
+    const comments = await strapi.services.comment.find();
 
-    // ctx.request.body.user_id = ctx.state.user.id
+    ctx.request.body.user_id = ctx.state.user.id
 
-    // const isCommentExist = comments.findIndex(
-    //   comment =>
-    //     comment.user_profile_id === ctx.request.body.user_profile_id &&
-    //     (
-    //       comment.user_id === ctx.state.user.id
-    //     ||
-    //       comment.user_ip === ctx.request.body.user_ip
-    //     ||
-    //       comment.user_profile_id === ctx.request.body.user_id
-    //     )
-    // )
-    const isCommentExist = -1
+    const isCommentExist = comments.findIndex(
+      comment =>
+        comment.user_profile_id === ctx.request.body.user_profile_id &&
+        (
+          comment.user_id === ctx.state.user.id
+        ||
+          comment.user_ip === ctx.request.body.user_ip
+        ||
+          comment.user_profile_id === ctx.request.body.user_id
+        )
+    )
 
     if(isCommentExist > -1){
       throw strapi.errors.badRequest('Your comment already exist');

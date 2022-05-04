@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const { sanitizeEntity } = require('strapi-utils');
 
+const auctionFunctions = require('../../../api/auction/controllers/auction')
+
 const sanitizeUser = user =>
   sanitizeEntity(user, {
     model: strapi.query('user', 'users-permissions').model,
@@ -16,12 +18,33 @@ module.exports = {
 
     await strapi.services.comment.delete({ user_profile_id: id });
     await strapi.services.comment.delete({ user_id: id });
-    await strapi.services.auction.delete({ user_id: id })
+    // await strapi.services.auction.delete({ user_id: id })
+    auctionFunctions.deleteUserAuctions(ctx)
     await strapi.services['auction-report'].delete({ user_id: id })
     await strapi.services['comment-report'].delete({ user_id: id })
+    await strapi.services['last-seen-messages'].delete({ user_id: id })
     await strapi.services.liked.delete({ user_id: id })
 
     return sanitizeEntity({ message: "successful, user blocked" }, { model: strapi.models.comment });
+  },
+  async deleteMe(ctx){
+    const { id } = ctx.params;
+
+    if(id !== ctx.state.user.id){
+      return ctx.unauthorized(`You can't delete this account`);
+    }
+
+    await strapi.services.comment.delete({ user_profile_id: id });
+    await strapi.services.comment.delete({ user_id: id });
+    // await strapi.services.auction.delete({ user_id: id })
+    auctionFunctions.deleteUserAuctions(ctx)
+    await strapi.services['auction-report'].delete({ user_id: id })
+    await strapi.services['comment-report'].delete({ user_id: id })
+    await strapi.services['last-seen-messages'].delete({ user_id: id })
+    await strapi.services.liked.delete({ user_id: id })
+    strapi.query('user', 'users-permissions').delete({ id })
+
+    return sanitizeEntity({ message: "successful, account deleted" }, { model: strapi.models.comment });
   },
   async updateMe(ctx){
     const advancedConfigs = await strapi

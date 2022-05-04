@@ -91,6 +91,8 @@ export default {
     sendEmail(){
       this.$swal({ icon: "success", title: 'Wiadomość została wysłana!'});
 
+      if(this.message.length > 300) return
+
       const data = {
         from_name: this.name,
         to_name: this.email,

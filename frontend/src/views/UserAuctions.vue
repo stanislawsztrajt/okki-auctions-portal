@@ -40,7 +40,7 @@
 import axios from 'axios'
 
 import API_URL from '../../API_URL'
-import { authorization, user } from '../constants/const-variables'
+import { jwt, user } from '../constants/const-variables'
 
 import InfoElement from '../components/InfoElement.vue'
 import Loading from '../components/Loading.vue'
@@ -76,9 +76,9 @@ export default {
     .then(res => this.auctions = res.data)  
     
 
-    if(this.id !== user.id){
-      await axios.get(`${API_URL}/user-liked-auctions/${this.id}`, authorization)
-      .then(res => this.likeds = res.data);  
+    if(jwt && this.id !== user.id){
+      await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
+      .then(res => this.likeds = res.data)
     }
 
     this.isLoading = false;
