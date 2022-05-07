@@ -11,6 +11,7 @@
         :key="conversation.id"
         :conversation="conversation"
         :conversationUserID="conversation.code.replace(this.user.id, '')"
+        :secondaryUserActive="activeUsers.includes(conversation.code.replace(user.id, ''))"
         @move-converastion-to-top="moveConverastionToTop"
       />
     </div>
@@ -20,7 +21,7 @@
   </div>
 </template>
 <script>
-import { authorization, user } from '../constants/const-variables'
+import { authorization, user, jwt } from '../constants/const-variables'
 import { socket } from '../../config/web-sockets.js';
 import axios from 'axios'
 import API_URL from '../../API_URL'
@@ -31,10 +32,10 @@ import Loading from '../components/Loading.vue'
 export default {
   data() {
     return {
-      user: user,
       conversations: [],
-      ISjwt: this.$cookies.isKey('jwt'),
+      activeUsers: [],
       isLoading: true,
+      user,
     }
   },
   components: {
@@ -43,20 +44,35 @@ export default {
     Loading
   },
   created() {
-    if(!this.ISjwt){
-      this.$router.push('/login')
-    }
+    if(!jwt) this.$router.push('/login')
+
     this.fetchUserConversations()
 
-    socket.on('newConversation', async ({ conversation }) => {
+    socket.on('newConversation', ({ conversation }) => {
       this.conversations.unshift(conversation)
+      this.activeUsers.push(conversation.code.replace(user.id, ''))
+    })
+    socket.on('newActiveUser', ({ user_id }) => {
+      this.activeUsers.push(user_id)
+    })
+    socket.on('deleteActiveUser', ({ user_id }) => {
+      const index = this.activeUsers.findIndex(user => user === user_id)
+      if(index > -1)this.activeUsers.splice(index, 1);
     })
   },
   methods: {
     async fetchUserConversations() {
       axios.get(`${API_URL}/user-conversations`, authorization)
       .then((res) => {
+        let conversationsUsers = []
         this.conversations = res.data.sort((conA, conB) => Date.parse(conB.updatedAt) - Date.parse(conA.updatedAt))
+        this.conversations.forEach(conversation => {
+          conversationsUsers.push(conversation.code.replace(this.user.id, ''))
+        })
+
+        socket.emit('checkUsersActivity', { usersIds: conversationsUsers })
+        socket.on('usersActivity', data => this.activeUsers = data)
+
         this.isLoading = false
       })
     },

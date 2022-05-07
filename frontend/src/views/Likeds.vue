@@ -29,7 +29,8 @@
           <DisclosurePanel :static="windowWidth > 1024 ? true : false">
             <SearchFilters
               ref="filteringComponent"
-              @select-change="updateAppliedFilters"
+              @filter-change="updateAppliedFilters"
+              @price-filters-change="updatePriceFilters"
               :selectDefaultOption="'Wszystko'"
               :isRequired="false"
             />
@@ -60,7 +61,7 @@
         :numberOfAllAuctions="numberOfAllAuctions"
         :currentPage="this.page ? parseInt(this.page) : 1"
         :isLoading="isLoading"
-        :defaultRoute="'/likeds'"
+        :defaultRoute="defaultRoute"
       />
     </div>
   </div>
@@ -101,6 +102,9 @@ export default {
       searchInputLocation: '',
       categoryOption: '',
       appliedFilters: {},
+      priceFilters: {},
+      // split method cuts everything after "/page" from url pathname
+      defaultRoute: this.$route.path.split('/page')[0],
 
       auctions: [],
       likeds: [],
@@ -136,10 +140,11 @@ export default {
 
       await axios.get(`${API_URL}/auctions`, { headers: {
         page: this.page ? this.page : 1,
-        applied_filters: JSON.stringify(this.appliedFilters),
-        sorting_option: this.sortingOption,
         input_item: this.searchInputItem,
         input_location: this.searchInputLocation,
+        price_filters: JSON.stringify(this.priceFilters),
+        applied_filters: JSON.stringify(this.appliedFilters),
+        sorting_option: this.sortingOption,
         likeds_ids: JSON.stringify(this.likedsIds),
         return_auctions_number: true
       }})
@@ -152,17 +157,22 @@ export default {
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
-      this.$router.push('/likeds')
+      this.$router.push(this.defaultRoute)
       this.searchAuctions()
     },
     updateAppliedFilters(filters) {
       this.appliedFilters = filters
-      this.$router.push('/likeds')
+      this.$router.push(this.defaultRoute)
       this.searchAuctions()
     },
     updateSortingValue(sorting_option) {
       this.sortingOption = sorting_option
-      this.$router.push('/likeds')
+      this.$router.push(this.defaultRoute)
+      this.searchAuctions()
+    },
+    updatePriceFilters(price_filters){
+      this.priceFilters = price_filters
+      this.$router.push(this.defaultRoute)
       this.searchAuctions()
     }
   },

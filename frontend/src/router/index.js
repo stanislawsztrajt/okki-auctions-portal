@@ -87,6 +87,7 @@ const routes = [
   },
   {
     path: '/user-auctions/:id',
+    alias: '/user-auctions/:id/page/:page',
     name: 'UserAuctions',
     component: UserAuctions,
     props: true,

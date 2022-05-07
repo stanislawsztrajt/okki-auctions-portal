@@ -157,7 +157,6 @@ export default {
     }
   },
   created() {
-    console.log(this.commentBodyCopy)
     if(this.reports) this.commentReports = this.reports.filter(report => report.comment_id === this.comment.id);
   },
   methods: {

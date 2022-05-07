@@ -11,22 +11,29 @@
     <!-- <div v-show="!isCallingShow" class="w-screen h-5/6 flex flex-col items-center justify-center"> -->
     <div v-show="!isCallingShow" class="w-full h-5/6 absolute flex flex-col items-center justify-center">
       <div class="w-11/12 xs:w-3/4 md:w-3/5 xl:w-1/2 h-4/5 bg-white text-gray-700 flex flex-col shadow border border-gray-300 rounded-md overflow-x-hidden">
-        <div class="w-full h-20 flex flex-row justify-between items-center px-5 ">
-          <router-link to="/conversations" class="text-2xl  flex flex-row items-center">
+        <div class="w-full h-20 flex flex-row justify-between items-center sm:px-5">
+          <router-link to="/conversations" class="text-2xl hidden sm:flex flex-row items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
             </svg>
           </router-link>
-          <router-link
-            :to="`/users/${secondUser.id}`"
-            class="text-2xl ml-4 w-full flex flex-row items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span class="ml-2 text-center">
-              {{ secondUser.username }}
-            </span>
-          </router-link>
+          <div>
+            <router-link
+              :to="`/users/${secondUser.id}`"
+              class="text-2xl ml-4 w-full flex flex-row items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span class="mx-2 text-center">
+                {{ secondUser.username }}
+              </span>
+              <div
+                class="w-3 h-3 rounded-full cursor-default"
+                :class="isUserActive ? 'bg-green-500' : 'bg-red-500'"
+                :title="isUserActive ? 'Użytkownik jest teraz aktywny' : 'Użytkownik nie jest teraz aktywny'"
+              ></div>
+            </router-link>
+          </div>
           <div class="flex flex-row items-center">
             <button v-if="idToCall !== ''" @click="call({video: false, audio: true})">
               <svg  xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 mr-4 button-animation-hover cursor-pointer text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
@@ -45,11 +52,12 @@
           </div>
         </div>
         <div ref="chatWindow" class="flex flex-col pb-2 px-4 md:px-10 2xl:px-24 h-full bg-gray-100 border border-gray-200 overflow-y-scroll">
-          <span class="text-gray-400 my-2 mb-4 text-center block">Początek konwersacji z {{ secondUser.username }}</span>
+          <p class="text-gray-400 my-2 mb-4 text-center block">Początek konwersacji z <span class="font-semibold">{{ secondUser.username }}</span></p>
           <div v-for="message in messages" :key="message">
             <div
               class="dont-break-out bg-green-300 max-w px-4 py-2 mb-2 float-left rounded rounded-tl-none rounded-br-xl max-w-xs mr-3"
               :class="{userMessage: message.sender_id === this.user.id}"
+              :title="`${message.createdAt.substring(11,16)} | ${message.createdAt.substring(0,10).split('-').reverse().join('.')}`"
             >
               {{ message.message }}
             </div>
@@ -114,30 +122,45 @@ export default {
       conversationExists: true,
       isLoading: true,
       isCallingShow: false,
+      isUserActive: false
     }
   },
   props: {
-    id: {
-      type: String
-    },
+    id: String
   },
   components: {
     Loading,
     VideoChat
   },
   async created() {
-    if(!jwt){
-      this.$router.push('/login')
-    }
+    if(!jwt) this.$router.push('/login')
 
     if(this.id !== this.user.id){
       await axios.get(`${API_URL}/users/${this.id}`)
       .then(res => {
-        this.secondUser = res.data
+        if(res.data !== '') {
+          this.secondUser = res.data
+        } else {
+          this.secondUser = {
+            id: this.id,
+            username: `UsunieteKonto`,
+          }
+        }
+
         this.usersIds = [this.user.id, this.secondUser.id].sort().join('+')
         this.fetchConversation()
+
+        socket.emit('checkUserActivity', { userId: this.id })
+        socket.on('userActivity', data => this.isUserActive = data)
       })
       .catch(() => this.$router.push('/conversations'))
+
+      socket.on('newActiveUser', ({ user_id }) => {
+        if(user_id === this.id) this.isUserActive = true
+      })
+      socket.on('deleteActiveUser', ({ user_id }) => {
+        if(user_id === this.id) this.isUserActive = false
+      })
     } else {
       this.$router.push('/conversations')
     }
@@ -161,7 +184,7 @@ export default {
       const message = {
         message: this.message.replace(/\s+/g, ' ').trim(),
         sender_id: this.user.id,
-        createdAt: new Date(),
+        createdAt: this.getLocalISOTime(),
         id: uuid.v1()
       }
 
@@ -249,6 +272,12 @@ export default {
       if(this.idToCall === '') return
       this.$refs.VideoChat.callUser(userMediaOptions)
     },
+    getLocalISOTime() {
+      let tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      let localISOTime = (new Date(Date.now() - tzoffset)).toISOString()
+
+      return localISOTime
+    }
   },
 }
 </script>

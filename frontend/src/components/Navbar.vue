@@ -14,7 +14,7 @@
         <router-link
           v-if="jwt ? link.route !== 'login' : link.route !== 'dashboard'"
           :to="`/${link.route}`"
-          :class="`menu-element ${link.btnWide ? 'menu-element-new-auction' : ''} ${link.route === 'conversations' && showNotificationIcon ? 'new-message-icon' : ''}`"
+          :class="`navbar-element ${link.btnWide ? 'navbar-element-new-auction' : ''} ${link.route === 'conversations' && showNotificationIcon ? 'new-message-icon' : ''}`"
           :ref="link.route === 'conversations' ? 'conversationsLink' : ''"
         >
           <svg xmlns="http://www.w3.org/2000/svg" :class="`h-7 w-7 ${link.btnWide ? 'block lg:hidden' : ''}`" fill="none" viewBox="0 0 24 24" stroke="currentColor">

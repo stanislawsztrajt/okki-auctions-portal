@@ -9,6 +9,7 @@ const getUserSocket = async user_id =>{
   return sockets[socketIndex]?.id;
 }
 
+const activeUsers = {};
 const io = require("socket.io")(server, {
 	cors: {
 		origin: "http://localhost:8080",
@@ -26,6 +27,9 @@ io.on("connection", (socket) => {
 
 	socket.on("disconnect", async () => {
 		socket.broadcast.emit("callEnded")
+    socket.broadcast.emit('deleteActiveUser', { user_id: socket.strapi_id })
+
+    delete activeUsers[socket.id];
 	})
 
 	socket.on("callUser", async (data) => {
@@ -47,8 +51,17 @@ io.on("connection", (socket) => {
 		io.to(userToCallId).emit('endCall', data.ended)
 	})
 
-  socket.on('join', ({ rooms, user_id }) => {
+  socket.on('join', ({ rooms, user_id, conversationsSecondaryUserIds }) => {
     socket.strapi_id = user_id
+    activeUsers[socket.id] = user_id
+
+    // emiting information about my activity to users whom i have conversation
+    conversationsSecondaryUserIds.forEach(secondaryUserStrapiId => {
+      if(Object.values(activeUsers).includes(secondaryUserStrapiId)) {
+        const secondaryUserSocketId = Object.keys(activeUsers).find(key => activeUsers[key] === secondaryUserStrapiId);
+        socket.broadcast.to(secondaryUserSocketId).emit('newActiveUser', { user_id: socket.strapi_id })
+      }
+    })
 
     rooms.forEach(room => {
       if(!socket.rooms.hasOwnProperty(room)) socket.join(room)
@@ -81,6 +94,26 @@ io.on("connection", (socket) => {
     socket.on('hideNotifications', () => {
       socket.emit('hideNotifications')
     })
+  })
+
+  socket.on('checkUsersActivity', ({ usersIds }) => {
+    const usersActive = []
+
+    usersIds.forEach(userId => {
+      if(Object.values(activeUsers).includes(userId)) {
+        usersActive.push(userId)
+      }
+    })
+
+    socket.emit('usersActivity', usersActive)
+  })
+
+  socket.on('checkUserActivity', ({ userId }) => {
+    let isUserActive = false
+
+    if(Object.values(activeUsers).includes(userId)) isUserActive = true
+
+    socket.emit('userActivity', isUserActive)
   })
 })
 

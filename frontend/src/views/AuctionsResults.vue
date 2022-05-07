@@ -2,7 +2,7 @@
   <div class="m-6 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 2xl:mx-48">
     <div class="border-b pb-6 border-gray-300">
       <SearchInputs
-        class="sm:w-3/4"
+        class="w-full sm:w-5/6"
         ref="inputsComponent"
         @update-search-input-values="updateSearchInputValues"
         :searchInputItem="searchInputItem"
@@ -19,7 +19,8 @@
           <DisclosurePanel :static="windowWidth > 1024 ? true : false">
             <SearchFilters
               ref="filteringComponent"
-              @select-change="updateAppliedFilters"
+              @filter-change="updateAppliedFilters"
+              @price-filters-change="updatePriceFilters"
               :appliedFiltersCookies="appliedFilters"
               :selectDefaultOption="'Wszystko'"
               :isRequired="false"
@@ -55,7 +56,7 @@
         :numberOfAllAuctions="numberOfAllAuctions"
         :currentPage="this.page ? parseInt(this.page) : 1"
         :isLoading="isLoading"
-        :defaultRoute="'/auctions-results'"
+        :defaultRoute="defaultRoute"
       />
     </div>
   </div>
@@ -97,6 +98,9 @@ export default {
       searchInputLocation: '',
       sortingOption: '',
       appliedFilters: {},
+      priceFilters: {},
+      // split method cuts everything after "/page" from url pathname
+      defaultRoute: this.$route.path.split('/page')[0],
 
       auctions: [],
       likeds: [],
@@ -118,6 +122,8 @@ export default {
     }
 
     if(this.$route.params.item || this.$route.params.item === '') {
+      this.$cookies.set('scrollPosition', 0, '1MIN')
+
       this.searchInputItem = this.$route.params.item
       this.searchInputLocation = this.$route.params.location
       Object.keys(this.appliedFilters).forEach(key => this.appliedFilters[key] = '')
@@ -131,7 +137,6 @@ export default {
     }
 
     this.searchAuctions();
-
   },
   methods: {
     async searchAuctions () {
@@ -145,32 +150,42 @@ export default {
 
       await axios.get(`${API_URL}/auctions`, { headers: {
         page: this.page ? this.page : 1,
-        applied_filters: JSON.stringify(this.appliedFilters),
-        sorting_option: this.sortingOption,
         input_item: this.searchInputItem,
         input_location: this.searchInputLocation,
+        price_filters: JSON.stringify(this.priceFilters),
+        applied_filters: JSON.stringify(this.appliedFilters),
+        sorting_option: this.sortingOption,
         return_auctions_number: true
       }})
       .then(res => {
         this.auctions = res.data.auctions;
         this.numberOfAllAuctions = res.data.numberOfAllAuctions;
         this.isLoading = false;
+
+        setTimeout(() => {
+          if(this.$cookies.isKey('scrollPosition')) window.scrollTo(0, this.$cookies.get('scrollPosition'))
+        }, 0);
       })
     },
     updateSearchInputValues(searchInputItem, searchInputLocation) {
       this.searchInputItem = searchInputItem;
       this.searchInputLocation = searchInputLocation;
-      this.$router.push('/auctions-results')
+      this.$router.push(this.defaultRoute)
       this.searchAuctions()
     },
     updateAppliedFilters(filters) {
       this.appliedFilters = filters
-      this.$router.push('/auctions-results')
+      this.$router.push(this.defaultRoute)
       this.searchAuctions()
     },
     updateSortingValue(sorting_option) {
       this.sortingOption = sorting_option
-      this.$router.push('/auctions-results')
+      this.$router.push(this.defaultRoute)
+      this.searchAuctions()
+    },
+    updatePriceFilters(price_filters){
+      this.priceFilters = price_filters
+      this.$router.push(this.defaultRoute)
       this.searchAuctions()
     }
   },

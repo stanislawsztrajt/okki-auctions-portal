@@ -9,7 +9,7 @@
         :actions="false"
         :config="{
           classes: {
-            message: 'text-gray-800 font-semibold mt-1',
+            message: 'formkit-message',
             messages: 'list-none ml-0',
             help: 'text-gray-800 -mb-2'
           },
@@ -24,7 +24,7 @@
               type="text"
               v-model.trim="titleValue"
               placeholder="Np. Opel Corsa 2014 1.4 benzyna"
-              label="Tytuł ogłoszenia"
+              label="Tytuł"
               validation="required|length:8,70"
               :classes="{ input: 'new-auction-input' }"
             />
@@ -60,14 +60,15 @@
             />
           </div>
         </div>
+
         <div class="new-auction-main-box">
           <h1 class="new-auction-title">Zdjęcia i opis</h1>
           <div class="new-auction-data-box">
             <label>Zdjęcia</label>
             <input
               type="file"
+              accept=".jpg, .jpeg, .png"
               class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2 mb-2"
-              accept="image/png, image/jpeg"
               @change="onFileChange($event)"
               multiple
               :disabled="urls.length >= 4"
@@ -113,14 +114,14 @@
           <SearchFilters
             class="text-white"
             ref="filteringComponent"
-            @select-change="updateFilters"
+            @filter-change="updateFilters"
             @display-filters-validation-error="displayFiltersValidationError"
             @hide-filters-validation-error="hideFiltersValidationError"
             :appliedFiltersEditing="filtersValue"
             :selectDefaultOption="'Wybierz'"
             :isRequired="true"
           />
-          <p v-if="filtersValidationErr" class="text-gray-800 font-semibold mt-1">Filtry są wymagane.</p>
+          <p v-if="filtersValidationErr" class="formkit-message">Filtry są wymagane.</p>
         </div>
 
         <div class="new-auction-main-box">
@@ -156,7 +157,7 @@
                 required: 'Lokalizacja jest wymagana.',
                 formKitStreetRule: 'Podana ulica nie istnieje w Kaliszu.',
               }"
-              help="*Podaj pełną nazwę ulicy"
+              help="*Podaj pełną nazwę ulicy znajdującej się w Kaliszu."
               :classes="{ input: 'new-auction-input' }"
             />
             <datalist id="streets">

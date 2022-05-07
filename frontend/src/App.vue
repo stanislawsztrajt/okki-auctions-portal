@@ -81,27 +81,23 @@ export default {
       .then((res) => {
         this.conversations = res.data
         const userRooms = []
+        const conversationsSecondaryUserIds = []
 
         this.conversations.forEach(conversation => {
           userRooms.push(conversation.code)
+          conversationsSecondaryUserIds.push(conversation.code.replace(user.id, ''))
         })
-        this.joinUserToSocketRooms(userRooms)
+        this.joinUserToSocketRooms(userRooms, conversationsSecondaryUserIds)
       })
     },
-    async joinUserToSocketRooms(roomsToJoin) {
-      let rooms = roomsToJoin
-      let user_id = user.id
-      socket.emit('join', { rooms, user_id });
+    async joinUserToSocketRooms(roomsToJoin, conversationsSecondaryUserIds) {
+      socket.emit('join', ({ rooms: roomsToJoin, user_id: user.id, conversationsSecondaryUserIds }));
     }
   },
   watch: {
     $route(route) {
-      this.showNavbarAndFooter = 
-                                route.path !== '/login' && 
-                                route.path !== '/register' && 
-                                route.path !== '/forgot-password' && 
-                                route.path !== '/reset-password'
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0)
+      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register' && route.path !== '/forgot-password' && route.path !== '/reset-password'
     }
   },
 }

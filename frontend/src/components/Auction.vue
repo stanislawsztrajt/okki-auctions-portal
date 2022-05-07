@@ -25,6 +25,7 @@
       :question="'Czy na pewno chcesz zablokować użytkownika?'"
     />
     <router-link
+      @click="saveScrollHeight"
       :to="`/auction/${auction.id}`"
       class="flex flex-col lg:flex-row w-full xl:w-10/12 border border-gray-300 mt-4 text-gray-600 bg-white"
     >
@@ -58,7 +59,7 @@
         </div>
       </div>
     </router-link>
-    <div v-if="isDashboardRoute" class="w-full xl:w-10/12 bg-white border border-t-0 border-dashed border-gray-300 p-2 exsm:p-4 text-gray-700 cursor-auto">
+    <div v-if="isDashboardRoute" class="w-full xl:w-10/12 bg-white border border-t-0 border-dashed border-gray-300 p-2 xxs:p-4 text-gray-700 cursor-auto">
       <div v-if="user && user.role.name === 'Admin'" class="flex flex-col lg:flex-row justify-between -mt-2">
         <div v-if="reports">
           <h2 class="lg:text-lg font-semibold">Wiadomości:</h2>
@@ -250,6 +251,9 @@ export default {
       .then(res => this.amountOfViews = res.data)
       .catch(err => err)
     },
+    saveScrollHeight() {
+      if(this.$route.path === '/auctions-results') this.$cookies.set('scrollPosition', window.scrollY, '5MIN')
+    }
   },
 }
 </script>

@@ -24,9 +24,10 @@ export default {
     return {
       sorting: '',
       options: [
-        {name: 'Najnowsze', value: 'najnowsze'},
-        {name: 'Najtańsze', value: 'najtansze'},
-        {name: 'Najdroższe', value: 'najdrozsze'}
+        {name: 'Popularne', value: 'popular'},
+        {name: 'Najnowsze', value: 'latest'},
+        {name: 'Najtańsze', value: 'cheapest'},
+        {name: 'Najdroższe', value: 'dearest'},
       ],
     }
   },

@@ -7,10 +7,10 @@
         :searchInputItem="searchInputItem"
         :searchInputLocation="searchInputLocation"
       />
-      <section class="bg-white py-10 shadow">
-        <div class="h-96 w-full md:h-108 2xl:h-128 grid gap-8 grid-cols-3 exsm:grid-cols-4 sm:grid-cols-5 xl:grid-cols-6 items-center justify-items-center shadow-md banner-background p-8 sm:py-10 md:py-12 lg:py-16 sm:px-20 md:px-32 xl:px-44 2xl:px-80">
+      <section class="bg-white py-10 shadow flex items-center">
+        <div class="h-96 w-full md:h-108 2xl:h-128 grid gap-8 grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 xl:grid-cols-6 items-center justify-items-center shadow-md banner-background p-8 sm:py-10 md:py-12 sm:px-20 md:px-24 lg:px-32 xl:px-44 2xl:px-80">
           <div v-for="category in categories" :key="category.name">
-            <button @click="updateCategoryOption(category.value)" class="flex flex-col box-content p-1 justify-center items-center w-16 h-12 xs:w-20 xs:h-16 md:w-24 md:h-20 xl:w-28 xl:h-24 2xl:w-32 2xl:h-28 bg-white hover:bg-gray-200 text-gray-500 text-3xl md:text-4xl lg:text-5xl rounded cursor-pointer transition duration-100">
+            <button @click="updateCategoryOption(category.value)" class="flex flex-col box-content p-1 justify-center items-center w-16 xxs:w-20 h-12 xs:w-20 xs:h-16 md:w-24 md:h-20 xl:w-28 xl:h-24 2xl:w-32 2xl:h-28 bg-white hover:bg-gray-200 text-gray-500 text-3xl md:text-4xl lg:text-5xl rounded cursor-pointer transition duration-100">
               <i v-bind:class="'fas fa-' + category.icon"></i>
             </button>
           </div>

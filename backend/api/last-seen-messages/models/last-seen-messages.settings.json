@@ -24,7 +24,7 @@
     },
     "lastSeenMessage_id": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 0,
       "maxLength": 50
     }
   }

@@ -26,6 +26,7 @@
     "express": "^4.17.3",
     "image-file-resize": "^1.0.4",
     "js-cookie": "^3.0.1",
+    "lodash.debounce": "^4.0.8",
     "nookies": "^2.5.2",
     "path": "^0.12.7",
     "postcss": "^7.0.39",

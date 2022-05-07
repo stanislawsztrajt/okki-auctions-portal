@@ -51,13 +51,13 @@ body::-webkit-scrollbar-thumb:hover {
   opacity: 0.8;
 }
 
-/* Menu styles */
+/* Navbar styles */
 
-.menu-element {
-  @apply relative flex flex-col justify-center items-center h-20 px-2 md:px-4 text-xl hover:shadow-inner hover:bg-gray-100 transition duration-100;
+.navbar-element {
+  @apply relative flex flex-col justify-center items-center h-20 px-1 xxs:px-2 md:px-4 text-xl hover:shadow-inner hover:bg-gray-100 transition duration-100;
 }
 
-.menu-element-new-auction {
+.navbar-element-new-auction {
   @apply lg:px-7 text-green-600 text-2xl lg:border-r lg:border-l border-gray-200;
 }
 
@@ -91,7 +91,7 @@ body::-webkit-scrollbar-thumb:hover {
   @apply bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded absolute;
 }
 
-/* NewAdverst styles */
+/* NewAuction styles */
 
 .new-auction-main-box {
   @apply bg-green-600 rounded-xl shadow p-7 mb-6;
@@ -109,8 +109,16 @@ body::-webkit-scrollbar-thumb:hover {
   @apply h-12 w-full md:w-4/5 bg-gray-100 text-lg text-gray-700 px-4 py-2;
 }
 
+.filtering-input-price {
+  @apply h-12 w-full md:w-4/5 bg-gray-100 text-lg text-gray-700 px-3 py-2;
+}
+
 .new-auction-button{
   @apply w-full md:w-64 h-16 bg-green-600 text-white text-xl font-semibold flex justify-center items-center rounded-xl hover:bg-green-700 transition duration-150
+}
+
+.formkit-message {
+  @apply text-gray-800 font-semibold mt-1 text-lg;
 }
 
 /* SearchSorting styles */

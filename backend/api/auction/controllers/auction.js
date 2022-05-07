@@ -104,12 +104,39 @@ module.exports = {
     if(ctx.request.header.likeds_ids) {
       const likedsIds = JSON.parse(ctx.request.header.likeds_ids)
       auctions = await strapi.services.auction.find({ id: { $in: likedsIds }});
+    } else if(ctx.request.header.user_id)  {
+      auctions = await strapi.services.auction.find({ user_id: ctx.request.header.user_id });
     } else {
       auctions = await strapi.services.auction.find()
     }
 
     checkAuctionsExpiration(auctions);
 
+    // Filtering auctions array by item
+    if(ctx.request.header.input_item) {
+      auctions = auctions.filter((auction) => {
+        let auctionTitle = auction.title.toLowerCase()
+        let inputItem = ctx.request.header.input_item.toLowerCase().split(' ')
+        return inputItem.every(searchingWord => auctionTitle.includes(searchingWord));
+      })
+    }
+
+    // Filtering auctions array by location
+    if(ctx.request.header.input_location) {
+      auctions = auctions.filter((auction) => {
+        let auctionLocation = auction.location.toLowerCase()
+        let inputLocation = ctx.request.header.input_location.toLowerCase().split(' ')
+        return inputLocation.every(searchingWord => auctionLocation.includes(searchingWord));
+      })
+    }
+
+    if(ctx.request.header.price_filters) {
+      const priceFilters = JSON.parse(ctx.request.header.price_filters)
+      if(priceFilters.from) auctions = auctions.filter(auction => auction.price >= parseFloat(priceFilters.from))
+      if(priceFilters.to) auctions = auctions.filter(auction => auction.price <= parseFloat(priceFilters.to))
+    }
+
+    // Filtering auctions
     if(ctx.request.header.applied_filters) {
       let appliedFilters = Object.values(JSON.parse(ctx.request.header.applied_filters))
       appliedFilters = appliedFilters.filter((a) => a)
@@ -121,39 +148,38 @@ module.exports = {
       })
     }
 
+    // Sorting auctions
     if(ctx.request.header.sorting_option) {
       switch(ctx.request.header.sorting_option) {
-        case 'najnowsze': {
-          auctions.sort((auctionA,auctionB) => new Date(auctionB.createdAt) - new Date(auctionA.createdAt) ? -1 : 1);
+        case 'popular': {
+          const auctionsIdsViewsNumber = {};
+
+          auctions.forEach(auction => {
+            auctionsIdsViewsNumber[auction.id] = 0
+          })
+
+          const viewsOfAuctions = await strapi.query('views-of-auctions').find();
+
+          viewsOfAuctions.forEach((x) => {
+            auctionsIdsViewsNumber[x.auction_id] = (auctionsIdsViewsNumber[x.auction_id] || 0) + 1;
+          });
+
+          auctions.sort((auctionA, auctionB) => auctionsIdsViewsNumber[auctionB.id] - auctionsIdsViewsNumber[auctionA.id])
           break;
         }
-        case 'najtansze': {
+        case 'latest': {
+          auctions.sort((auctionA,auctionB) => new Date(auctionB.published_at) - new Date(auctionA.published_at) ? -1 : 1);
+          break;
+        }
+        case 'cheapest': {
           auctions.sort((auctionA, auctionB) => (auctionA.price > auctionB.price) ? 1 : -1);
           break;
         }
-        case 'najdrozsze': {
+        case 'dearest': {
           auctions.sort((auctionA, auctionB) => (auctionA.price < auctionB.price) ? 1 : -1);
           break;
         }
       }
-    }
-
-    if(ctx.request.header.input_item) {
-      // Filtering auctions array by item
-      auctions = auctions.filter((auction) => {
-        let auctionTitle = auction.title.toLowerCase()
-        let inputItem = ctx.request.header.input_item.toLowerCase().split(' ')
-        return inputItem.every(searchingWord => auctionTitle.includes(searchingWord));
-      })
-    }
-
-    if(ctx.request.header.input_location) {
-      // Filtering auctions array by location
-      auctions = auctions.filter((auction) => {
-        let auctionLocation = auction.location.toLowerCase()
-        let inputLocation = ctx.request.header.input_location.toLowerCase().split(' ')
-        return inputLocation.every(searchingWord => auctionLocation.includes(searchingWord));
-      })
     }
 
     numberOfAllAuctions = auctions.length

@@ -5,11 +5,11 @@
       <select
         name="Kategorie"
         class="filtering-input"
-        v-model="this.filtersVariables['category']"
+        v-model="filtersVariables['category']"
         @blur="checkIfAllFiltersChoosen()"
         @change="[clearSubcategory(), checkIfAllFiltersChoosen()]"
       >
-        <option :value="this.filtersVariables['category'] ? '' : this.filtersVariables['category']" selected>{{ this.selectDefaultOption }}</option>
+        <option :value="filtersVariables['category'] ? '' : filtersVariables['category']" selected>{{ selectDefaultOption }}</option>
         <option
           v-for="category in categories"
           :key="category.value"
@@ -19,18 +19,18 @@
         </option>
       </select>
     </div>
-    <div v-show="this.filtersVariables['category']" class="flex flex-col">
+    <div v-show="filtersVariables['category']" class="flex flex-col">
       <label class="ml-1">Podkategoria</label>
       <select
         name="Podkategorie"
         class="filtering-input"
-        v-model="this.filtersVariables['subcategory']"
+        v-model="filtersVariables['subcategory']"
         @blur="checkIfAllFiltersChoosen()"
         @change="[clearSubcategoryFilters(), checkIfAllFiltersChoosen()]"
       >
-        <option :value="this.filtersVariables['subcategory'] ? '' : this.filtersVariables['subcategory']" selected>{{ this.selectDefaultOption }}</option>
+        <option :value="filtersVariables['subcategory'] ? '' : filtersVariables['subcategory']" selected>{{ selectDefaultOption }}</option>
         <option
-          v-for="subcategory in subcategories[this.filtersVariables['category']]"
+          v-for="subcategory in subcategories[filtersVariables['category']]"
           :key="subcategory.value"
           :value="subcategory.value"
         >
@@ -39,8 +39,8 @@
       </select>
     </div>
     <div
-      v-show="this.filtersVariables['subcategory'] !== ''"
-      v-for="filter in this.subcategoriesFilters[this.filtersVariables['subcategory']]"
+      v-show="filtersVariables['subcategory'] !== ''"
+      v-for="filter in subcategoriesFilters[filtersVariables['subcategory']]"
       :key="filter"
       class="flex flex-col"
     >
@@ -48,11 +48,11 @@
       <select
         name="Filtry podkategorii"
         class="filtering-input"
-        v-model="this.filtersVariables[filter.vmodel]"
+        v-model="filtersVariables[filter.vmodel]"
         @blur="checkIfAllFiltersChoosen()"
         @change="[updateAppliedFilters(), checkIfAllFiltersChoosen()]"
       >
-        <option :value="this.filtersVariables[filter.vmodel] ? '' : this.filtersVariables[filter.vmodel]" selected>{{ this.selectDefaultOption }}</option>
+        <option :value="filtersVariables[filter.vmodel] ? '' : filtersVariables[filter.vmodel]" selected>{{ selectDefaultOption }}</option>
         <option
           v-for="option in filter.options"
           :key="option.value"
@@ -62,6 +62,27 @@
         </option>
       </select>
     </div>
+    <div v-if="!this.isRequired">
+      <label class="ml-1"> Cena </label>
+      <div class="flex flex-row w-full md:w-4/5">
+        <input
+          type="number"
+          v-model="priceFilters.from"
+          @input="updatePriceFilters"
+          placeholder="Od"
+          min="0"
+          class="filtering-input-price mr-3"
+        >
+        <input
+          type="number"
+          v-model="priceFilters.to"
+          @input="updatePriceFilters"
+          placeholder="Do"
+          min="0"
+          class="filtering-input-price"
+        >
+      </div>
+    </div>
   </div>
 </template>
 
@@ -69,6 +90,7 @@
 import categories from '../jsons files/categories.json'
 import subcategories from '../jsons files/subcategories.json'
 import subcategoriesFiltersJSON from '../jsons files/subcategoriesFilters.json'
+import debounce from 'lodash.debounce'
 
 export default {
   name: 'InputSearchPanel',
@@ -80,9 +102,10 @@ export default {
       auctions: [],
       filtersVariables: {
         category: '',
-        subcategory: '',
+        subcategory: ''
       },
       appliedFilters: [],
+      priceFilters: {},
     }
   },
   props: {
@@ -123,15 +146,23 @@ export default {
     updateAppliedFilters() {
       if(!this.$route.path.includes('edit-auction') && !this.$route.path.includes('new-auction')) {
         Object.keys(this.filtersVariables).forEach(key => {
-          if(this.filtersVariables[key].trim() === '') {
+          if(this.filtersVariables[key].toString().trim() === '') {
             delete this.filtersVariables[key]
           }
         })
       }
-      this.$emit('select-change', this.filtersVariables)
+      this.$emit('filter-change', this.filtersVariables)
     },
+    updatePriceFilters: debounce(function() {
+      if(parseFloat(this.priceFilters.from) > parseFloat(this.priceFilters.to)) {
+        let tempPriceTo = this.priceFilters.to
+        this.priceFilters.to = this.priceFilters.from
+        this.priceFilters.from = tempPriceTo
+      }
+      this.$emit('price-filters-change', this.priceFilters)
+    }, 500),
     checkIfAllFiltersChoosen() {
-      if(this.$route.path.includes('edit-auction') || this.$route.path.includes('new-auction')) {
+      if(this.isRequired) {
         if(this.filtersVariables['category'].trim() === '' || this.filtersVariables['subcategory'].trim() === '') {
           this.$emit('display-filters-validation-error')
         } else if(this.subcategoriesFilters[this.filtersVariables['subcategory']]) {
