@@ -51,7 +51,7 @@
             <input
               type="text"
               class="login-register-input"
-              maxlength="30"
+              maxlength="22"
               v-model="usernameValue"
             >
             <input
@@ -246,11 +246,11 @@ export default {
         return this.validationError = true
       }
 
-      if(this.usernameValue.length > 30){
+      if(this.usernameValue.length > 22){
         this.setTimeout = setTimeout(()=>{
           this.validationError = false
         },this.setTimeoutTime)
-        this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 30 znaków)'
+        this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 22 znaki)'
         return this.validationError = true
       }
 

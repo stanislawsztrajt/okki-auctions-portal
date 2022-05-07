@@ -25,6 +25,12 @@ io.on("connection", (socket) => {
     socket.VideoChat_id = user_id
   })
 
+  socket.on("webrtcSettings", async (data) =>{
+    const userToCallId = await getUserSocket(data.userToCall);
+
+		io.to(userToCallId).emit('webrtcSettings', { audio: data.audio, video: data.video })
+  })
+
 	socket.on("disconnect", async () => {
 		socket.broadcast.emit("callEnded")
     socket.broadcast.emit('deleteActiveUser', { user_id: socket.strapi_id })

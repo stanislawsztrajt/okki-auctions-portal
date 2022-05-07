@@ -4,6 +4,16 @@
       v-if="showNavbarAndFooter && !isBlocked"
       :conversations="conversations"
     />
+    <button 
+      v-if="$route.path !== '/'"
+      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
+      class="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 md:bottom-10 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150 z-50"
+      @click="() => $router.go(-1)"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </button>
     <BlockedUser v-if="isBlocked"/>
     <router-view v-else class="min-h-screen" />
     <div v-if="cookieModalShow" class="w-screen h-screen fixed top-0 left-0 flex flex-col justify-center items-center">
@@ -48,6 +58,7 @@ export default {
     if(!userAcceptedCookie) {
       this.cookieModalShow = true;
     }
+    console.log(this.$router)
 
     if(jwt){
       await axios.get(`${API_URL}/users/me`, authorization)

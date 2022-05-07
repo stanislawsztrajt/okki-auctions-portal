@@ -133,11 +133,11 @@ export default {
           return this.validationError = true
         }
 
-        if(this.usernameValue.length > 30){
+        if(this.usernameValue.length > 22){
           this.setTimeout = setTimeout(()=>{
             this.validationError = false
           },this.setTimeoutTime)
-          this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 30 znaki)'
+          this.validationText = 'Nazwa użytkownika jest zbyt długa (maksymalnie 20 znaki)'
           return this.validationError = true
         }
 

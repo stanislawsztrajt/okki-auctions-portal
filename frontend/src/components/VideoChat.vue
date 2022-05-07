@@ -26,17 +26,17 @@
 						<div class="pb-6 pt-0 p-4 flex flex-col md:flex-row justify-center">
 							<button
 								type="button"
-								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-								@click="answerCall({video: true, audio: true})"
-							>
-								Dołącz z kamerką
-							</button>
-							<button
-								type="button"
 								class="w-full inline-flex mt-2 md:mt-0 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
 								@click="answerCall({video: false, audio: true})"
 							>
 								Dołącz bez kamerki
+							</button>
+							<button
+								type="button"
+								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+								@click="answerCall({video: true, audio: true})"
+							>
+								Dołącz z kamerką
 							</button>
 							<div class="mt-2 md:mt-0"></div>
 							<button @click="cancelCall" type="button" class="w-full x inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
@@ -49,6 +49,14 @@
 		</div>
 		<div class=" h-5/6 flex flex-col justify-center" v-show="isCallingShow">
 			<div class="w-full flex flex-col items-center" id="streams">
+				<div class="absolute mt-4 text-white flex flex-row">
+					<div v-if="!isSecondUserAudioOn">
+						<svg class="h-16 w-16 p-4"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <line x1="1" y1="1" x2="23" y2="23" />  <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />  <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />  <line x1="12" y1="19" x2="12" y2="23" />  <line x1="8" y1="23" x2="16" y2="23" /></svg>
+					</div>
+					<div v-if="!isSecondUserVideoOn">
+						<svg class="h-16 w-16 p-4"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10" />  <line x1="1" y1="1" x2="23" y2="23" /></svg>
+					</div>
+				</div>
 				<div v-if="videosLength === 1" class="mt-4">
 					Czekanie na użytkownika...
 				</div>
@@ -112,22 +120,33 @@ export default {
 			isStream: false,
 			isIdSent: false,
 
-			isFirstStreamHasVideo: false,
-			isSecondStreamHasVideo: false,
+			isSecondUserAudioOn: true,
+			isSecondUserVideoOn: true,
+
 			name: '',
-
 			videosLength: 0,
-
 
 			connectionRef: {},
 			used: false,
 		}
 	},
+	watch: {
+    "$route.path"() {
+			if(this.isCalling || this.callAccepted){
+				this.leaveCall()
+			}
+    }
+  },
 	created(){
 		socket.on('endCall', (data) => {
 			if(data){
 				this.$router.go(0);
 			}
+		})
+
+		socket.on('webrtcSettings', (data) => {
+			this.isSecondUserVideoOn = data.video;
+			this.isSecondUserAudioOn = data.audio;
 		})
 
 		socket.emit('setVideoChatId', user.id)
@@ -147,20 +166,32 @@ export default {
 		setTrueIsCalling(){
 			this.$emit('set-true-is-calling')
 		},
+		emitStreamSettings(){
+			socket.emit('webrtcSettings', {
+				userToCall: this.idToCall,
+				audio: this.isNotMute,
+				video: this.isStream
+			});
+		},
 		stopStream(){
 			this.isStream = false,
+			this.emitStreamSettings();
+			console.log(this.stream.getVideoTracks()[0])
 			this.stream.getVideoTracks()[0].enabled = false;
 		},
 		startStream(){
 			this.isStream = true,
+			this.emitStreamSettings();
 			this.stream.getVideoTracks()[0].enabled = true;
 		},
 		mute(){
 			this.isNotMute = false;
+			this.emitStreamSettings();
 			this.stream.getAudioTracks()[0].enabled = false;
 		},
 		unmute(){
 			this.isNotMute = true;
+			this.emitStreamSettings();
 			this.stream.getAudioTracks()[0].enabled = true;
 		},
 		addVideo(video, stream){
@@ -175,9 +206,9 @@ export default {
 			await navigator.mediaDevices.getUserMedia({video: true, audio: true})
 			.then(stream =>{
 				this.isStream = userMediaOptions.video ? true : false;
+				this.emitStreamSettings();
 
 				this.stream = stream;
-				this.isFirstStreamHasVideo = stream.getVideoTracks().length > 0 ? true : false;
 				const video = document.createElement('video');
 				video.muted = true;
 
@@ -207,6 +238,7 @@ export default {
 
 			peer.on('stream', stream =>{
 				const video = document.createElement('video');
+				this.secondUserStream = stream;
 				this.addVideo(video, stream)
 			})
 
@@ -224,9 +256,9 @@ export default {
 				await navigator.mediaDevices.getUserMedia({video: true, audio: true})
 				.then(stream =>{
 					this.isStream = newUserMediaOptions.video ? true : false;
+					this.emitStreamSettings();
 
 					this.stream = stream;
-					this.isFirstStreamHasVideo = stream.getVideoTracks().length > 0 ? true : false;
 					const video = document.createElement('video');
 					video.muted = true;
 
@@ -257,7 +289,7 @@ export default {
 
 			peer.on('stream', stream =>{
 				const video = document.createElement('video');
-				this.isSecondStreamHasVideo = stream.getVideoTracks().length > 0 ? true : false;
+				this.secondUserStream = stream;
 
 				this.addVideo(video, stream)
 			})

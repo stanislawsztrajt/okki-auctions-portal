@@ -14,7 +14,7 @@
   "attributes": {
     "body": {
       "type": "text",
-      "minLength": 20,
+      "minLength": 8,
       "maxLength": 450
     },
     "username": {

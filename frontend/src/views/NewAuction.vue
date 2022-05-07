@@ -177,26 +177,26 @@
         >
       </FormKit>
     </div>
-    <a
-      href="/new-auction#scrollDown"
+    <div
+      @click="scrollDown"
       v-if="isScrollDown"
       style="box-shadow: 0 0 2em rgb(30, 58, 138);"
-      class="fixed bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+      class="fixed bottom-16 right-2 sm:bottom-4 sm:right-4 md:bottom-28 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
       </svg>
-    </a>
-    <a
-      href="/new-auction#"
+    </div>
+    <div
+      @click="scrollUp"
       v-if="isScrollUp"
       style="box-shadow: 0 0 2em rgb(30, 58, 138);"
-      class="fixed bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+      class="fixed bottom-16 right-2 sm:bottom-4 sm:right-4 md:bottom-28 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
       </svg>
-    </a>
+    </div>
   </div>
 </template>
 <script>
@@ -268,6 +268,12 @@ export default {
       this.isScrollDown = document.body.clientHeight > window.scrollY * x ? true : false
       this.isScrollUp = document.body.clientHeight < window.scrollY * x ? true : false
     },
+    scrollUp(){
+      window.scroll(0,0)
+    },
+    scrollDown(){
+      document.getElementById('scrollDown').scrollIntoView({ block: 'start', behavior: 'smooth' })
+    },
     updateFilters(filters) {
       this.filtersValue = filters
     },
@@ -325,7 +331,7 @@ export default {
             const typeImg = image.type.slice(6)
             img.src = this.urls[index];
 
-            const proportionImg = (img.width > img.height ? img.width : img.height) / 608;
+            const proportionImg = (img.width > img.height ? img.width : img.height) / 768;
             const width = img.width / proportionImg;
             const height = img.height / proportionImg;
 
@@ -349,7 +355,7 @@ export default {
               )
               .then(res => {
                 this.imagesPublic_id.push(res.data.public_id);
-                this.imageUrls.push(res.data.url);
+                this.imageUrls.push(res.data.secure_url);
               })
               .catch(err => console.log(err))
 

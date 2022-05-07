@@ -13,7 +13,7 @@
     "username": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 30,
+      "maxLength": 22,
       "unique": true,
       "configurable": false,
       "required": true

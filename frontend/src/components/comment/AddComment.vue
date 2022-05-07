@@ -67,11 +67,11 @@ export default {
         return this.isValidate = true;
       }
 
-      if(this.body.length <= 20){
+      if(this.body.length <= 8){
         setTimeout(() =>{
           this.isValidate = false
         }, 4000)
-        this.validateText = 'Zgłoszenie musi być dłuższe niż 20 znaków.'
+        this.validateText = 'Komentarz musi być dłuższy niż 8 znaków.'
         return this.isValidate = true;
       }
 

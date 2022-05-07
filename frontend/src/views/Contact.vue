@@ -18,12 +18,12 @@
           }">
           <FormKit
             type="text"
-            label="IMIĘ"
+            label="Imię"
             name="name"
             placeholder="Mariusz"
             v-model.trim="name"
             :classes="{
-              label: 'block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-2',
+              label: 'block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mt-2',
               input: 'appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
             }"
             validation="required|length:0,50"
@@ -33,12 +33,12 @@
           />
           <FormKit
             type="email"
-            label="EMAIL"
+            label="Email"
             name="email"
             placeholder="przykladowyemail@gmail.com"
             v-model.trim="email"
             :classes="{
-              label: 'block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-2',
+              label: 'block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mt-2',
               input: 'appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
             }"
             validation="required|length:0,50"
@@ -49,11 +49,11 @@
           <FormKit
             type="textarea"
             name="message"
-            label="WIADOMOŚĆ"
+            label="Wiadomość"
             placeholder="Wiadomość, którą chcesz przekazać"
             v-model.trim="message"
             :classes="{
-              'label': 'block tracking-wide text-gray-700 text-xs font-bold mb-2 mt-4',
+              'label': 'block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mt-4',
               'input': 'no-resize appearance-none block w-full bg-main text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 h-48 resize-none'
             }"
             validation="required|length:0,300"

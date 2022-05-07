@@ -12,13 +12,13 @@
       v-else
       class="flex flex-col items-center gap-8"
     >
-      <header class="w-11/12 2xl:w-3/4 mt-8 xl:mt-14 border-gray-300 text-gray-600 bg-white shadow p-4">
-        <h1
-          class="text-xl dont-break-out  lg:text-2xl pointer-events-none"
-        >
+      <header class="w-11/12 2xl:w-3/4 mt-8 xl:mt-14 border-gray-300 bg-white shadow p-4">
+        <h1 class="dont-break-out text-gray-700 text-2xl lg:text-3xl">
           {{auction.title}}
         </h1>
-        <h2 class="text-2xl lg:text-3xl text-green-600 font-bold">{{ auction.price }}zł</h2>
+        <h2 class="text-2xl lg:text-3xl text-green-600 font-semibold">
+          {{ auction.price }}zł
+        </h2>
       </header>
 
       <div class="w-11/12 2xl:w-3/4 flex flex-col xl:flex-row gap-x-8 xl:h-128">
@@ -140,15 +140,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              {{ auction.location }}
+              Kalisz, {{ auction.location }}
             </div>
             </a>
           </div>
         </div>
       </div>
       <div class="w-11/12 2xl:w-3/4 flex flex-col xl:flex-row gap-8">
-        <div class="w-full 2xl:w-3/4 bg-white h-full p-4 shadow">
-          <h2 class="text-3xl lg:text-4xl bold">Opis ogłoszenia</h2>
+        <div class="w-full 2xl:w-3/4 bg-white h-full p-4 shadow text-gray-700">
+          <h2 class="text-2xl lg:text-3xl font-medium">Opis</h2>
           <div
             class="dont-break-out w-full min-h-56 text-lg lg:text-xl mt-4 bg-transparent auction-textarea resize-none pointer-events-none"
           >
@@ -167,7 +167,7 @@
               spellcheck="false"
               disabled
             >
-              {{ auction.location }}
+              Kalisz, {{ auction.location }}
             </div>
             na google maps
             <div class="flex justify-center">
@@ -190,11 +190,9 @@
 import axios from 'axios'
 import API_URL from '../../API_URL'
 import { user, jwt, authorization } from '../constants/const-variables'
-
 import ReportLayer from '../components/ReportLayer.vue'
 import Loading from '../components/Loading.vue'
 import Liking from '../components/Liking.vue'
-
 export default {
   components: {
     ReportLayer,
@@ -212,38 +210,30 @@ export default {
       auction: null,
       likeds: [],
       rate: 0,
-
       isReportLayer: false,
       isLoading: false,
-
       imageIndex: 0
     }
   },
   async created(){
     this.isLoading = true
-
     if(jwt){
       await axios.get(`${API_URL}/likeds`, { headers: { user_id: user.id, Authorization: `Bearer ${jwt}` } })
       .then(res => this.likeds = res.data)
     }
-
     await axios.get(`${API_URL}/auctions/${this.id}`)
     .then(async res =>{
       this.auction = res.data
-
       await axios.get(`${API_URL}/users/${res.data.user_id}`)
       .then(async res => {
         this.user = res.data
-
         await axios.get(`${API_URL}/comments-in-users-profiles/${res.data.id}`)
         .then(res => this.rate = res.data.accucuracyRate)
         .catch(err => console.log(err))
       })
     })
     .catch(() => this.user = false)
-
     this.addView()
-
     this.isLoading = false
   },
   methods: {
@@ -268,7 +258,6 @@ export default {
           user_id: user.id,
           auction_id: this.id
         }
-
         await axios.post(`${API_URL}/views-of-auctions`, data, authorization)
         .catch(err => err)
       }
