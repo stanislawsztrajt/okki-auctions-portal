@@ -4,7 +4,7 @@
       v-if="showNavbarAndFooter && !isBlocked"
       :conversations="conversations"
     />
-    <button 
+    <button
       v-if="$route.path !== '/'"
       style="box-shadow: 0 0 2em rgb(30, 58, 138);"
       class="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 md:bottom-10 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150 z-50"
@@ -58,7 +58,6 @@ export default {
     if(!userAcceptedCookie) {
       this.cookieModalShow = true;
     }
-    console.log(this.$router)
 
     if(jwt){
       await axios.get(`${API_URL}/users/me`, authorization)

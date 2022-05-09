@@ -169,7 +169,7 @@
             >
               Kalisz, {{ auction.location }}
             </div>
-            na google maps
+            na Google Maps
             <div class="flex justify-center">
               <img class="mt-4 w-72" src="../images/google-maps.jpg" alt="">
             </div>

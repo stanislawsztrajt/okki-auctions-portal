@@ -67,7 +67,6 @@ export function findVulgarWord(array){
   for(let i = 0; i < vulgarWords.length; i++) {
     for(let j = 0; j < array.length; j++) {
       if(array[j].toLowerCase().includes(vulgarWords[i].toLowerCase())) {
-        console.log(array[j].toLowerCase())
         return true;
       }
     }

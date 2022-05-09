@@ -121,7 +121,9 @@ io.on("connection", (socket) => {
 
     socket.emit('userActivity', isUserActive)
   })
+
 })
+
 
 const port = process.env.PORT || 5000
 

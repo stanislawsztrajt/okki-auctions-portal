@@ -80,7 +80,7 @@
         >
       </form>
     </div>
-    <div v-if="validationError" class="validation-alert absolute bottom-0 mb-2 sm:mb-20" role="alert">
+    <div v-if="validationError" class="validation-alert absolute bottom-0 mb-2 sm:mb-20 z-50" role="alert">
       <span class="block sm:inline">{{ validationText }}</span>
       <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
       </span>
@@ -90,7 +90,7 @@
 
 <script>
 import API_URL from '../../API_URL'
-import { jwt } from '../constants/const-variables'
+import { jwt, findVulgarWord } from '../constants/const-variables'
 
 export default {
     name: 'Register',
@@ -122,6 +122,14 @@ export default {
             this.validationError = false
           },this.setTimeoutTime)
           this.validationText = 'Uzupełnij puste pola'
+          return this.validationError = true
+        }
+
+        if(findVulgarWord(this.usernameValue.split(' ')) === true){
+          this.setTimeout = setTimeout(()=>{
+            this.validationError = false
+          },this.setTimeoutTime)
+          this.validationText = 'Nazwa użytkownika nie może zawierać wulgarnych słów'
           return this.validationError = true
         }
 

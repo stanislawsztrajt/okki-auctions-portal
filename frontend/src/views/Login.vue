@@ -56,6 +56,7 @@ import axios from 'axios'
 
 import API_URL from '../../API_URL'
 import { jwt } from '../constants/const-variables'
+import { socket } from '../../config/web-sockets.js'
 
 export default {
     name: 'Login',
@@ -84,6 +85,8 @@ export default {
         .then(async res =>{
           await this.$cookies.set('jwt', res.data.jwt, '7d')
           await this.$cookies.set('user', res.data.user, '7d')
+
+          socket.emit('join', ({ rooms: [], user_id: res.data.user.id, conversationsSecondaryUserIds: [] }));
 
           this.$router.go(0)
           return this.$router.push('/dashboard')

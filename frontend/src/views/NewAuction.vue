@@ -4,7 +4,7 @@
     <div class="w-5/6 sm:w-3/4 xl:w-3/5 pt-10 pb-16 m-auto">
       <FormKit
         type="form"
-        id="create-auction-form"
+        id="auction-form"
         @submit="createAuction"
         :actions="false"
         :config="{
@@ -73,6 +73,7 @@
               accept=".jpg, .jpeg, .png"
               class="min-h-12 w-full md:w-72 text-sm sm:text-base flex items-center text-gray-700 bg-gray-100 p-2 mb-2"
               @change="onFileChange($event)"
+              @click="clearImagesInputValue($event)"
               multiple
               :disabled="urls.length >= 4"
             >
@@ -117,7 +118,7 @@
           <SearchFilters
             class="text-white"
             ref="filteringComponent"
-            @select-change="updateFilters"
+            @filter-change="updateFilters"
             @display-filters-validation-error="displayFiltersValidationError"
             @hide-filters-validation-error="hideFiltersValidationError"
             :selectDefaultOption="'Wybierz'"
@@ -175,6 +176,7 @@
           class="new-auction-button cursor-pointer"
           @click="checkFiltersValidation"
         >
+        <p class="formkit-message" v-if="filtersValidationErr">Filtry nie zostały uzupełnione.</p>
       </FormKit>
     </div>
     <div
@@ -279,6 +281,7 @@ export default {
     },
     async onFileChange(e){
       const images = Object.values(e.target.files)
+
       images.forEach(image => {
         const imageIsDuplicate = this.images.some(arrImage => image.name === arrImage.name)
 
@@ -293,6 +296,7 @@ export default {
       this.urls.splice(index,1)
     },
     async createAuction(){
+      console.log('dwa')
       this.$refs.filteringComponent.checkIfAllFiltersChoosen()
       this.checkIfIncludesVulgarWords()
 
@@ -418,12 +422,15 @@ export default {
 
       if(findVulgarWord(titleDescriptionArray) === true){
         this.validationErr = true
-        this.validationMsg = 'To ogłoszenie zawiera wulgarne słowo!'
+        this.validationMsg = 'Ogłoszenie nie może zawierać wulgarnych słów.'
 
         setTimeout(() => {
           this.validationErr = false
         }, 5000);
       }
+    },
+    clearImagesInputValue(e) {
+      e.target.value = null
     },
     similarity(s1, s2) {
       var longer = s1;

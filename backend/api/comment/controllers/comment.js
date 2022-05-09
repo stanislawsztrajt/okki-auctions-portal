@@ -93,8 +93,6 @@ module.exports = {
         (
           comment.user_id === ctx.state.user.id
         ||
-          comment.user_ip === ctx.request.body.user_ip
-        ||
           comment.user_profile_id === ctx.request.body.user_id
         )
     )

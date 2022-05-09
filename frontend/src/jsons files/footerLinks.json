@@ -41,6 +41,10 @@
       {
         "text": "Kontakt",
         "route": "contact"
+      },
+      {
+        "text": "Często zadawane pytania",
+        "route": "faq"
       }
     ]
   },
@@ -59,10 +63,6 @@
       {
         "text": "Polityka prywatności",
         "route": "privacy-policy"
-      },
-      {
-        "text": "Często zadawane pytania",
-        "route": "faq"
       }
     ]
   }

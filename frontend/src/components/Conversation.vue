@@ -8,9 +8,9 @@
       {{ conversationUser.username }}
       <span v-if="secondaryUserActive" title="Użytkownik jest teraz aktywny" class="w-2.5 h-2.5 bg-green-600 rounded-full cursor-default inline-block ml-1 mb-1"></span>
     </p>
-    <div class="text-xl text-gray-700">
+    <div class="text-xl text-gray-700 dont-break-out">
       <span>{{ lastMessage.sender_id === conversationUserID ? '' : 'Ty: ' }}</span>
-      <span :class="showNotification ? 'font-semibold' : ''">{{ lastMessage.message.length > 80 ? lastMessage.message.substring(0, 80) + '...' :  lastMessage.message}}</span>
+      <span :class="showNotification ? 'font-semibold dont-break-out' : ''">{{ lastMessage.message.length > 80 ? lastMessage.message.substring(0, 80) + '...' :  lastMessage.message}}</span>
     </div>
     <div v-if="showNotification" title="Nowa wiadomość" class="absolute top-1/2 right-5 w-3 h-3 rounded-full bg-red-500 transform -translate-y-1/2 cursor-default"></div>
   </router-link>
