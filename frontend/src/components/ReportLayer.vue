@@ -82,7 +82,7 @@ export default {
         return this.validationText = "Maksymalna długość zgłoszenia to 500 znaków";
       }
 
-      await fetch('http://api.ipify.org/?format=json')
+      await fetch('https://api.ipify.org/?format=json')
       .then(res => res.json())
       .then(async ({ ip }) => {
         const data = {

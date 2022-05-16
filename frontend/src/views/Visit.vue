@@ -2,7 +2,7 @@
   <main class="flex flex-col items-center text-gray-800">
     <section class="section-main flex-col w-5/6 mt-8 xl:mt-20">
       <div class="section-header">
-        <h2 class="text-4xl md:text-6xl xl:text-7xl font-bold">Sprzedawaj, kupuj oraz wymieniaj szybko i przyjemnie</h2>
+        <h2 class="text-4xl md:text-6xl 2xl:text-7xl font-bold">Sprzedawaj, kupuj oraz wymieniaj szybko i przyjemnie</h2>
         <p class="section-header-paragraph">
           Sprzedawanie i kupowanie tylko na terenie Kalisza nie było do tej pory uporządkowane i wspomagane przez jakąkolwiek aplikację. Okki zostało stworzone specjalnie dla mieszkańców Kalisza z myślą ułatwienia procesu zakupu i sprzedaży dzięki licznym funkcjom wbudowanym w aplikację.
         </p>
@@ -64,7 +64,7 @@
     <button 
       @click="goToHome" 
       style="box-shadow: 0 0 2em rgb(30, 58, 138);"
-      class="fixed bottom-16 right-2 sm:bottom-4 sm:right-4 md:bottom-28 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
+      class="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 md:bottom-10 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150"
     >
       Przejdź do portalu
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

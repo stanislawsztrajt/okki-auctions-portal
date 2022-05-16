@@ -85,6 +85,7 @@ export default {
         .then(async res =>{
           await this.$cookies.set('jwt', res.data.jwt, '7d')
           await this.$cookies.set('user', res.data.user, '7d')
+          await this.$cookies.set('firstTimePermissionAllowed', 'null', '10y')
 
           socket.emit('join', ({ rooms: [], user_id: res.data.user.id, conversationsSecondaryUserIds: [] }));
 

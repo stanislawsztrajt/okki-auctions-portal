@@ -97,6 +97,7 @@ export default {
 
       isLoading: true,
       isDeleteAuctionLayer: false,
+			isMobile: document.body.clientWidth < 900,
     }
   },
   async created() {
@@ -106,6 +107,11 @@ export default {
     else if(!jwt) {
       this.$router.push('/login');
     } else{
+      if(!this.$cookies.get('isFirstTimeAfterAllowedPermission') && this.isMobile){
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }, audio: true})
+        this.$cookies.set('isFirstTimeAfterAllowedPermission', 'after allowed', '10y')
+      }
+
       await axios.get(`${API_URL}/first-six-user-auctions/${user.id}`)
       .then(res => {
         this.auctionsLength = res.data.length;

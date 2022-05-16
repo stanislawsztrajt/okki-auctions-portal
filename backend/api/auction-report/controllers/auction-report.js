@@ -72,6 +72,8 @@ module.exports = {
           counts[report.auction_id] = counts[report.auction_id] ? counts[report.auction_id] + 1 : 1;
         }
 
+        console.log(reports)
+
         const keys = Object.keys(counts);
         Object.values(counts).forEach((value, index) =>{
           // equal 2 because if "value" is greater than 2 then every time

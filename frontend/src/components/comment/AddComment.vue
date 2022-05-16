@@ -34,7 +34,7 @@
 import axios from 'axios'
 import API_URL from '../../../API_URL'
 
-import { user, jwt, authorization } from '../../constants/const-variables'
+import { user, jwt, authorization, findVulgarWord } from '../../constants/const-variables'
 
 export default {
   props: {
@@ -75,6 +75,14 @@ export default {
         return this.isValidate = true;
       }
 
+      if(findVulgarWord(this.body.split(' ')) === true){
+        setTimeout(() =>{
+          this.isValidate = false
+        }, 4000)
+        this.validateText = 'Komentarz nie może zawierać wulgarnych słów.'
+        return this.isValidate = true;
+      }
+
       const comment = {
         body: this.body,
         user_id: user.id,
@@ -82,7 +90,6 @@ export default {
         username: user.username,
         rate: this.rate,
       }
-      console.log(comment)
 
       await axios.post(`${API_URL}/comments`, comment, authorization)
       .then(async res =>{

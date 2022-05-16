@@ -198,8 +198,10 @@ module.exports = {
     }
   },
   async findLastWeekMostPopular() {
-    let auctions = await strapi.query('auction').find()
+    let auctions = await strapi.services.auction.find()
     const auctionsIdsViewsNumber = {};
+
+    checkAuctionsExpiration(auctions);
 
     auctions.forEach(auction => {
       auctionsIdsViewsNumber[auction.id] = 0

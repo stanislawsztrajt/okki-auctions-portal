@@ -16,6 +16,7 @@
       />
       <RateElement :rate="rate"/>
       <ButtonElement
+        v-if="jwt"
         :value="`Przejdź do konwersacji z użytkownikiem ${userProfile.username}`"
         :icon="'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'"
         @action="() => $router.push(`/chat/${userProfile.id}`)"
@@ -30,7 +31,7 @@
       />
       <div v-if="auctions.length > 0">
         <InfoElement
-          :value="auctions.length > 5 ? 'Ostatnie ogłoszenia użytkownika' : 'Ogłoszenia użytkownika'"
+          :value="auctionsLength > 5 ? 'Ostatnie ogłoszenia użytkownika' : 'Ogłoszenia użytkownika'"
           :icon="'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z'"
         />
         <Auction
@@ -101,6 +102,7 @@ export default {
 
       commentsLength: 0,
       rate: '',
+      jwt,
 
       isLoading: true,
       isReportLayer: false,
@@ -108,6 +110,10 @@ export default {
   },
   async created(){
     this.isLoading = true;
+
+    if(this.id === user.id){
+      return this.$router.push('/dashboard')
+    }
 
     await axios.get(`${API_URL}/users/${this.id}`)
     .then(res => this.userProfile = res.data )

@@ -124,7 +124,7 @@
           v-if="!isDeleteAccountLayer"
           @click="toggleDeleteAccountLayer"
           style="box-shadow: 0 0 2em rgb(127, 29, 29);"
-          class="fixed z-40 bottom-0 right-0 mb-2 mr-2 sm:mb-4 sm:mr-4 md:mb-10 md:mr-10 bg-red-700 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-red-800 transition duration-150"
+          class="fixed z-40 bottom-16 right-2 sm:bottom-4 sm:right-4 md:bottom-28 md:right-10 bg-red-700 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-red-800 transition duration-150"
         >
           Usuń konto
           <svg class="h-5 w-5 ml-3"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="9" cy="7" r="4" />  <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />  <path d="M17 9l4 4m0 -4l-4 4" /></svg>
@@ -168,7 +168,6 @@ export default {
     ApproveLayer,
     Loading
   },
-
   data(){
     return{
       usernameValue: user.username,
@@ -190,6 +189,11 @@ export default {
 
       isLoading: false,
       isDeleteAccountLayer: false
+    }
+  },
+  watch: {
+    "$route.path"() {
+      this.$router.go();
     }
   },
   async created(){
@@ -254,13 +258,14 @@ export default {
 
       await axios.put(`${API_URL}/users/me`, { username: this.usernameValue }, authorization)
       .then(async res => {
-        this.isLoading = false
         const jwtCopy = jwt;
 
         await this.$cookies.remove('user');
         await this.$cookies.remove('jwt');
         await this.$cookies.set('user', res.data, '7d')
         await this.$cookies.set('jwt', jwtCopy, '7d')
+
+        this.isLoading = false
 
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false
@@ -293,13 +298,14 @@ export default {
 
       await axios.put(`${API_URL}/users/me`, { email: this.emailValue }, authorization)
       .then(async res => {
-        this.isLoading = false;
         const jwtCopy = jwt;
 
         await this.$cookies.remove('user');
         await this.$cookies.remove('jwt');
         await this.$cookies.set('user', res.data, '7d')
         await this.$cookies.set('jwt', jwtCopy, '7d')
+
+        this.isLoading = false;
 
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false
@@ -358,13 +364,14 @@ export default {
         password: this.passwordValue
       },authorization)
       .then(async res => {
-        this.isLoading = false;
         const jwtCopy = jwt;
 
         await this.$cookies.remove('user');
         await this.$cookies.remove('jwt');
         await this.$cookies.set('user', res.data, '7d')
         await this.$cookies.set('jwt', jwtCopy, '7d')
+
+        this.isLoading = false;
 
         this.setTimeout = setTimeout(()=>{
           this.responseAlert = false

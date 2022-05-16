@@ -45,16 +45,15 @@ module.exports = {
 
     ctx.request.body.user_id = ctx.state.user.id
 
-    // const isReportExist = reports.findIndex(
-    //   report =>
-    //     report.auction_id === ctx.request.body.auction_id &&
-    //     (
-    //       report.user_id === ctx.state.user.id
-    //     ||
-    //       report.user_ip === ctx.request.body.user_ip
-    //     )
-    // )
-    const isReportExist = -1
+    const isReportExist = reports.findIndex(
+      report =>
+        report.auction_id === ctx.request.body.auction_id &&
+        (
+          report.user_id === ctx.state.user.id
+        ||
+          report.user_ip === ctx.request.body.user_ip
+        )
+    )
 
     if(isReportExist > -1){
       throw strapi.errors.badRequest('Your report already exist');

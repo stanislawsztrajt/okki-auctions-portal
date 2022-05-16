@@ -31,6 +31,7 @@
 							>
 								Dołącz bez kamerki
 							</button>
+							<div class="mt-2 md:mt-0"></div>
 							<button
 								type="button"
 								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
@@ -93,13 +94,10 @@
 </template>
 
 <script>
-import io from 'socket.io-client';
 import Peer from 'simple-peer'
-import { user } from '../constants/const-variables';
 
-const serverURL = 'http://localhost:5000'
-// const serverURL = 'https://okki-videochat.herokuapp.com'
-const socket = io.connect(serverURL)
+import { user } from '../constants/const-variables';
+import { socket } from '../../config/web-sockets.js';
 
 export default {
 	props: {
@@ -128,6 +126,7 @@ export default {
 
 			connectionRef: {},
 			used: false,
+			isMobile: document.body.clientWidth < 900,
 		}
 	},
 	watch: {
@@ -135,11 +134,18 @@ export default {
 			if(this.isCalling || this.callAccepted){
 				this.leaveCall()
 			}
+    },
+	},
+	async created(){
+		if(this.$cookies.get('isFirstTimeAfterAllowedPermission') === 'after allowed' && this.isMobile){
+			this.$cookies.set('isFirstTimeAfterAllowedPermission', 'after reload', '10y')
+			this.$router.go(0);
     }
-  },
-	created(){
+
+		socket.emit('setVideoChatId', user.id)
+
 		socket.on('endCall', (data) => {
-			if(data){
+			if(data.from === this.idToCall && data.ended){
 				this.$router.go(0);
 			}
 		})
@@ -149,7 +155,6 @@ export default {
 			this.isSecondUserAudioOn = data.audio;
 		})
 
-		socket.emit('setVideoChatId', user.id)
 
 		socket.on('callUser', data =>{
 			if(data.userIdFrom === this.idToCall){
@@ -166,6 +171,9 @@ export default {
 		setTrueIsCalling(){
 			this.$emit('set-true-is-calling')
 		},
+		toggleIsLoading(){
+			this.$emit('toggle-is-loading')
+		},
 		emitStreamSettings(){
 			socket.emit('webrtcSettings', {
 				userToCall: this.idToCall,
@@ -176,7 +184,6 @@ export default {
 		stopStream(){
 			this.isStream = false,
 			this.emitStreamSettings();
-			console.log(this.stream.getVideoTracks()[0])
 			this.stream.getVideoTracks()[0].enabled = false;
 		},
 		startStream(){
@@ -203,8 +210,14 @@ export default {
 			streams.prepend(video)
 		},
 		async callUser(userMediaOptions){
-			await navigator.mediaDevices.getUserMedia({video: true, audio: true})
-			.then(stream =>{
+			if (!navigator.mediaDevices) {
+				return alert('not suporting')
+			}
+
+			this.toggleIsLoading()
+
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }, audio: true})
+			.then(async stream =>{
 				this.isStream = userMediaOptions.video ? true : false;
 				this.emitStreamSettings();
 
@@ -217,44 +230,52 @@ export default {
 				}
 
 				this.addVideo(video, stream)
-			})
+				this.toggleIsLoading()
 
-			this.toggleIsCalling()
-			this.isCalling = true;
+				this.toggleIsCalling()
+				this.isCalling = true;
 
-			const peer = new Peer({
-				initiator: true,
-				trickle: false,
-				stream: this.stream
-			})
-
-			peer.on('signal', data =>{
-				socket.emit('callUser', {
-					userToCall: this.idToCall,
-					signalData: data,
-					from: this.me,
+				const peer = await new Peer({ 
+					initiator: true,
+					trickle: false,
+					stream
 				})
+
+				await peer.on('signal', async data =>{
+					await socket.emit('callUser', {
+						userToCall: this.idToCall,
+						signalData: data,
+						from: this.me,
+					})
+				})
+
+				await peer.on('stream', secondStream =>{
+					const video = document.createElement('video');
+					this.secondUserStream = secondStream;
+					this.addVideo(video, secondStream)
+				})
+
+				await socket.on('callAccepted', async signal =>{
+					this.isCalling = false;
+					this.callAccepted = true;
+					await peer.signal(signal);
+				})
+
+				this.connectionRef.current = peer;
 			})
-
-			peer.on('stream', stream =>{
-				const video = document.createElement('video');
-				this.secondUserStream = stream;
-				this.addVideo(video, stream)
-			})
-
-			socket.on('callAccepted', signal =>{
-				this.isCalling = false;
-				this.callAccepted = true;
-				peer.signal(signal);
-			})
-
-			this.connectionRef.current = peer;
-
 		},
-		async answerCall(newUserMediaOptions){
-			if(this.videosLength === 0){
-				await navigator.mediaDevices.getUserMedia({video: true, audio: true})
-				.then(stream =>{
+		answerCall(newUserMediaOptions){
+			if (!navigator.mediaDevices) {
+				return alert('not suporting')
+			}
+
+			this.toggleIsLoading()
+			this.isCalling = false;
+			this.callAccepted = true;
+			
+			navigator.mediaDevices.getUserMedia({video: { facingMode: { exact: "environment" } }, audio: true})
+			.then(async stream =>{
+				if(this.videosLength === 0){
 					this.isStream = newUserMediaOptions.video ? true : false;
 					this.emitStreamSettings();
 
@@ -267,39 +288,40 @@ export default {
 					}
 
 					this.addVideo(video, stream)
+				}
+
+				this.toggleIsLoading()
+				this.setTrueIsCalling();
+
+				const peer = await new Peer({
+					initiator: false,
+					trickele: false,
+					stream
 				})
-			}
 
-			this.setTrueIsCalling();
-			this.isCalling = false;
-			this.callAccepted = true;
-
-			const peer = new Peer({
-				initiator: false,
-				trickele: false,
-				stream: this.stream
-			})
-
-			peer.on('signal', data =>{
-				socket.emit('answerCall', {
-					signal: data,
-					to: this.idToCall
+				await peer.on('signal', async data =>{
+					await socket.emit('answerCall', {
+						signal: data,
+						to: this.idToCall
+					})
 				})
+
+				await peer.on('stream', secondStream =>{
+					const video = document.createElement('video');
+					this.secondUserStream = secondStream;
+
+					this.addVideo(video, secondStream)
+				})
+
+				await peer.signal(this.callerSignal);
+
+				this.connectionRef.current = peer;
 			})
-
-			peer.on('stream', stream =>{
-				const video = document.createElement('video');
-				this.secondUserStream = stream;
-
-				this.addVideo(video, stream)
-			})
-
-			peer.signal(this.callerSignal);
-			this.connectionRef.current = peer;
 		},
 		cancelCall(){
 			socket.emit('endCall', {
 				userToCall: this.idToCall,
+				from: user.id,
 				ended: true
 			})
 			this.$router.go(0);
@@ -310,6 +332,7 @@ export default {
 		leaveCall(){
 			socket.emit('endCall', {
 				userToCall: this.idToCall,
+				from: user.id,
 				ended: true
 			})
 			socket.on('disconnect');
@@ -326,7 +349,7 @@ export default {
 	}
 
 	video{
-		@apply border-4 border-white
+		@apply border-4 border-white bg-white
 	}
 
 	video:first-child{

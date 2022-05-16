@@ -11,7 +11,7 @@
         {{ rate }}%
         <span class="text-gray-600">Opinia użytkowników</span>
       </span>
-      <span v-else-if="rate > 45 && rate < 55">
+      <span v-else-if="rate >= 45 && rate <= 55">
         <svg class="h-7 w-7 -mt-1 inline text-gray-600"  width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="10" x2="9.01" y2="10" />  <line x1="15" y1="10" x2="15.01" y2="10" />  <line x1="9" y1="15" x2="15" y2="15" /></svg>
         {{ rate }}%
         <span class="text-gray-600">Opinia użytkowników</span>

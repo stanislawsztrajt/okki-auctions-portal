@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { jwt, user, fetchLastSeenMessages, notReadConversations } from '../constants/const-variables'
+import { jwt, user, notReadConversations } from '../constants/const-variables'
 import { socket } from '../../config/web-sockets.js'
 import links from '../jsons files/links'
 
@@ -39,11 +39,6 @@ export default {
       links: links,
       showNotificationIcon: false
     }
-  },
-  props: {
-    conversations: {
-      type: Object
-    },
   },
   created() {
     socket.on('message', (data) => {
@@ -60,18 +55,6 @@ export default {
     socket.on('hideNotifications', () => {
       this.showNotificationIcon = false;
     })
-  },
-  watch: {
-    conversations(conversations) {
-      if(conversations.length > 0) {
-        conversations.forEach(async conversation => {
-          let seconUser_id = conversation.code.replace(user.id, "");
-          if(!this.$route.path.includes('/chat/' + seconUser_id)) {
-            await fetchLastSeenMessages(conversation)
-          }
-        })
-      }
-    }
-  },
+  }
 }
 </script>

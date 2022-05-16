@@ -2,18 +2,7 @@
   <div id="app">
     <Navbar
       v-if="showNavbarAndFooter && !isBlocked"
-      :conversations="conversations"
     />
-    <button
-      v-if="$route.path !== '/'"
-      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
-      class="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 md:bottom-10 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150 z-50"
-      @click="() => $router.go(-1)"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-    </button>
     <BlockedUser v-if="isBlocked"/>
     <router-view v-else class="min-h-screen" />
     <div v-if="cookieModalShow" class="w-screen h-screen fixed top-0 left-0 flex flex-col justify-center items-center">
@@ -24,6 +13,17 @@
       </div>
       <div class="absolute bg-gray-500 opacity-30 z-10 w-screen h-screen top-0 left-0"></div>
     </div>
+    <button
+      v-if="showBackButton"
+      style="box-shadow: 0 0 2em rgb(30, 58, 138);"
+      class="cursor-pointer fixed bottom-2 right-2 sm:bottom-4 sm:right-4 md:bottom-10 md:right-10 bg-blue-900 text-white text-lg px-8 py-3 font-semibold flex justify-center items-center rounded-lg hover:bg-blue-800 transition duration-150 z-50"
+      @click="() => $router.go(-1)"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </button>
+
     <Footer v-if="showNavbarAndFooter && !isBlocked" />
   </div>
 </template>
@@ -51,7 +51,8 @@ export default {
       isBlocked: false,
       cookieModalShow: false,
       showNavbarAndFooter: true,
-      conversations: []
+      conversations: [],
+      showBackButton: false,
     }
   },
   async created(){
@@ -71,11 +72,14 @@ export default {
 
       socket.on('newConversation', async ({ conversation }) => {
         fetchLastSeenMessages(conversation)
+        console.log(conversation)
 
         const room = conversation.code
         socket.emit('joinToNewRoom', { room })
       })
       socket.on('createdNewConversation', async ({ conversation }) => {
+        fetchLastSeenMessages(conversation)
+
         const room = conversation.code
         socket.emit('joinToNewRoom', { room })
       })
@@ -87,7 +91,7 @@ export default {
       this.cookieModalShow = false
     },
     async fetchUserConversations() {
-      axios.get(`${API_URL}/user-conversations`, authorization)
+      await axios.get(`${API_URL}/user-conversations`, authorization)
       .then((res) => {
         this.conversations = res.data
         const userRooms = []
@@ -99,6 +103,16 @@ export default {
         })
         this.joinUserToSocketRooms(userRooms, conversationsSecondaryUserIds)
       })
+      .then(() => {
+        if(this.conversations.length > 0) {
+          this.conversations.forEach(async conversation => {
+            let seconUser_id = conversation.code.replace(user.id, "");
+            if(!this.$route.path.includes('/chat/' + seconUser_id)) {
+              await fetchLastSeenMessages(conversation)
+            }
+          })
+        }
+      })
     },
     async joinUserToSocketRooms(roomsToJoin, conversationsSecondaryUserIds) {
       socket.emit('join', ({ rooms: roomsToJoin, user_id: user.id, conversationsSecondaryUserIds }));
@@ -106,8 +120,9 @@ export default {
   },
   watch: {
     $route(route) {
-      window.scrollTo(0, 0)
-      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register' && route.path !== '/forgot-password' && route.path !== '/reset-password'
+      window.scrollTo(0, 0);
+      this.showBackButton = route.path !== '/' && route.path !== '/visit' && route.path !== '/login' && route.path !== '/register' && route.path !== '/forgot-password' && route.path !== '/reset-password';
+      this.showNavbarAndFooter = route.path !== '/login' && route.path !== '/register' && route.path !== '/forgot-password' && route.path !== '/reset-password';
     }
   },
 }
@@ -121,4 +136,3 @@ body {
   background: #EEE;
 }
 </style>
-

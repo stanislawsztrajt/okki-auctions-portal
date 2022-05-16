@@ -12,8 +12,8 @@ const getUserSocket = async user_id =>{
 const activeUsers = {};
 const io = require("socket.io")(server, {
 	cors: {
-		origin: "http://localhost:8080",
-		// origin: "https://okki.herokuapp.com",
+		// origin: "http://localhost:8080",
+		origin: "https://okki.herokuapp.com",
     allowedHeadears: '*',
     credentials: true,
 		methods: [ "GET", "POST" ]
@@ -54,20 +54,14 @@ io.on("connection", (socket) => {
   socket.on('endCall', async (data) => {
     const userToCallId = await getUserSocket(data.userToCall);
 
-		io.to(userToCallId).emit('endCall', data.ended)
+		io.to(userToCallId).emit('endCall', { ended: data.ended, from: data.from })
 	})
 
   socket.on('join', ({ rooms, user_id, conversationsSecondaryUserIds }) => {
     socket.strapi_id = user_id
     activeUsers[socket.id] = user_id
 
-    // emiting information about my activity to users whom i have conversation
-    conversationsSecondaryUserIds.forEach(secondaryUserStrapiId => {
-      if(Object.values(activeUsers).includes(secondaryUserStrapiId)) {
-        const secondaryUserSocketId = Object.keys(activeUsers).find(key => activeUsers[key] === secondaryUserStrapiId);
-        socket.broadcast.to(secondaryUserSocketId).emit('newActiveUser', { user_id: socket.strapi_id })
-      }
-    })
+    socket.broadcast.emit('newActiveUser', { user_id: socket.strapi_id })
 
     rooms.forEach(room => {
       if(!socket.rooms.hasOwnProperty(room)) socket.join(room)
@@ -86,9 +80,11 @@ io.on("connection", (socket) => {
 
     socket.on('newConversation', async ({ seconUser_id, conversation }) => {
       let sockets = await io.fetchSockets();
-      sockets = sockets.filter(socket => socket.strapi_id === seconUser_id)
+
+      const socketIndex = sockets.findIndex(socket => socket.strapi_id === seconUser_id)
       // emit to second user in room
-      io.to(sockets[0].id).emit('newConversation', { conversation })
+      if(socketIndex > -1) io.to(sockets[socketIndex].id).emit('newConversation', { conversation })
+
       // emit to myself
       socket.emit('createdNewConversation', { conversation })
     })
@@ -121,7 +117,6 @@ io.on("connection", (socket) => {
 
     socket.emit('userActivity', isUserActive)
   })
-
 })
 
 
