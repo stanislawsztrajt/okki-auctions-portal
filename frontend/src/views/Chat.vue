@@ -132,6 +132,13 @@ export default {
     }
   },
   async created() {
+    // alert(1)
+    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true})
+    //     alert(2)
+    //     // navigator.getWebcam({ audio: true, video: true })
+    //     alert(3)
+    // navigator.permissions.query({ name: 'camera'/*and 'microphone'*/ })
+    // navigator.permissions.query({ name: 'microphone'/*and 'microphone'*/ })
     if(!jwt) this.$router.push('/login')
 
     if(this.id !== this.user.id){

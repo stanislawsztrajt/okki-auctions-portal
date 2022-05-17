@@ -101,12 +101,13 @@ export default {
     }
   },
   async created() {
-    if(user.role.name === 'Admin'){
+    if(!jwt) {
+      this.$router.push('/login');
+    } 
+    else if(user.role.name === 'Admin'){
       this.$router.push('/admin-dashboard')
     }
-    else if(!jwt) {
-      this.$router.push('/login');
-    } else{
+    else{
       if(!this.$cookies.get('isFirstTimeAfterAllowedPermission') && this.isMobile){
         navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }, audio: true})
         this.$cookies.set('isFirstTimeAfterAllowedPermission', 'after allowed', '10y')

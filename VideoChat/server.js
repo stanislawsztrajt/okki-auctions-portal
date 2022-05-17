@@ -12,6 +12,7 @@ const getUserSocket = async user_id =>{
 const activeUsers = {};
 const io = require("socket.io")(server, {
 	cors: {
+    //arstarst
 		// origin: "http://localhost:8080",
 		origin: "https://okki.herokuapp.com",
     allowedHeadears: '*',

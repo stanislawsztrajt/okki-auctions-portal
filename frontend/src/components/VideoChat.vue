@@ -137,12 +137,15 @@ export default {
     },
 	},
 	async created(){
-		if(this.$cookies.get('isFirstTimeAfterAllowedPermission') === 'after allowed' && this.isMobile){
-			this.$cookies.set('isFirstTimeAfterAllowedPermission', 'after reload', '10y')
-			this.$router.go(0);
-    }
-
 		socket.emit('setVideoChatId', user.id)
+
+		socket.on('callUser', data =>{
+			if(data.userIdFrom === this.idToCall){
+				this.receivingCall = true;
+				this.caller = data.from
+				this.callerSignal = data.signal;
+			}
+		})
 
 		socket.on('endCall', (data) => {
 			if(data.from === this.idToCall && data.ended){
@@ -155,14 +158,10 @@ export default {
 			this.isSecondUserAudioOn = data.audio;
 		})
 
-
-		socket.on('callUser', data =>{
-			if(data.userIdFrom === this.idToCall){
-				this.receivingCall = true;
-				this.caller = data.from
-				this.callerSignal = data.signal;
-			}
-		})
+		if(this.$cookies.get('isFirstTimeAfterAllowedPermission') === 'after allowed' && this.isMobile){
+			this.$cookies.set('isFirstTimeAfterAllowedPermission', 'after reload', '10y')
+			this.$router.go(0);
+    }
 	},
 	methods: {
 		toggleIsCalling(){
@@ -215,8 +214,14 @@ export default {
 			}
 
 			this.toggleIsLoading()
-
-			navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }, audio: true})
+			navigator.mediaDevices.getUserMedia(
+				{
+					// video: true, 
+					video: this.isMobile ? { facingMode: { exact: "environment" } } :  true, 
+					audio: true
+				}
+			)
+			// await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }, audio: true})
 			.then(async stream =>{
 				this.isStream = userMediaOptions.video ? true : false;
 				this.emitStreamSettings();
@@ -229,42 +234,42 @@ export default {
 					this.stopStream()
 				}
 
-				this.addVideo(video, stream)
-				this.toggleIsLoading()
-
-				this.toggleIsCalling()
-				this.isCalling = true;
-
 				const peer = await new Peer({ 
 					initiator: true,
 					trickle: false,
 					stream
 				})
 
-				await peer.on('signal', async data =>{
-					await socket.emit('callUser', {
+				this.addVideo(video, stream)
+				this.toggleIsLoading()
+
+				this.toggleIsCalling()
+				this.isCalling = true;
+
+				peer.on('signal', async data =>{
+					socket.emit('callUser', {
 						userToCall: this.idToCall,
 						signalData: data,
 						from: this.me,
 					})
 				})
 
-				await peer.on('stream', secondStream =>{
+				peer.on('stream', secondStream =>{
 					const video = document.createElement('video');
 					this.secondUserStream = secondStream;
 					this.addVideo(video, secondStream)
 				})
 
-				await socket.on('callAccepted', async signal =>{
+				socket.on('callAccepted', async signal =>{
 					this.isCalling = false;
 					this.callAccepted = true;
-					await peer.signal(signal);
+					peer.signal(signal);
 				})
 
 				this.connectionRef.current = peer;
 			})
 		},
-		answerCall(newUserMediaOptions){
+		async answerCall(newUserMediaOptions){
 			if (!navigator.mediaDevices) {
 				return alert('not suporting')
 			}
@@ -273,7 +278,13 @@ export default {
 			this.isCalling = false;
 			this.callAccepted = true;
 			
-			navigator.mediaDevices.getUserMedia({video: { facingMode: { exact: "environment" } }, audio: true})
+			navigator.mediaDevices.getUserMedia(
+				{
+					// video: true, 
+					video: this.isMobile ? { facingMode: { exact: "environment" } } :  true, 
+					audio: true
+				})
+			// await navigator.mediaDevices.getUserMedia({video: { facingMode: { exact: "environment" } }, audio: true})
 			.then(async stream =>{
 				if(this.videosLength === 0){
 					this.isStream = newUserMediaOptions.video ? true : false;
@@ -290,30 +301,30 @@ export default {
 					this.addVideo(video, stream)
 				}
 
-				this.toggleIsLoading()
-				this.setTrueIsCalling();
-
 				const peer = await new Peer({
 					initiator: false,
 					trickele: false,
 					stream
 				})
 
-				await peer.on('signal', async data =>{
+				this.toggleIsLoading()
+				this.setTrueIsCalling();
+
+				peer.on('signal', async data =>{
 					await socket.emit('answerCall', {
 						signal: data,
 						to: this.idToCall
 					})
 				})
 
-				await peer.on('stream', secondStream =>{
+				peer.on('stream', secondStream =>{
 					const video = document.createElement('video');
 					this.secondUserStream = secondStream;
 
 					this.addVideo(video, secondStream)
 				})
 
-				await peer.signal(this.callerSignal);
+				peer.signal(this.callerSignal);
 
 				this.connectionRef.current = peer;
 			})
@@ -371,3 +382,4 @@ export default {
 		@apply mt-4 w-44
 	} */
 </style>
+
