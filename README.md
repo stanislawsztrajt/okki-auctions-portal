@@ -11,10 +11,10 @@ view https://okki.herokuapp.com/visit
 When you go to the home page, you see this view
 ![Screenshot_287](https://user-images.githubusercontent.com/64974010/192735169-e7e20b48-5b0b-4429-90fb-b74960a05f54.png)
 
-> # Popular auctions(under, view without login)
+> # Popular auctions(below, view without login)
 > Counting views and comparing them
 > ![Screenshot_288](https://user-images.githubusercontent.com/64974010/192737103-1184b25f-06b0-4cb1-9e53-422a6f14133f.png)
-> ## Liking(view login)
+> ## Liking(view with login)
 > ![Screenshot_289](https://user-images.githubusercontent.com/64974010/192737819-6e72414e-7e00-4df1-a381-b5d18df4d296.png)
 
 # Liked auctions
