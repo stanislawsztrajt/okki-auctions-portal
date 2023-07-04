@@ -1,5 +1,5 @@
 # okki-auctions-portal
-Application to list and view auctions with some features(e.g calling, chat, admin dashboard). Created in Vue3, strapi v3 and Expo
+Application to list and view auctions with some features(e.g calling, chat, admin dashboard). Created in Vue3, strapi v3 and Expo.
 
 # First time on the app(content in polish)
 When you enter the site for the first time, the information about cookies and a view of the business card - a place that describes important aspects of the applications.
